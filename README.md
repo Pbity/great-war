@@ -11,15 +11,6 @@ Aplikacja webowa wspomagajaca rozgrywke w fizycznego **Secret Hitlera** na domow
 * **Eliminacje:** losowa jednorazowa *Ukryta Bron* w jednej z 15 stacji QR, *Tajny Zamach* Faszystow (oba trafiaja do bufora i sa blokowane przez Tarcze) oraz reczny przycisk **Egzekucja** na ekranie laptopa pod 4. i 5. ustawe faszystowska.
 * **Synchronizacja Online (PeerJS WebRTC) + Tryb Testowy:** dziala na statycznym hostingu (GitHub Pages) bez stawiania wlasnego serwera.
 
-## Jak wrzucic na GitHub Pages (krok po kroku)
-
-1. Utworz nowe, publiczne repozytorium na GitHubie (np. `secret-hitler-qr`).
-2. Rozpakuj ten plik ZIP i wrzuc jego zawartosc (`index.html`, `README.md`, `.nojekyll`) do glownego katalogu repozytorium.
-3. Wejdz w **Settings -> Pages**.
-4. W sekcji **Build and deployment** wybierz **Source: Deploy from a branch**, zaznacz galaz `main` i folder `/ (root)`, a nastepnie kliknij **Save**.
-5. Po 1–2 minutach strona bedzie dostepna pod adresem `https://TWOJ-NICK.github.io/secret-hitler-qr/`.
-
-> **Wazne:** Przegladarki na telefonach wymagaja polaczenia **HTTPS**, aby udostepnic aparat do skanowania kodow QR. GitHub Pages zapewnia HTTPS automatycznie.
 
 ## Jak przeprowadzic rozgrywke
 
