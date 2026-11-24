@@ -36,6 +36,17 @@
     <!-- ==================== WIDOK 1: START / POKÓJ ==================== -->
     <section id="view-lobby" class="view-section active">
       <div id="auto-scan-banner" class="info-box" style="display:none;"></div>
+      <div id="quick-join-panel" class="panel panel-liberal" style="display:none; max-width:480px; margin:0 auto 20px;">
+        <div class="panel-header">
+          <span class="panel-title">SZYBKIE DOŁĄCZENIE DO POKOJU</span>
+          <span id="quick-join-room-badge" class="badge badge-liberal"></span>
+        </div>
+        <div class="form-row">
+          <label for="quick-join-name">Wpisz swoje imię</label>
+          <input type="text" id="quick-join-name" />
+        </div>
+        <button class="btn btn-liberal" style="width:100%;" onclick="confirmQuickJoin()">DOŁĄCZ DO GRY</button>
+      </div>
 
       <div class="grid-3">
         <div class="panel">
@@ -182,6 +193,23 @@
         </div>
 
         <div>
+          <div id="host-join-qr-panel" class="panel panel-liberal" style="display:none;">
+            <div class="panel-header">
+              <span class="panel-title">DOŁĄCZ DO POKOJU (KOD QR)</span>
+              <span id="host-room-code-badge" class="badge badge-liberal"></span>
+            </div>
+            <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+              <div id="host-join-qr-canvas" style="background:#fff; padding:8px; border:2px solid var(--ink); flex-shrink:0;"></div>
+              <div style="flex:1; min-width:180px;">
+                <p style="font-size:0.82rem; margin-bottom:8px;">
+                  Zeskanuj aparatem telefonu, aby od razu dołączyć do pokoju bez wpisywania kodu.
+                </p>
+                <div style="font-size:0.75rem; word-break:break-all; background:#fffcf5; padding:6px 8px; border:1.5px solid var(--ink); margin-bottom:8px;" id="host-join-url-text"></div>
+                <button class="btn btn-sm btn-outline" onclick="copyJoinUrl()">KOPIUJ LINK</button>
+              </div>
+            </div>
+          </div>
+
           <div class="panel">
             <div class="panel-header">
               <span class="panel-title">PARLAMENT // GRACZE</span>

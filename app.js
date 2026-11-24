@@ -1,4 +1,4 @@
-/* SECRET HITLER // STACJE QR — LOGIKA APLIKACJI (V6) */
+/* SECRET HITLER // STACJE QR — LOGIKA APLIKACJI (V7) */
 
 const BOARD_POWERS = {
   "5-6": [
@@ -311,7 +311,7 @@ let state = {
     boardSize: "7-8",
     choresDuration: 120,
     discussionDuration: 300,
-    baseUrl: "",
+    baseUrl: "https://pbity.github.io/great-war/",
     transfersEnabled: true,
     limitOnePurchasePerRound: true,
     fascistFreeChoiceEnabled: true,
@@ -524,6 +524,7 @@ function hostOnlineRoom() {
     updateConnectionBadge("ONLINE HOST: " + code);
     document.getElementById("connection-info").innerHTML =
       `Pokój uruchomiony. Kod pokoju dla graczy: <strong>${code}</strong>.`;
+    renderHostJoinQr();
     switchView("host");
   });
 
@@ -601,6 +602,7 @@ function hostLanRoom() {
   connMode = "LAN_HOST";
   state.roomCode = "LAN-WIFI";
   updateConnectionBadge("LAN HOST (SERWER PYTHON)");
+  renderHostJoinQr();
   broadcastState();
   if (lanPollInterval) clearInterval(lanPollInterval);
   lanPollInterval = setInterval(pollLanActionsForHost, 1200);
@@ -660,6 +662,72 @@ function pollLanState() {
 
 function updateConnectionBadge(text) {
   document.getElementById("connection-badge").textContent = text;
+}
+
+function getJoinRoomUrl() {
+  const base = getBaseQrUrl() || "https://pbity.github.io/great-war/";
+  const cleanBase = base.endsWith("/") ? base : (base + "/");
+  if (connMode === "LAN_HOST") {
+    return window.location.origin + window.location.pathname + "?lan=1";
+  }
+  return `${cleanBase}?room=${encodeURIComponent(state.roomCode)}`;
+}
+
+function renderHostJoinQr() {
+  const panel = document.getElementById("host-join-qr-panel");
+  const canvasWrap = document.getElementById("host-join-qr-canvas");
+  const codeBadge = document.getElementById("host-room-code-badge");
+  const urlText = document.getElementById("host-join-url-text");
+  if (!panel || !canvasWrap) return;
+
+  if (connMode === "PEER_HOST" || connMode === "LAN_HOST") {
+    const joinUrl = getJoinRoomUrl();
+    panel.style.display = "block";
+    codeBadge.textContent = connMode === "LAN_HOST" ? "LAN WI-FI" : ("KOD: " + state.roomCode);
+    urlText.textContent = joinUrl;
+    canvasWrap.innerHTML = "";
+    if (typeof QRCode !== "undefined") {
+      new QRCode(canvasWrap, {
+        text: joinUrl,
+        width: 150,
+        height: 150,
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    } else {
+      canvasWrap.textContent = joinUrl;
+    }
+  } else {
+    panel.style.display = "none";
+  }
+}
+
+function copyJoinUrl() {
+  const url = getJoinRoomUrl();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => alert("Skopiowano link do pokoju: " + url));
+  } else {
+    prompt("Skopiuj link do pokoju:", url);
+  }
+}
+
+function confirmQuickJoin() {
+  const name = document.getElementById("quick-join-name").value.trim();
+  if (!name) {
+    alert("Wpisz swoje imię.");
+    return;
+  }
+  const badgeText = document.getElementById("quick-join-room-badge").textContent;
+  if (badgeText === "LAN WI-FI") {
+    document.getElementById("lan-player-name").value = name;
+    document.getElementById("quick-join-panel").style.display = "none";
+    joinLanRoom();
+  } else {
+    const roomCode = badgeText.replace("KOD: ", "").trim();
+    document.getElementById("peer-room-input").value = roomCode;
+    document.getElementById("peer-player-name").value = name;
+    document.getElementById("quick-join-panel").style.display = "none";
+    joinOnlineRoom();
+  }
 }
 
 /* ==================== LOGIKA GRY (HOST) ==================== */
@@ -2299,6 +2367,26 @@ window.addEventListener("DOMContentLoaded", () => {
   renderAll();
 
   const params = new URLSearchParams(window.location.search);
+  const roomParam = params.get("room");
+  const lanParam = params.get("lan");
+  if (roomParam) {
+    const cleanRoom = roomParam.trim().toUpperCase();
+    document.getElementById("peer-room-input").value = cleanRoom;
+    document.getElementById("quick-join-room-badge").textContent = "KOD: " + cleanRoom;
+    document.getElementById("quick-join-panel").style.display = "block";
+    const savedName = localStorage.getItem("sh_last_name");
+    if (savedName) document.getElementById("quick-join-name").value = savedName;
+    setTimeout(() => document.getElementById("quick-join-name").focus(), 100);
+    window.history.replaceState({}, document.title, window.location.pathname);
+  } else if (lanParam) {
+    document.getElementById("quick-join-room-badge").textContent = "LAN WI-FI";
+    document.getElementById("quick-join-panel").style.display = "block";
+    const savedName = localStorage.getItem("sh_last_name");
+    if (savedName) document.getElementById("quick-join-name").value = savedName;
+    setTimeout(() => document.getElementById("quick-join-name").focus(), 100);
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+
   const scanParam = params.get("scan");
   if (scanParam) {
     pendingScanToken = scanParam;
