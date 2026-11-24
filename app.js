@@ -1,4 +1,4 @@
-/* SECRET HITLER // STACJE QR — LOGIKA APLIKACJI (V5) */
+/* SECRET HITLER // STACJE QR — LOGIKA APLIKACJI (V6) */
 
 const BOARD_POWERS = {
   "5-6": [
@@ -316,6 +316,11 @@ let state = {
     limitOnePurchasePerRound: true,
     fascistFreeChoiceEnabled: true,
     hiddenWeaponEnabled: true,
+    announceWeaponDestroy: false,
+    ghostSupportEnabled: true,
+    deadBetsEnabled: true,
+    elimDelayMin: 30,
+    elimDelayMax: 60,
     startingPointEnabled: false,
     liberalCatchupEnabled: false,
     hideDescForLiberals: false,
@@ -331,7 +336,9 @@ let state = {
   players: [],
   stations: loadSavedStations(),
   weaponStationId: null,
+  weaponClaimed: false,
   weaponUsed: false,
+  deadBets: {},
   
   shopConfig: createInitialShopConfig(),
   scanHistory: [],
@@ -357,10 +364,25 @@ let clientConn = null;
 let qrScanner = null;
 let lanAvailable = false;
 let pendingScanToken = null;
+let sharedAudioCtx = null;
+let lastKnownAliveMap = {};
+let bufferWatcherInterval = null;
+
+function getAudioContext() {
+  if (!sharedAudioCtx) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (AC) sharedAudioCtx = new AC();
+  }
+  if (sharedAudioCtx && sharedAudioCtx.state === "suspended") {
+    sharedAudioCtx.resume().catch(() => {});
+  }
+  return sharedAudioCtx;
+}
 
 function playChime() {
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = getAudioContext();
+    if (!ctx) return;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = "triangle";
@@ -372,6 +394,32 @@ function playChime() {
     gain.connect(ctx.destination);
     osc.start();
     osc.stop(ctx.currentTime + 0.6);
+  } catch (e) {}
+}
+
+function playDeathSound() {
+  try {
+    if (navigator.vibrate) {
+      navigator.vibrate([450, 150, 450, 150, 800]);
+    }
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    // Dramatyczny niski sygnal eliminacji (3 uderzenia)
+    [220, 185, 130].forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sawtooth";
+      const start = now + idx * 0.28;
+      osc.frequency.setValueAtTime(freq, start);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.82, start + 0.25);
+      gain.gain.setValueAtTime(0.26, start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.26);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(start);
+      osc.stop(start + 0.27);
+    });
   } catch (e) {}
 }
 
@@ -628,6 +676,8 @@ function createPlayerObj(id, name) {
     purchasedRound: 0,
     sentTransferRound: 0,
     receivedTransferRound: 0,
+    ghostScans: 0,
+    ghostPoints: 0,
     usedCompare: false,
     foundWeapon: false,
     extraVoteActive: false,
@@ -709,7 +759,10 @@ function startGameAndAssignRoles() {
 
   const stCount = state.stations.length;
   state.weaponStationId = state.settings.hiddenWeaponEnabled ? (Math.floor(Math.random() * stCount) + 1) : null;
+  state.weaponClaimed = false;
   state.weaponUsed = false;
+  state.deadBets = {};
+  lastKnownAliveMap = {};
 
 
 
@@ -728,6 +781,8 @@ function startGameAndAssignRoles() {
     p.purchasedRound = 0;
     p.sentTransferRound = 0;
     p.receivedTransferRound = 0;
+    p.ghostScans = 0;
+    p.ghostPoints = 0;
     p.usedCompare = false;
     p.foundWeapon = false;
     p.extraVoteActive = false;
@@ -743,7 +798,7 @@ function startGameAndAssignRoles() {
 function assignStationsForRound() {
   const stCount = state.stations.length;
   state.players.forEach(p => {
-    if (p.alive) {
+    if (p.alive || state.settings.ghostSupportEnabled) {
       p.assignedStation = Math.floor(Math.random() * stCount) + 1;
     }
   });
@@ -908,31 +963,58 @@ function manualRevive(playerId) {
   broadcastState();
 }
 
+function queueBufferedElimination(sourceId, targetId, reason) {
+  const minD = Math.max(5, Number(state.settings.elimDelayMin) || 30);
+  const maxD = Math.max(minD, Number(state.settings.elimDelayMax) || 60);
+  const delaySec = Math.floor(Math.random() * (maxD - minD + 1)) + minD;
+  state.bufferedEliminations.push({
+    sourceId,
+    targetId,
+    reason,
+    resolveAt: Date.now() + delaySec * 1000
+  });
+}
+
+function executeEliminationItem(el) {
+  const target = state.players.find(p => p.id === el.targetId);
+  if (!target || !target.alive) return false;
+  if (state.shields[target.id] === state.round) {
+    addPublicLog("TAJNY ZAMACH ZABLOKOWANY: Tarcza Ochronna uratowała jednego z graczy.");
+    addPrivateLog(target, "Twoja Tarcza Ochronna zablokowała zamach w tej rundzie.");
+    return true;
+  } else {
+    target.alive = false;
+    playDeathSound();
+    addPublicLog(`TAJNA ELIMINACJA: Gracz ${target.name} został wyeliminowany.`);
+    addPrivateLog(target, "ZOSTAŁEŚ WYELIMINOWANY! Nie możesz się odzywać ani brać udziału w obradach.");
+    if (target.role === "HITLER") {
+      state.winner = `ZWYCIĘSTWO LIBERAŁÓW — ${target.name} BYŁ HITLEREM!`;
+      addPublicLog(state.winner);
+    }
+    return true;
+  }
+}
+
+function checkBufferedEliminationsTick() {
+  if (connMode !== "DEMO" && connMode !== "PEER_HOST" && connMode !== "LAN_HOST") return;
+  if (state.bufferedEliminations.length === 0) return;
+  const now = Date.now();
+  const ready = state.bufferedEliminations.filter(el => !el.resolveAt || now >= el.resolveAt);
+  if (ready.length === 0) return;
+  state.bufferedEliminations = state.bufferedEliminations.filter(el => el.resolveAt && now < el.resolveAt);
+  ready.forEach(el => executeEliminationItem(el));
+  broadcastState();
+}
+
 function resolveEliminations() {
   if (state.bufferedEliminations.length === 0) {
-    addPublicLog("Rozliczenie bufora: brak tajnych eliminacji w tej rundzie.");
+    addPublicLog("Rozliczenie bufora: brak oczekujących eliminacji.");
     broadcastState();
     return;
   }
-
   const queue = [...state.bufferedEliminations];
   state.bufferedEliminations = [];
-
-  queue.forEach(el => {
-    const target = state.players.find(p => p.id === el.targetId);
-    if (!target || !target.alive) return;
-    if (state.shields[target.id] === state.round) {
-      addPublicLog("TAJNY ZAMACH ZABLOKOWANY: Tarcza Ochronna uratowała jednego z graczy.");
-      addPrivateLog(target, "Twoja Tarcza Ochronna zablokowała zamach w tej rundzie.");
-    } else {
-      target.alive = false;
-      addPublicLog(`TAJNA ELIMINACJA: Gracz ${target.name} został wyeliminowany.`);
-      if (target.role === "HITLER") {
-        state.winner = `ZWYCIĘSTWO LIBERAŁÓW — ${target.name} BYŁ HITLEREM!`;
-        addPublicLog(state.winner);
-      }
-    }
-  });
+  queue.forEach(el => executeEliminationItem(el));
   broadcastState();
 }
 
@@ -953,7 +1035,64 @@ function handleHostAction(action) {
   }
 
   const player = state.players.find(p => p.id === action.playerId);
-  if (!player || !player.alive) return;
+  if (!player) return;
+
+  // Akcje dostępne dla WYELIMINOWANYCH graczy (Opcja 1 i Opcja 4)
+  if (!player.alive) {
+    if (action.type === "SUBMIT_BET" && state.settings.deadBetsEnabled) {
+      state.deadBets[player.id] = {
+        hitlerId: action.hitlerId || null,
+        fascistIds: Array.isArray(action.fascistIds) ? action.fascistIds : []
+      };
+      addPrivateLog(player, "Zapisano Twój zakład na role graczy.");
+      broadcastState();
+      return;
+    }
+    if (action.type === "GHOST_SEND_POINT" && state.settings.ghostSupportEnabled) {
+      if (player.ghostPoints < 1) return;
+      const target = state.players.find(p => p.id === action.targetId && p.alive);
+      if (!target) return;
+      player.ghostPoints -= 1;
+      target.points += 1;
+      addPrivateLog(player, `WSPARCIE ZZA GROBU: Przekazano 1 PKT Wpływu graczowi ${target.name}.`);
+      addPrivateLog(target, "WSPARCIE ZZA GROBU: Otrzymałeś 1 PKT Wpływu od wyeliminowanego gracza.");
+      broadcastState();
+      return;
+    }
+    if (action.type === "SCAN_QR" && state.settings.ghostSupportEnabled) {
+      if (state.phase !== "CHORES") {
+        addPrivateLog(player, "Skanowanie zza grobu możliwe jest tylko w fazie Prac Domowych.");
+        broadcastState();
+        return;
+      }
+      const station = state.stations.find(s => s.token === action.token);
+      if (!station) {
+        addPrivateLog(player, "Nieprawidłowy kod QR.");
+        broadcastState();
+        return;
+      }
+      // Skany martwych NIE trafiają do scanHistory ani podsłuchów
+      if (station.id === player.assignedStation) {
+        if (player.completedRound === state.round) {
+          addPrivateLog(player, `Stacja zza grobu w rundzie ${state.round} została już zaliczona.`);
+        } else {
+          player.completedRound = state.round;
+          player.ghostScans += 1;
+          if (player.ghostScans >= 2) {
+            player.ghostScans -= 2;
+            player.ghostPoints += 1;
+            addPrivateLog(player, `WSPARCIE ZZA GROBU: Zaliczone 2 stacje! Zyskujesz +1 PKT do przekazania żywemu graczowi.`);
+          } else {
+            addPrivateLog(player, `WSPARCIE ZZA GROBU: Zaliczono stację #${station.id} (postęp: ${player.ghostScans}/2 do punktu wsparcia).`);
+          }
+        }
+      } else {
+        addPrivateLog(player, `Zeskanowano stację #${station.id}, ale Twoim celem zza grobu była stacja #${player.assignedStation}.`);
+      }
+      broadcastState();
+    }
+    return;
+  }
 
   if (action.type === "VOTE") {
     if (!state.votingOpen) return;
@@ -1000,9 +1139,10 @@ function handleHostAction(action) {
       }
     });
 
-    if (state.settings.hiddenWeaponEnabled && station.id === state.weaponStationId && !state.weaponUsed) {
+    if (state.settings.hiddenWeaponEnabled && station.id === state.weaponStationId && !state.weaponClaimed && !state.weaponUsed) {
+      state.weaponClaimed = true;
       player.foundWeapon = true;
-      addPrivateLog(player, `ZNALAZŁEŚ UKRYTĄ BROŃ na stacji #${station.id}. Możesz jej użyć w zakładce ZADANIE QR.`);
+      addPrivateLog(player, `ZNALAZŁEŚ UKRYTĄ BROŃ na stacji #${station.id}. Zniknęła ze stacji — możesz jej użyć lub zniszczyć ją w zakładce ZADANIE QR.`);
     }
 
     // Mechanika Faszystów: swobodny wybór stacji + premia +1 PKT za powtórzenie tego samego kodu
@@ -1043,15 +1183,33 @@ function handleHostAction(action) {
 
   if (action.type === "USE_WEAPON") {
     if (!player.foundWeapon || state.weaponUsed) return;
+    if (state.phase !== "CHORES") {
+      addPrivateLog(player, "Nie można używać broni podczas obrad (Dyskusji) — możliwe jest tylko przelewanie żetonów.");
+      broadcastState();
+      return;
+    }
     state.weaponUsed = true;
     player.foundWeapon = false;
-    state.bufferedEliminations.push({
-      sourceId: player.id,
-      targetId: action.targetId,
-      reason: "UKRYTA BROŃ QR"
-    });
+    queueBufferedElimination(player.id, action.targetId, "UKRYTA BROŃ QR");
     const t = state.players.find(p => p.id === action.targetId);
-    addPrivateLog(player, `Zlecono tajną eliminację gracza ${t ? t.name : "?"}.`);
+    addPrivateLog(player, `Zlecono tajną eliminację gracza ${t ? t.name : "?"}. Bufor odlicza się automatycznie.`);
+    broadcastState();
+    return;
+  }
+
+  if (action.type === "DESTROY_WEAPON") {
+    if (!player.foundWeapon || state.weaponUsed) return;
+    if (state.phase !== "CHORES") {
+      addPrivateLog(player, "Zniszczenie broni możliwe jest tylko w fazie Prac Domowych.");
+      broadcastState();
+      return;
+    }
+    state.weaponUsed = true;
+    player.foundWeapon = false;
+    addPrivateLog(player, "ZNISZCZONO BROŃ: Ukryta broń została trwale usunięta z gry.");
+    if (state.settings.announceWeaponDestroy) {
+      addPublicLog("KOMUNIKAT: Ktoś odnalazł i trwale ZNISZCZYŁ ukrytą broń QR.");
+    }
     broadcastState();
     return;
   }
@@ -1115,6 +1273,10 @@ function processPointTransfer(sender, targetId) {
 }
 
 function processShopPurchase(player, itemId, target1, target2) {
+  if (state.phase !== "CHORES") {
+    addPrivateLog(player, "Sklep jest zamknięty podczas obrad (Dyskusji). W trakcie obrad możliwe jest tylko przelewanie żetonów.");
+    return;
+  }
   const item = SHOP_CATALOG.find(i => i.id === itemId);
   const cfg = state.shopConfig[itemId];
   if (!item || !cfg || !cfg.enabled) return;
@@ -1255,8 +1417,8 @@ function processShopPurchase(player, itemId, target1, target2) {
   else if (itemId === "fascist_kill") {
     const t = state.players.find(p => p.id === target1);
     if (!t) return;
-    state.bufferedEliminations.push({ sourceId: player.id, targetId: t.id, reason: "TAJNY ZAMACH" });
-    addPrivateLog(player, `Zlecono TAJNY ZAMACH na gracza ${t.name}. Wynik pojawi się po rozliczeniu bufora.`);
+    queueBufferedElimination(player.id, t.id, "TAJNY ZAMACH");
+    addPrivateLog(player, `Zlecono TAJNY ZAMACH na gracza ${t.name}. Bufor odlicza się automatycznie.`);
   }
   else if (itemId === "fascist_wipe_traces") {
     let removed = false;
@@ -1308,7 +1470,12 @@ function updateSettingsFromUI() {
   state.settings.transfersEnabled = document.getElementById("cfg-transfers-enabled").checked;
   state.settings.limitOnePurchasePerRound = document.getElementById("cfg-limit-one-purchase").checked;
   state.settings.fascistFreeChoiceEnabled = document.getElementById("cfg-fascist-free-choice").checked;
+  state.settings.elimDelayMin = Math.max(5, Number(document.getElementById("cfg-elim-min").value) || 30);
+  state.settings.elimDelayMax = Math.max(state.settings.elimDelayMin, Number(document.getElementById("cfg-elim-max").value) || 60);
   state.settings.hiddenWeaponEnabled = document.getElementById("cfg-hidden-weapon").checked;
+  state.settings.announceWeaponDestroy = document.getElementById("cfg-announce-destroy").checked;
+  state.settings.ghostSupportEnabled = document.getElementById("cfg-ghost-support").checked;
+  state.settings.deadBetsEnabled = document.getElementById("cfg-dead-bets").checked;
   state.settings.startingPointEnabled = document.getElementById("cfg-starting-point").checked;
   state.settings.liberalCatchupEnabled = document.getElementById("cfg-liberal-catchup").checked;
   state.settings.hideDescForLiberals = document.getElementById("cfg-hide-desc-liberals").checked;
@@ -1458,14 +1625,17 @@ function renderHostView() {
   document.getElementById("lib-count").textContent = state.liberalPolicies;
   document.getElementById("fas-count").textContent = state.fascistPolicies;
   document.getElementById("election-tracker").textContent = `${state.electionTracker} / 3`;
-  document.getElementById("buffered-elim-badge").textContent = `BUFOR: ${state.bufferedEliminations.length}`;
+  document.getElementById("buffered-elim-badge").textContent = state.bufferedEliminations.length > 0 ? `BUFOR: ${state.bufferedEliminations.length} (AUTO-ODLICZANIE)` : "BUFOR: 0";
 
   const vic = document.getElementById("victory-banner");
+  const betsPanel = document.getElementById("host-bets-panel");
   if (state.winner) {
     vic.style.display = "block";
     vic.textContent = state.winner;
+    renderHostBetsSummary(betsPanel);
   } else {
     vic.style.display = "none";
+    if (betsPanel) betsPanel.style.display = "none";
   }
 
   const libTrack = document.getElementById("liberal-track");
@@ -1566,7 +1736,12 @@ function renderConfigView() {
   document.getElementById("cfg-transfers-enabled").checked = state.settings.transfersEnabled;
   document.getElementById("cfg-limit-one-purchase").checked = state.settings.limitOnePurchasePerRound;
   document.getElementById("cfg-fascist-free-choice").checked = state.settings.fascistFreeChoiceEnabled;
+  document.getElementById("cfg-elim-min").value = state.settings.elimDelayMin;
+  document.getElementById("cfg-elim-max").value = state.settings.elimDelayMax;
   document.getElementById("cfg-hidden-weapon").checked = state.settings.hiddenWeaponEnabled;
+  document.getElementById("cfg-announce-destroy").checked = state.settings.announceWeaponDestroy;
+  document.getElementById("cfg-ghost-support").checked = state.settings.ghostSupportEnabled;
+  document.getElementById("cfg-dead-bets").checked = state.settings.deadBetsEnabled;
   document.getElementById("cfg-starting-point").checked = state.settings.startingPointEnabled;
   document.getElementById("cfg-liberal-catchup").checked = state.settings.liberalCatchupEnabled;
   document.getElementById("cfg-hide-desc-liberals").checked = state.settings.hideDescForLiberals;
@@ -1641,6 +1816,36 @@ function renderQrPrintGrid() {
   });
 }
 
+function renderHostBetsSummary(betsPanel) {
+  if (!betsPanel || !state.settings.deadBetsEnabled) {
+    if (betsPanel) betsPanel.style.display = "none";
+    return;
+  }
+  const betEntries = Object.entries(state.deadBets || {});
+  if (betEntries.length === 0) {
+    betsPanel.style.display = "none";
+    return;
+  }
+  betsPanel.style.display = "block";
+  const actualHitler = state.players.find(p => p.role === "HITLER");
+  const actualFascists = state.players.filter(p => p.role === "FASCIST").map(p => p.id);
+  const resDiv = document.getElementById("host-bets-results");
+  resDiv.innerHTML = betEntries.map(([pid, bet]) => {
+    const bettor = state.players.find(p => p.id === pid);
+    const hitlerOk = actualHitler && bet.hitlerId === actualHitler.id;
+    const hitlerPick = state.players.find(p => p.id === bet.hitlerId);
+    const matchedFas = (bet.fascistIds || []).filter(fid => actualFascists.includes(fid)).length;
+    const wrongFas = (bet.fascistIds || []).filter(fid => !actualFascists.includes(fid)).length;
+    return `
+      <div class="log-entry">
+        <strong>${bettor ? bettor.name : "?"}</strong> —
+        Typ na Hitlera: <strong>${hitlerPick ? hitlerPick.name : "brak"}</strong> (${hitlerOk ? "TRAFIONY" : "PUDŁO"}) |
+        Trafieni Faszyści: <strong>${matchedFas}/${actualFascists.length}</strong> (błędne typy: ${wrongFas})
+      </div>
+    `;
+  }).join("");
+}
+
 function renderPhoneView() {
   if (connMode === "DEMO") {
     const sel = document.getElementById("demo-player-select");
@@ -1668,8 +1873,72 @@ function renderPhoneView() {
     ? (state.phase === "CHORES" ? "PRACE DOMOWE" : "DYSKUSJA")
     : "OCZEKIWANIE";
   document.getElementById("phone-round-text").textContent = state.round;
+  // Detekcja śmierci gracza -> sygnał dźwiękowy na jego telefonie
+  if (lastKnownAliveMap[player.id] === true && player.alive === false) {
+    playDeathSound();
+  }
+  lastKnownAliveMap[player.id] = player.alive;
+
   aliveBadge.textContent = player.alive ? "ŻYWY" : "WYELIMINOWANY";
   aliveBadge.className = "badge " + (player.alive ? "badge-liberal" : "badge-fascist");
+
+  // Ekran śmierci (Opcja 1 + Opcja 4, bez Opcji 2)
+  const deadScreen = document.getElementById("dead-player-screen");
+  if (!player.alive) {
+    deadScreen.style.display = "block";
+    const guideEl = document.getElementById("dead-guide-text");
+    const ghostBox = document.getElementById("ghost-transfer-box");
+    if (state.settings.ghostSupportEnabled) {
+      guideEl.innerHTML = `<strong>CO TERAZ ROBIĆ (WSPARCIE ZZA GROBU):</strong><br>1. Podczas obrad (Dyskusji) odejdź od stołu i zachowaj ciszę.<br>2. W fazie <strong>Prac Domowych</strong> możesz nadal skanować przydzielone Ci kody QR w zakładce <strong>ZADANIE QR</strong>.<br>3. Za każde <strong>2 zaliczone stacje</strong> zdobywasz 1 PKT wsparcia dla wybranego żywego gracza (postęp: <strong>${player.ghostScans || 0}/2</strong>).`;
+      if ((player.ghostPoints || 0) > 0) {
+        ghostBox.style.display = "block";
+        document.getElementById("ghost-points-count").textContent = player.ghostPoints;
+        const gSel = document.getElementById("ghost-target-select");
+        const prevG = gSel.value;
+        gSel.innerHTML = state.players.filter(p => p.alive).map(p => `<option value="${p.id}">${p.name}</option>`).join("");
+        if (prevG) gSel.value = prevG;
+      } else {
+        ghostBox.style.display = "none";
+      }
+    } else {
+      guideEl.innerHTML = "<strong>CO TERAZ ROBIĆ:</strong><br>Obserwuj rozgrywkę w ciszy. Jeśli włączono Zakłady poniżej, możesz wytypować role pozostałych graczy.";
+      ghostBox.style.display = "none";
+    }
+
+    const betsPanel = document.getElementById("dead-bets-panel");
+    if (state.settings.deadBetsEnabled) {
+      betsPanel.style.display = "block";
+      const hSel = document.getElementById("bet-hitler-select");
+      const savedBet = (state.deadBets && state.deadBets[player.id]) ? state.deadBets[player.id] : null;
+      const prevH = hSel.value || (savedBet ? savedBet.hitlerId : "");
+      hSel.innerHTML = `<option value="">-- wybierz --</option>` +
+        state.players.filter(p => p.id !== player.id).map(p => `<option value="${p.id}">${p.name}</option>`).join("");
+      if (prevH) hSel.value = prevH;
+
+      const fGrid = document.getElementById("bet-fascists-grid");
+      const checkedIds = new Set(
+        Array.from(fGrid.querySelectorAll("input:checked")).map(i => i.value)
+      );
+      if (checkedIds.size === 0 && savedBet && Array.isArray(savedBet.fascistIds)) {
+        savedBet.fascistIds.forEach(id => checkedIds.add(id));
+      }
+      if (fGrid.children.length !== state.players.length - 1) {
+        fGrid.innerHTML = state.players.filter(p => p.id !== player.id).map(p => `
+          <label class="bet-check">
+            <input type="checkbox" value="${p.id}" ${checkedIds.has(p.id) ? "checked" : ""} />
+            <span>${p.name}</span>
+          </label>
+        `).join("");
+      }
+      document.getElementById("bet-saved-status").textContent = savedBet
+        ? "Twój zakład jest zapisany (możesz go zmienić do końca gry)."
+        : "";
+    } else {
+      betsPanel.style.display = "none";
+    }
+  } else {
+    deadScreen.style.display = "none";
+  }
 
   const roleBox = document.getElementById("secret-role-container");
   if (roleVisible) {
@@ -1721,7 +1990,15 @@ function renderPhoneView() {
   const taskBox = document.getElementById("phone-task-box");
   const assignedLabel = formatStationForPlayer(player.assignedStation, player);
   if (!player.alive) {
-    taskBox.textContent = "Jesteś wyeliminowany — zadania QR są nieaktywne.";
+    if (state.settings.ghostSupportEnabled) {
+      if (player.completedRound === state.round) {
+        taskBox.innerHTML = `<strong>ZADANIE ZZA GROBU ZALICZONE</strong><br>Postęp do punktu wsparcia: <strong>${player.ghostScans || 0}/2</strong> (dostępne punkty: <strong>${player.ghostPoints || 0}</strong>).`;
+      } else {
+        taskBox.innerHTML = `<strong>CEL ZZA GROBU (RUNDA ${state.round}):</strong><br>STACJA ${assignedLabel}<br><span style="font-size:0.75rem;">Zeskanuj podczas Prac Domowych (postęp: ${player.ghostScans || 0}/2 do +1 PKT wsparcia).</span>`;
+      }
+    } else {
+      taskBox.textContent = "Jesteś wyeliminowany — zadania QR są nieaktywne.";
+    }
   } else if (player.completedRound === state.round) {
     taskBox.innerHTML = `<strong>ZADANIE ZALICZONE</strong><br>Stacja ${assignedLabel} została zaliczona w tej rundzie.`;
   } else if (player.role === "FASCIST" && state.settings.fascistFreeChoiceEnabled) {
@@ -1748,8 +2025,13 @@ function renderPhoneView() {
   if (player.foundWeapon && !state.weaponUsed && player.alive) {
     wPanel.style.display = "block";
     const wSel = document.getElementById("weapon-target-select");
+    const prevW = wSel.value;
     wSel.innerHTML = state.players.filter(p => p.alive && p.id !== player.id)
       .map(p => `<option value="${p.id}">${p.name}</option>`).join("");
+    if (prevW) wSel.value = prevW;
+    const inDebate = (state.phase !== "CHORES");
+    document.getElementById("btn-use-weapon").disabled = inDebate;
+    document.getElementById("btn-destroy-weapon").disabled = inDebate;
   } else {
     wPanel.style.display = "none";
   }
@@ -1802,10 +2084,16 @@ function renderPhoneShop(player) {
   } else {
     transferPanel.style.display = "none";
   }
-  const locked = state.settings.limitOnePurchasePerRound && player.purchasedRound === state.round;
-  notice.textContent = locked
-    ? "Wykorzystano limit 1 zakupu w tej rundzie."
-    : "Wspólna pula na całą grę — liczy się kolejność zakupu.";
+  const inDebate = (state.phase !== "CHORES");
+  const limitLocked = state.settings.limitOnePurchasePerRound && player.purchasedRound === state.round;
+  const locked = inDebate || limitLocked;
+  if (inDebate) {
+    notice.textContent = "TRWAJĄ OBRADY (DYSKUSJA): Zakupy w Sklepie są zablokowane — dozwolone jest wyłącznie przelewanie żetonów powyżej.";
+  } else if (limitLocked) {
+    notice.textContent = "Wykorzystano limit 1 zakupu w tej rundzie.";
+  } else {
+    notice.textContent = "Wspólna pula na całą grę — liczy się kolejność zakupu.";
+  }
 
   const aliveOthers = state.players.filter(p => p.alive && p.id !== player.id);
   const aliveAll = state.players.filter(p => p.alive);
@@ -1896,6 +2184,25 @@ function useHiddenWeapon() {
   sendActionToHost({ type: "USE_WEAPON", playerId: myPlayerId, targetId: sel.value });
 }
 
+function destroyHiddenWeapon() {
+  if (!myPlayerId) return;
+  if (!confirm("Czy na pewno trwale ZNISZCZYĆ ukrytą broń? Nikt nie będzie mógł z niej skorzystać.")) return;
+  sendActionToHost({ type: "DESTROY_WEAPON", playerId: myPlayerId });
+}
+
+function sendGhostPoint() {
+  const sel = document.getElementById("ghost-target-select");
+  if (!sel || !sel.value || !myPlayerId) return;
+  sendActionToHost({ type: "GHOST_SEND_POINT", playerId: myPlayerId, targetId: sel.value });
+}
+
+function submitDeadBet() {
+  if (!myPlayerId) return;
+  const hitlerId = document.getElementById("bet-hitler-select").value;
+  const fascistIds = Array.from(document.querySelectorAll("#bet-fascists-grid input:checked")).map(i => i.value);
+  sendActionToHost({ type: "SUBMIT_BET", playerId: myPlayerId, hitlerId, fascistIds });
+}
+
 /* ==================== SKANER QR ==================== */
 function extractTokenFromScan(rawText) {
   if (!rawText) return null;
@@ -1980,6 +2287,13 @@ function loadPersonalNotes() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  // Odblokowanie dzwieku przy pierwszym kliknieciu/dotknieciu (wymog przegladarek mobilnych)
+  ["click", "touchstart"].forEach(evt => {
+    window.addEventListener(evt, () => getAudioContext(), { once: true });
+  });
+  if (!bufferWatcherInterval) {
+    bufferWatcherInterval = setInterval(checkBufferedEliminationsTick, 1000);
+  }
   checkLanServer();
   renderConfigView();
   renderAll();

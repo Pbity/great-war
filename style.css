@@ -848,3 +848,66 @@ label {
     padding: 8px;
   }
 }
+
+/* EKRAN SMERCI I ZAKLADY */
+.dead-banner {
+  background: #2b0f0c;
+  color: #f6ebd6;
+  border: 3px solid var(--fascist);
+  outline: 1px solid #f0c15a;
+  outline-offset: -6px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 5px 5px 0 rgba(23, 20, 18, 0.35);
+}
+
+.dead-banner-title {
+  font-family: "Oswald", sans-serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #ff6b57;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.dead-banner-rule {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--fascist-dark);
+  padding: 8px 10px;
+  border: 1px solid #ff8c7a;
+  margin: 10px 0;
+}
+
+.dead-guide {
+  font-size: 0.79rem;
+  color: #e5d8bf;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+.bet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 6px;
+  margin: 8px 0 12px;
+}
+
+.bet-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border: 1.5px solid var(--border);
+  background: #fffcf5;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.bet-check input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--fascist);
+}

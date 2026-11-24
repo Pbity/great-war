@@ -118,6 +118,13 @@
       </div>
 
       <div id="victory-banner" class="alert-box" style="display:none; font-size:1.1rem; font-weight:700; text-align:center;"></div>
+      <div id="host-bets-panel" class="panel" style="display:none;">
+        <div class="panel-header">
+          <span class="panel-title">WYNIKI ZAKŁADÓW WYELIMINOWANYCH GRACZY</span>
+          <span class="badge badge-gold">PODSUMOWANIE KOŃCOWE</span>
+        </div>
+        <div id="host-bets-results"></div>
+      </div>
 
       <div class="grid-2">
         <div>
@@ -163,7 +170,7 @@
             <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
               <button class="btn btn-liberal" onclick="openVoting()">OTWÓRZ GŁOSOWANIE</button>
               <button class="btn" onclick="tallyVotes()">PODSUMUJ GŁOSY</button>
-              <button class="btn btn-fascist" onclick="resolveEliminations()">ROZLICZ BUFOR ELIMINACJI</button>
+              <button class="btn btn-fascist" onclick="resolveEliminations()">ROZLICZ BUFOR TERAZ (AWARYJNIE)</button>
             </div>
             <div id="vote-result-box" class="info-box" style="display:none;"></div>
 
@@ -225,6 +232,16 @@
                 <input type="number" id="cfg-discussion-sec" value="300" min="30" max="1800" onchange="updateSettingsFromUI()" />
               </div>
             </div>
+            <div class="grid-2">
+              <div class="form-row">
+                <label for="cfg-elim-min">Auto-bufor eliminacji: min (sek)</label>
+                <input type="number" id="cfg-elim-min" value="30" min="5" max="300" onchange="updateSettingsFromUI()" />
+              </div>
+              <div class="form-row">
+                <label for="cfg-elim-max">Auto-bufor eliminacji: max (sek)</label>
+                <input type="number" id="cfg-elim-max" value="60" min="5" max="300" onchange="updateSettingsFromUI()" />
+              </div>
+            </div>
             <div class="form-row">
               <label for="cfg-base-url">Bazowy adres URL dla kodów QR (aparat natywny)</label>
               <input type="text" id="cfg-base-url" onchange="updateSettingsFromUI()" />
@@ -245,7 +262,19 @@
             </label>
             <label class="checkbox-row">
               <input type="checkbox" id="cfg-hidden-weapon" checked onchange="updateSettingsFromUI()" />
-              <span>Ukryta broń QR: 1 losowa stacja QR zawiera jednorazową tajną eliminację</span>
+              <span>Ukryta broń QR: 1 losowa stacja QR zawiera jednorazową tajną eliminację (można użyć lub zniszczyć)</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="cfg-announce-destroy" onchange="updateSettingsFromUI()" />
+              <span>Ogłoś zniszczenie ukrytej broni w Dzienniku Publicznym na laptopie</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="cfg-ghost-support" checked onchange="updateSettingsFromUI()" />
+              <span>Wsparcie zza grobu (Opcja 1): wyeliminowani skanują przydzielone QR w Pracach Domowych (2 skany = 1 PKT dla żywego gracza)</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="cfg-dead-bets" checked onchange="updateSettingsFromUI()" />
+              <span>Zakłady wyeliminowanych (Opcja 4): typowanie Hitlera i Faszystów z wynikami na końcu gry</span>
             </label>
             <label class="checkbox-row">
               <input type="checkbox" id="cfg-starting-point" onchange="updateSettingsFromUI()" />
@@ -342,6 +371,39 @@
           </div>
         </div>
 
+        <!-- EKRAN DLA WYELIMINOWANEGO GRACZA -->
+        <div id="dead-player-screen" style="display:none;">
+          <div class="dead-banner">
+            <div class="dead-banner-title">NIE ŻYJESZ — ZOSTAŁEŚ WYELIMINOWANY</div>
+            <div class="dead-banner-rule">
+              NIE MOŻESZ SIĘ ODZYWAĆ, GŁOSOWAĆ ANI PRZEBYWAĆ PRZY STOLE PODCZAS OBRAD.
+            </div>
+            <div id="dead-guide-text" class="dead-guide"></div>
+            <div id="ghost-transfer-box" style="display:none; margin-top:12px; padding-top:10px; border-top:1px dashed #c99d57;">
+              <label style="color:#f0c15a;">WYŚLIJ 1 PKT WSPARCIA ZZA GROBU (<span id="ghost-points-count">0</span> DOSTĘPNYCH)</label>
+              <div style="display:flex; gap:8px;">
+                <select id="ghost-target-select" style="flex:1;"></select>
+                <button class="btn btn-sm btn-gold" onclick="sendGhostPoint()">PRZEKAŻ 1 PKT</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="dead-bets-panel" class="panel" style="display:none;">
+            <div class="panel-header">
+              <span class="panel-title">ZAKŁADY // KTO BYŁ KIM?</span>
+              <span class="badge badge-gold">TYPOWANIE</span>
+            </div>
+            <div class="form-row">
+              <label for="bet-hitler-select">Kto jest HITLEREM?</label>
+              <select id="bet-hitler-select"></select>
+            </div>
+            <label>Kto jest zwykłym FASZYSTĄ?</label>
+            <div id="bet-fascists-grid" class="bet-grid"></div>
+            <button class="btn btn-gold" style="width:100%;" onclick="submitDeadBet()">ZAPISZ SWÓJ ZAKŁAD</button>
+            <div id="bet-saved-status" style="font-size:0.78rem; margin-top:8px; color:var(--liberal-dark);"></div>
+          </div>
+        </div>
+
         <div class="subtabs">
           <button class="subtab-btn active" data-pane="role" onclick="switchPhonePane('role')">AKTA</button>
           <button class="subtab-btn" data-pane="task" onclick="switchPhonePane('task')">ZADANIE QR</button>
@@ -376,9 +438,12 @@
 
             <div id="hidden-weapon-panel" class="alert-box" style="display:none;">
               <strong>ZNALEZIONO UKRYTĄ BROŃ</strong>
-              <p style="margin:6px 0;">Możesz zlecić jednorazową tajną eliminację do bufora na Ekranie Głównym.</p>
+              <p style="margin:6px 0;">Broń została zdjęta ze stacji — masz ją tylko Ty. Możesz użyć jej w fazie Prac Domowych lub trwale zniszczyć.</p>
               <select id="weapon-target-select" style="margin-bottom:8px;"></select>
-              <button class="btn btn-fascist" style="width:100%;" onclick="useHiddenWeapon()">ZLEĆ TAJNĄ ELIMINACJĘ</button>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="btn btn-fascist" style="flex:1;" id="btn-use-weapon" onclick="useHiddenWeapon()">ZLEĆ ELIMINACJĘ</button>
+                <button class="btn btn-outline" style="flex:1;" id="btn-destroy-weapon" onclick="destroyHiddenWeapon()">ZNISZCZ BROŃ</button>
+              </div>
             </div>
 
             <div style="display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
