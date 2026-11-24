@@ -1,0 +1,606 @@
+/* SECRET HITLER: QR & SKLEP WPLYWOW - ESTETYKA REPUBLIKI WEIMARSKIEJ */
+:root {
+  --bg: #efe4ce;
+  --paper: #f7f0e1;
+  --paper-dark: #e4d5b7;
+  --ink: #1a1715;
+  --ink-muted: #524a42;
+  --fascist: #a62626;
+  --fascist-dark: #7a1818;
+  --liberal: #24567d;
+  --liberal-dark: #183b57;
+  --gold: #a87b22;
+  --border: #1a1715;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Georgia", "Times New Roman", serif;
+  background-color: var(--bg);
+  color: var(--ink);
+  line-height: 1.45;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, .display-font, button, .badge, .tab-btn {
+  font-family: "Arial Narrow", "Impact", "Helvetica Neue", Arial, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.app-header {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 14px 20px;
+  border-bottom: 5px solid var(--fascist);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-title {
+  font-size: 1.55rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.brand-sub {
+  font-size: 0.78rem;
+  color: var(--paper-dark);
+  letter-spacing: 0.15em;
+  display: block;
+}
+
+.nav-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tab-btn {
+  background: transparent;
+  color: var(--paper);
+  border: 2px solid var(--paper-dark);
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.tab-btn:hover {
+  background: var(--paper-dark);
+  color: var(--ink);
+}
+
+.tab-btn.active {
+  background: var(--fascist);
+  border-color: var(--fascist);
+  color: #fff;
+}
+
+.container {
+  max-width: 1260px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.view-section {
+  display: none;
+}
+
+.view-section.active {
+  display: block;
+}
+
+.panel {
+  background: var(--paper);
+  border: 3px solid var(--border);
+  padding: 18px;
+  margin-bottom: 18px;
+  box-shadow: 5px 5px 0 rgba(26, 23, 21, 0.18);
+}
+
+.panel-header {
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.panel-title {
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.btn {
+  background: var(--ink);
+  color: var(--paper);
+  border: 2px solid var(--ink);
+  padding: 9px 15px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn:hover:not(:disabled) {
+  background: #332e2a;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-fascist {
+  background: var(--fascist);
+  border-color: var(--fascist-dark);
+  color: #fff;
+}
+
+.btn-fascist:hover:not(:disabled) {
+  background: var(--fascist-dark);
+}
+
+.btn-liberal {
+  background: var(--liberal);
+  border-color: var(--liberal-dark);
+  color: #fff;
+}
+
+.btn-liberal:hover:not(:disabled) {
+  background: var(--liberal-dark);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--ink);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: var(--paper-dark);
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 0.75rem;
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 2px solid var(--border);
+  background: #fffdf8;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-family: "Arial Narrow", Arial, sans-serif;
+}
+
+.form-row {
+  margin-bottom: 12px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  border: 1px solid var(--ink);
+  background: var(--paper-dark);
+}
+
+.badge-fascist {
+  background: var(--fascist);
+  color: #fff;
+  border-color: var(--fascist-dark);
+}
+
+.badge-liberal {
+  background: var(--liberal);
+  color: #fff;
+  border-color: var(--liberal-dark);
+}
+
+.badge-gold {
+  background: var(--gold);
+  color: #fff;
+  border-color: #7c5812;
+}
+
+/* TIMER */
+.timer-box {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 20px;
+  border: 4px solid var(--border);
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.timer-phase {
+  font-size: 1rem;
+  letter-spacing: 0.16em;
+  color: var(--paper-dark);
+  margin-bottom: 6px;
+}
+
+.timer-phase.chores {
+  color: #e6b85c;
+}
+
+.timer-phase.discussion {
+  color: #e67373;
+}
+
+.timer-clock {
+  font-family: "Courier New", monospace;
+  font-size: 3.8rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  margin: 4px 0 12px;
+}
+
+.timer-controls {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* PLANSZE SECRET HITLERA */
+.board-track {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 16px;
+}
+
+.board-track.liberal-track {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.board-track.fascist-track {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.policy-slot {
+  border: 2px solid var(--ink);
+  padding: 10px 6px;
+  text-align: center;
+  background: var(--paper-dark);
+  min-height: 74px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.policy-slot.enacted-liberal {
+  background: var(--liberal);
+  color: #fff;
+}
+
+.policy-slot.enacted-fascist {
+  background: var(--fascist);
+  color: #fff;
+}
+
+.policy-slot-num {
+  font-size: 0.72rem;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.policy-slot-power {
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-top: 4px;
+  line-height: 1.2;
+}
+
+/* LISTA GRACZY NA LAPTOPIE */
+.player-card {
+  border: 2px solid var(--ink);
+  padding: 10px 12px;
+  background: #fffdf8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.player-card.dead {
+  background: #d8cfc0;
+  opacity: 0.75;
+}
+
+.player-card.dead .player-name {
+  text-decoration: line-through;
+}
+
+.stamp {
+  border: 2px solid var(--fascist);
+  color: var(--fascist);
+  padding: 2px 6px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  transform: rotate(-3deg);
+  display: inline-block;
+}
+
+/* WIDOK TELEFONU */
+.phone-shell {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.role-box {
+  border: 3px solid var(--ink);
+  padding: 16px;
+  text-align: center;
+  background: var(--paper-dark);
+  margin: 12px 0;
+}
+
+.role-box.liberal {
+  background: var(--liberal);
+  color: #fff;
+}
+
+.role-box.fascist {
+  background: var(--fascist);
+  color: #fff;
+}
+
+.role-box.hitler {
+  background: #1a1715;
+  color: #e6b85c;
+  border-color: var(--fascist);
+}
+
+.shop-item {
+  border: 2px solid var(--ink);
+  padding: 12px;
+  background: #fffdf8;
+  margin-bottom: 10px;
+}
+
+.shop-item.fascist-only {
+  border-color: var(--fascist);
+  background: #fdf2f2;
+}
+
+.shop-item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.shop-item-desc {
+  font-size: 0.88rem;
+  color: var(--ink-muted);
+  margin-bottom: 10px;
+}
+
+.subtabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.subtab-btn {
+  flex: 1;
+  min-width: 90px;
+  padding: 8px 6px;
+  border: 2px solid var(--ink);
+  background: var(--paper-dark);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.subtab-btn.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.phone-pane {
+  display: none;
+}
+
+.phone-pane.active {
+  display: block;
+}
+
+.alert-box {
+  border: 2px solid var(--fascist);
+  background: #f9e3e3;
+  color: var(--fascist-dark);
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+.info-box {
+  border: 2px solid var(--liberal);
+  background: #e3eff7;
+  color: var(--liberal-dark);
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+.log-list {
+  max-height: 260px;
+  overflow-y: auto;
+  border: 2px solid var(--ink);
+  background: #fffdf8;
+  padding: 10px;
+  font-size: 0.86rem;
+}
+
+.log-entry {
+  padding: 5px 0;
+  border-bottom: 1px dashed #c8bca6;
+}
+
+.log-entry:last-child {
+  border-bottom: none;
+}
+
+/* TABELA KONFIGURACJI SKLEPU */
+.config-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+
+.config-table th,
+.config-table td {
+  border: 1px solid var(--ink);
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.config-table th {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: "Arial Narrow", Arial, sans-serif;
+  text-transform: uppercase;
+}
+
+.config-table input[type="number"] {
+  width: 68px;
+  padding: 4px 6px;
+}
+
+/* QR GRID DO DRUKU */
+.qr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px;
+}
+
+.qr-card {
+  border: 2px solid var(--ink);
+  padding: 12px;
+  background: #fff;
+  text-align: center;
+  break-inside: avoid;
+}
+
+.qr-card-num {
+  font-family: "Arial Narrow", Arial, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+
+.qr-card-loc {
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  min-height: 2.2em;
+}
+
+.qr-img-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 150px;
+}
+
+.qr-img-wrap img,
+.qr-img-wrap canvas {
+  max-width: 150px;
+  height: auto;
+}
+
+#qr-reader {
+  width: 100%;
+  margin: 10px 0;
+  border: 2px solid var(--ink);
+  background: #000;
+}
+
+/* TRYB DRUKU */
+@media print {
+  body {
+    background: #fff;
+  }
+  .app-header,
+  .no-print,
+  #view-lobby,
+  #view-host,
+  #view-phone,
+  .config-non-qr {
+    display: none !important;
+  }
+  #view-config {
+    display: block !important;
+  }
+  .container {
+    max-width: 100%;
+    padding: 0;
+  }
+  .panel {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+  .qr-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .qr-card {
+    border: 2px dashed #000;
+    padding: 8px;
+  }
+}
