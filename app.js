@@ -1,56 +1,56 @@
-/* SECRET HITLER: QR & SKLEP WPLYWOW — LOGIKA APLIKACJI */
+/* SECRET HITLER // STACJE QR — LOGIKA APLIKACJI */
 
 const BOARD_POWERS = {
   "5-6": [
     "Brak mocy",
     "Brak mocy",
-    "Podglad 3 gornych ustaw",
+    "Podgląd 3 górnych ustaw",
     "Egzekucja",
     "Egzekucja + Veto",
-    "ZWYCIESTWO FASZYSTOW"
+    "ZWYCIĘSTWO FASZYSTÓW"
   ],
   "7-8": [
     "Brak mocy",
-    "Sprawdzenie lojalnosci",
-    "Wybor specjalny Prezydenta",
+    "Sprawdzenie lojalności",
+    "Wybór specjalny Prezydenta",
     "Egzekucja",
     "Egzekucja + Veto",
-    "ZWYCIESTWO FASZYSTOW"
+    "ZWYCIĘSTWO FASZYSTÓW"
   ],
   "9-10": [
-    "Sprawdzenie lojalnosci",
-    "Sprawdzenie lojalnosci",
-    "Wybor specjalny Prezydenta",
+    "Sprawdzenie lojalności",
+    "Sprawdzenie lojalności",
+    "Wybór specjalny Prezydenta",
     "Egzekucja",
     "Egzekucja + Veto",
-    "ZWYCIESTWO FASZYSTOW"
+    "ZWYCIĘSTWO FASZYSTÓW"
   ]
 };
 
 const DEFAULT_STATIONS = [
-  "Kuchnia — lodowka",
-  "Przedpokoj — wieszak",
-  "Lazienka — lustro",
-  "Salon — regal z ksiazkami",
+  "Kuchnia — lodówka",
+  "Przedpokój — wieszak",
+  "Łazienka — lustro",
+  "Salon — regał z książkami",
   "Balkon — drzwi",
   "Sypialnia — szafa",
-  "Korytarz — wlacznik swiatla",
+  "Korytarz — włącznik światła",
   "Jadalnia — kredens",
   "Biurko — lampka",
-  "Wejscie — drzwi frontowe",
+  "Wejście — drzwi frontowe",
   "Kuchnia — ekspres do kawy",
   "Salon — parapet",
-  "Przedpokoj — szafka na buty",
-  "Spizarnia / schowek",
-  "Korytarz — zegar scienny"
+  "Przedpokój — szafka na buty",
+  "Spiżarnia / schowek",
+  "Korytarz — zegar ścienny"
 ];
 
 const SHOP_CATALOG = [
   {
     id: "trace_narrow",
-    name: "Slad Faszysty: Zawezenie",
+    name: "Ślad Faszysty: Zawężenie",
     category: "WYWIAD",
-    desc: "Wskazuje 1 prawdziwa stacje odwiedzona przez Faszyste oraz 2 losowe stacje Liberalow (bez kolejnosci).",
+    desc: "Wskazuje 1 prawdziwą stację odwiedzoną przez Faszystę oraz 2 losowe stacje Liberałów (bez kolejności).",
     defaultCost: 3,
     defaultQty: 2,
     defaultEnabled: true,
@@ -59,9 +59,9 @@ const SHOP_CATALOG = [
   },
   {
     id: "trace_delayed",
-    name: "Slad Faszysty: Opozniony",
+    name: "Ślad Faszysty: Opóźniony",
     category: "WYWIAD",
-    desc: "Ujawnia 1 dokladna stacje QR, na ktorej odbil sie Faszysta w POPRZEDNIEJ rundzie.",
+    desc: "Ujawnia 1 dokładną stację QR, na której odbił się Faszysta w POPRZEDNIEJ rundzie.",
     defaultCost: 3,
     defaultQty: 2,
     defaultEnabled: true,
@@ -70,9 +70,9 @@ const SHOP_CATALOG = [
   },
   {
     id: "trace_hot",
-    name: "Slad Faszysty: Gorace Stacje",
+    name: "Ślad Faszysty: Gorące Stacje",
     category: "WYWIAD",
-    desc: "Pokazuje liste do 3 ostatnich stacji odwiedzonych przez Faszystow od poczatku gry (bez rund i kolejnosci).",
+    desc: "Pokazuje listę do 3 ostatnich stacji odwiedzonych przez Faszystów od początku gry (bez rund i kolejności).",
     defaultCost: 4,
     defaultQty: 1,
     defaultEnabled: true,
@@ -81,9 +81,9 @@ const SHOP_CATALOG = [
   },
   {
     id: "extra_vote",
-    name: "Tajny +1 Glos",
-    category: "GLOSOWANIE",
-    desc: "Twoj najblizszy glos (JA lub NEIN) policzy sie podwojnie w tajnym podsumowaniu.",
+    name: "Tajny +1 Głos",
+    category: "GŁOSOWANIE",
+    desc: "Twój najbliższy głos (JA lub NEIN) policzy się podwójnie w tajnym podsumowaniu.",
     defaultCost: 2,
     defaultQty: 3,
     defaultEnabled: true,
@@ -92,9 +92,9 @@ const SHOP_CATALOG = [
   },
   {
     id: "block_vote",
-    name: "Blokada Glosu (Cenzura)",
-    category: "GLOSOWANIE",
-    desc: "Glos wybranego gracza nie zostanie policzony w najblizszym glosowaniu.",
+    name: "Blokada Głosu (Cenzura)",
+    category: "GŁOSOWANIE",
+    desc: "Głos wybranego gracza nie zostanie policzony w najbliższym głosowaniu.",
     defaultCost: 3,
     defaultQty: 1,
     defaultEnabled: true,
@@ -105,7 +105,7 @@ const SHOP_CATALOG = [
     id: "shield",
     name: "Tarcza Ochronna",
     category: "OBRONA",
-    desc: "Chroni wybranego gracza (lub Ciebie) przed tajna eliminacja w tej rundzie.",
+    desc: "Chroni wybranego gracza (lub Ciebie) przed tajną eliminacją w tej rundzie.",
     defaultCost: 3,
     defaultQty: 2,
     defaultEnabled: true,
@@ -114,9 +114,9 @@ const SHOP_CATALOG = [
   },
   {
     id: "sabotage",
-    name: "Sabotaz Stacji",
+    name: "Sabotaż Stacji",
     category: "DYWERSJA",
-    desc: "Wylacza wybrana stacje QR do konca tej rundy — nikt nie zdobedzie tam punktu.",
+    desc: "Wyłącza wybraną stację QR do końca tej rundy — nikt nie zdobędzie tam punktu.",
     defaultCost: 1,
     defaultQty: 3,
     defaultEnabled: true,
@@ -125,9 +125,9 @@ const SHOP_CATALOG = [
   },
   {
     id: "wiretap",
-    name: "Podsluch Stacji",
+    name: "Podsłuch Stacji",
     category: "WYWIAD",
-    desc: "Wybierasz stacje QR. Jesli ktos ja zeskanuje w tej lub nastepnej rundzie, otrzymasz jego imie.",
+    desc: "Wybierasz stację QR. Jeśli ktoś ją zeskanuje w tej lub następnej rundzie, otrzymasz jego imię.",
     defaultCost: 2,
     defaultQty: 2,
     defaultEnabled: true,
@@ -136,9 +136,9 @@ const SHOP_CATALOG = [
   },
   {
     id: "activity_report",
-    name: "Raport Aktywnosci",
+    name: "Raport Aktywności",
     category: "WYWIAD",
-    desc: "Pokazuje liste graczy, ktorzy w poprzedniej rundzie nie zeskanowali zadnego kodu QR.",
+    desc: "Pokazuje listę graczy, którzy w poprzedniej rundzie nie zeskanowali żadnego kodu QR.",
     defaultCost: 2,
     defaultQty: 2,
     defaultEnabled: true,
@@ -149,7 +149,7 @@ const SHOP_CATALOG = [
     id: "counter_intel",
     name: "Raport Kontrwywiadu",
     category: "WYWIAD",
-    desc: "Pokazuje liste przedmiotow kupionych w Sklepie w poprzedniej rundzie (bez imion).",
+    desc: "Pokazuje listę przedmiotów kupionych w Sklepie w poprzedniej rundzie (bez imion).",
     defaultCost: 1,
     defaultQty: 2,
     defaultEnabled: true,
@@ -158,9 +158,9 @@ const SHOP_CATALOG = [
   },
   {
     id: "compare_factions",
-    name: "Porownanie Frakcji",
+    name: "Porównanie Frakcji",
     category: "WYWIAD",
-    desc: "Wskazujesz 2 graczy. Otrzymasz odpowiedz: TA SAMA FRAKCJA lub ROZNE FRAKCJE (raz na gre na gracza).",
+    desc: "Wskazujesz 2 graczy. Otrzymasz odpowiedź: TA SAMA FRAKCJA lub RÓŻNE FRAKCJE (raz na grę na gracza).",
     defaultCost: 4,
     defaultQty: 1,
     defaultEnabled: true,
@@ -169,9 +169,9 @@ const SHOP_CATALOG = [
   },
   {
     id: "cut_debate",
-    name: "Skrocenie Debaty",
+    name: "Skrócenie Debaty",
     category: "PRESJA",
-    desc: "Anonimowo ucina 2 minuty z aktualnego zegara dyskusji na Ekranie Glownym.",
+    desc: "Anonimowo ucina 2 minuty z aktualnego zegara dyskusji na Ekranie Głównym.",
     defaultCost: 2,
     defaultQty: 2,
     defaultEnabled: true,
@@ -180,9 +180,9 @@ const SHOP_CATALOG = [
   },
   {
     id: "false_trail",
-    name: "Falszywy Trop",
+    name: "Fałszywy Trop",
     category: "MASKOWANIE",
-    desc: "W tej rundzie Twoje skanowania i frakcja zwracaja falszywe dane w raportach wywiadu.",
+    desc: "W tej rundzie Twoje skanowania i frakcja zwracają fałszywe dane w raportach wywiadu.",
     defaultCost: 2,
     defaultQty: 2,
     defaultEnabled: true,
@@ -191,9 +191,9 @@ const SHOP_CATALOG = [
   },
   {
     id: "fascist_kill",
-    name: "Tajny Zamach (Faszysci)",
+    name: "Tajny Zamach (Faszyści)",
     category: "ELIMINACJA",
-    desc: "Widoczne tylko dla zwyklych Faszystow. Zleca tajna eliminacje do bufora (wspolna pula).",
+    desc: "Widoczne tylko dla zwykłych Faszystów. Zleca tajną eliminację do bufora (wspólna pula).",
     defaultCost: 3,
     defaultQty: 1,
     defaultEnabled: true,
@@ -237,7 +237,7 @@ let state = {
   roomCode: "",
   started: false,
   round: 1,
-  phase: "CHORES", // CHORES | DISCUSSION
+  phase: "CHORES",
   timerSeconds: 120,
   timerRunning: false,
   settings: {
@@ -252,23 +252,22 @@ let state = {
   electionTracker: 0,
   winner: null,
   votingOpen: false,
-  votes: {}, // playerId -> 'JA' | 'NEIN'
+  votes: {},
   lastVoteSummary: null,
-  players: [], // {id, name, role, alive, points, assignedStation, completedRound, purchasedRound, usedCompare, foundWeapon, extraVoteActive, falseTrailRound, logs:[]}
+  players: [],
   stations: createInitialStations(),
   weaponStationId: null,
   weaponUsed: false,
   shopConfig: createInitialShopConfig(),
-  scanHistory: [], // {round, playerId, stationId, isFascist, fake}
-  purchaseHistory: [], // {round, itemName}
-  wiretaps: [], // {ownerId, stationId, expiresRound}
-  shields: {}, // targetId -> round
-  blockedVotes: {}, // targetId -> true
-  bufferedEliminations: [], // {sourceId, targetId, reason}
+  scanHistory: [],
+  purchaseHistory: [],
+  wiretaps: [],
+  shields: {},
+  blockedVotes: {},
+  bufferedEliminations: [],
   publicLogs: []
 };
 
-// Tryb polaczenia: 'NONE' | 'DEMO' | 'PEER_HOST' | 'PEER_CLIENT' | 'LAN_HOST' | 'LAN_CLIENT'
 let connMode = "NONE";
 let myPlayerId = null;
 let roleVisible = false;
@@ -281,7 +280,6 @@ let qrScanner = null;
 let lanAvailable = false;
 let pendingScanToken = null;
 
-/* ==================== AUDIO (WEB AUDIO API) ==================== */
 function playChime() {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -296,12 +294,9 @@ function playChime() {
     gain.connect(ctx.destination);
     osc.start();
     osc.stop(ctx.currentTime + 0.6);
-  } catch (e) {
-    // Brak wsparcia audio
-  }
+  } catch (e) {}
 }
 
-/* ==================== NAWIGACJA ==================== */
 function switchView(viewName) {
   document.querySelectorAll(".view-section").forEach(s => s.classList.remove("active"));
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
@@ -329,7 +324,6 @@ function switchPhonePane(pane) {
   if (pane !== "task") stopQrScanner();
 }
 
-/* ==================== SYNCHRONIZACJA ==================== */
 function broadcastState() {
   if (connMode === "PEER_HOST") {
     const payload = { type: "STATE", state };
@@ -365,7 +359,7 @@ function startLocalDemo() {
   connMode = "DEMO";
   state.roomCode = "TEST-LOKALNY";
   state.players = [
-    "Marek", "Kasia", "Tomek", "Ania", "Piotr", "Zosia", "Michal"
+    "Marek", "Kasia", "Tomek", "Ania", "Piotr", "Zosia", "Michał"
   ].map((name, i) => createPlayerObj("p" + (i + 1), name));
   myPlayerId = state.players[0].id;
   startGameAndAssignRoles();
@@ -379,7 +373,7 @@ function selectDemoPlayer(pid) {
   myPlayerId = pid;
   roleVisible = false;
   document.getElementById("secret-role-container").style.display = "none";
-  document.getElementById("btn-toggle-role").textContent = "ODSLON TAJNA ROLE";
+  document.getElementById("btn-toggle-role").textContent = "ODSŁOŃ TAJNĄ ROLĘ";
   loadPersonalNotes();
   renderAll();
 }
@@ -391,7 +385,7 @@ function hostOnlineRoom() {
   const peerId = "sh-qr-room-" + code.toLowerCase().replace(/[^a-z0-9-]/g, "");
 
   if (typeof Peer === "undefined") {
-    alert("Brak biblioteki PeerJS (sprawdz polaczenie z internetem).");
+    alert("Brak biblioteki PeerJS (sprawdź połączenie z internetem).");
     return;
   }
 
@@ -403,7 +397,7 @@ function hostOnlineRoom() {
   peerInstance.on("open", () => {
     updateConnectionBadge("ONLINE HOST: " + code);
     document.getElementById("connection-info").innerHTML =
-      `Pokoj uruchomiony. Kod pokoju dla graczy: <strong>${code}</strong>. Podaj ten kod znajomym lub wydrukuj kody QR.`;
+      `Pokój uruchomiony. Kod pokoju dla graczy: <strong>${code}</strong>.`;
     switchView("host");
   });
 
@@ -420,7 +414,7 @@ function hostOnlineRoom() {
   });
 
   peerInstance.on("error", err => {
-    alert("Blad PeerJS: " + err.type);
+    alert("Błąd PeerJS: " + err.type);
   });
 }
 
@@ -428,7 +422,7 @@ function joinOnlineRoom() {
   const code = document.getElementById("peer-room-input").value.trim().toUpperCase();
   const name = document.getElementById("peer-player-name").value.trim();
   if (!code || !name) {
-    alert("Wpisz kod pokoju oraz swoje imie.");
+    alert("Wpisz kod pokoju oraz swoje imię.");
     return;
   }
   const peerId = "sh-qr-room-" + code.toLowerCase().replace(/[^a-z0-9-]/g, "");
@@ -460,7 +454,7 @@ function joinOnlineRoom() {
     });
   });
   peerInstance.on("error", err => {
-    alert("Nie udalo sie polaczyc z pokojem: " + err.type);
+    alert("Nie udało się połączyć z pokojem: " + err.type);
   });
 }
 
@@ -472,7 +466,7 @@ function checkLanServer() {
       if (data && data.ok) {
         lanAvailable = true;
         const box = document.getElementById("lan-status-box");
-        box.innerHTML = `<strong>SERWER LAN AKTYWNY!</strong> Adres w sieci Wi-Fi: <code>${data.url || window.location.origin}</code>`;
+        box.innerHTML = `<strong>SERWER LAN AKTYWNY</strong> — adres: <code>${data.url || window.location.origin}</code>`;
         if (!state.settings.baseUrl) {
           state.settings.baseUrl = window.location.origin + "/";
         }
@@ -481,7 +475,7 @@ function checkLanServer() {
     .catch(() => {
       lanAvailable = false;
       const box = document.getElementById("lan-status-box");
-      box.innerHTML = "Lokalny serwer Python nie zostal wykryty (uruchom <code>server.py</code>, aby korzystac z trybu offline Wi-Fi).";
+      box.innerHTML = "Lokalny serwer Python nieaktywny (uruchom <code>server.py</code>).";
     });
 }
 
@@ -501,12 +495,12 @@ function hostLanRoom() {
 
 function joinLanRoom() {
   if (!lanAvailable) {
-    alert("Brak polaczenia z lokalnym serwerem Python.");
+    alert("Brak połączenia z lokalnym serwerem Python.");
     return;
   }
   const name = document.getElementById("lan-player-name").value.trim();
   if (!name) {
-    alert("Wpisz swoje imie.");
+    alert("Wpisz swoje imię.");
     return;
   }
   connMode = "LAN_CLIENT";
@@ -596,17 +590,16 @@ function addPlayerFromHost() {
   if (!name) return;
   state.players.push(createPlayerObj("pl-" + randomToken(5), name));
   inp.value = "";
-  addPublicLog(`Dolaczyl gracz: ${name}.`);
+  addPublicLog(`Dołączył gracz: ${name}.`);
   broadcastState();
 }
 
 function startGameAndAssignRoles() {
   if (state.players.length < 5) {
-    alert("Do rozpoczecia gry potrzeba minimum 5 graczy.");
+    alert("Do rozpoczęcia gry potrzeba minimum 5 graczy.");
     return;
   }
 
-  // Dopasowanie planszy do liczby graczy jesli trzeba
   const n = state.players.length;
   if (n <= 6) state.settings.boardSize = "5-6";
   else if (n <= 8) state.settings.boardSize = "7-8";
@@ -620,7 +613,6 @@ function startGameAndAssignRoles() {
   for (let i = 0; i < fascistsCount; i++) roles.push("FASCIST");
   while (roles.length < n) roles.push("LIBERAL");
 
-  // Tasowanie Fisher-Yates
   for (let i = roles.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [roles[i], roles[j]] = [roles[j], roles[i]];
@@ -647,7 +639,6 @@ function startGameAndAssignRoles() {
   state.weaponStationId = Math.floor(Math.random() * state.stations.length) + 1;
   state.weaponUsed = false;
 
-  // Reset puli sklepu do wartosci maxQty
   Object.keys(state.shopConfig).forEach(k => {
     state.shopConfig[k].remaining = state.shopConfig[k].maxQty;
   });
@@ -668,7 +659,7 @@ function startGameAndAssignRoles() {
   });
 
   assignStationsForRound();
-  addPublicLog(`Rozpoczeto nowa gre (${n} graczy, plansza ${state.settings.boardSize}). Role zostaly rozdane.`);
+  addPublicLog(`Rozpoczęto nową grę (${n} graczy, plansza ${state.settings.boardSize}). Role zostały rozdane.`);
   broadcastState();
 }
 
@@ -695,11 +686,11 @@ function timerStart() {
       if (state.phase === "CHORES") {
         state.phase = "DISCUSSION";
         state.timerSeconds = state.settings.discussionDuration;
-        addPublicLog("Koniec fazy Prac Domowych. Rozpoczyna sie Dyskusja przy stole.");
+        addPublicLog("Koniec fazy Prac Domowych. Rozpoczyna się Dyskusja przy stole.");
         broadcastState();
       } else {
         state.timerRunning = false;
-        addPublicLog("Czas dyskusji dobiegl konca. Czas na glosowanie.");
+        addPublicLog("Czas dyskusji dobiegł końca. Czas na głosowanie.");
         broadcastState();
       }
     }
@@ -717,11 +708,11 @@ function timerSwitchPhase() {
   if (state.phase === "CHORES") {
     state.phase = "DISCUSSION";
     state.timerSeconds = state.settings.discussionDuration;
-    addPublicLog("Przelaczono faze na: DYSKUSJA.");
+    addPublicLog("Przełączono fazę na: DYSKUSJA.");
   } else {
     state.phase = "CHORES";
     state.timerSeconds = state.settings.choresDuration;
-    addPublicLog("Przelaczono faze na: PRACE DOMOWE.");
+    addPublicLog("Przełączono fazę na: PRACE DOMOWE.");
   }
   broadcastState();
 }
@@ -737,22 +728,22 @@ function nextRound() {
   state.blockedVotes = {};
   state.wiretaps = state.wiretaps.filter(w => w.expiresRound >= state.round);
   assignStationsForRound();
-  addPublicLog(`Rozpoczeto Runde ${state.round}. Przydzielono nowe stacje QR.`);
+  addPublicLog(`Rozpoczęto Rundę ${state.round}. Przydzielono nowe stacje QR.`);
   broadcastState();
 }
 
-/* ==================== PLANSZA I GLOSOWANIE ==================== */
+/* ==================== PLANSZA I GŁOSOWANIE ==================== */
 function togglePolicy(type, index) {
   if (type === "LIBERAL") {
     state.liberalPolicies = (state.liberalPolicies === index + 1) ? index : index + 1;
     if (state.liberalPolicies >= 5) {
-      state.winner = "ZWYCIESTWO LIBERALOW (5 USTAW LIBERALNYCH)";
+      state.winner = "ZWYCIĘSTWO LIBERAŁÓW (5 USTAW LIBERALNYCH)";
       addPublicLog(state.winner);
     }
   } else {
     state.fascistPolicies = (state.fascistPolicies === index + 1) ? index : index + 1;
     if (state.fascistPolicies >= 6) {
-      state.winner = "ZWYCIESTWO FASZYSTOW (6 USTAW FASZYSTOWSKICH)";
+      state.winner = "ZWYCIĘSTWO FASZYSTÓW (6 USTAW FASZYSTOWSKICH)";
       addPublicLog(state.winner);
     }
   }
@@ -763,7 +754,7 @@ function changeTracker(delta) {
   if (delta < 0) state.electionTracker = 0;
   else state.electionTracker = Math.min(3, state.electionTracker + 1);
   if (state.electionTracker === 3) {
-    addPublicLog("Odrzucono 3 rzady z rzedu — uchwalana jest gorna ustawa z talii.");
+    addPublicLog("Odrzucono 3 rządy z rzędu — uchwalana jest górna ustawa z talii.");
   }
   broadcastState();
 }
@@ -772,7 +763,7 @@ function openVoting() {
   state.votingOpen = true;
   state.votes = {};
   state.lastVoteSummary = null;
-  addPublicLog("Otwarto glosowanie nad rzadem na telefonach graczy.");
+  addPublicLog("Otwarto głosowanie nad rządem na telefonach graczy.");
   broadcastState();
 }
 
@@ -780,16 +771,12 @@ function tallyVotes() {
   if (!state.votingOpen) return;
   let ja = 0;
   let nein = 0;
-  let blockedCount = 0;
 
   state.players.forEach(p => {
     if (!p.alive) return;
     const v = state.votes[p.id];
     if (!v) return;
-    if (state.blockedVotes[p.id]) {
-      blockedCount++;
-      return;
-    }
+    if (state.blockedVotes[p.id]) return;
     const weight = p.extraVoteActive ? 2 : 1;
     if (v === "JA") ja += weight;
     else nein += weight;
@@ -799,7 +786,7 @@ function tallyVotes() {
   state.blockedVotes = {};
   state.votingOpen = false;
   const passed = ja > nein;
-  const resText = `WYNIK GLOSOWANIA: JA ${ja} — NEIN ${nein}. Rzad ${passed ? "PRZYJETY" : "ODRZUCONY"}.`;
+  const resText = `WYNIK GŁOSOWANIA: JA ${ja} — NEIN ${nein}. Rząd ${passed ? "PRZYJĘTY" : "ODRZUCONY"}.`;
   state.lastVoteSummary = resText;
   addPublicLog(resText);
   broadcastState();
@@ -809,11 +796,11 @@ function tallyVotes() {
 function manualExecute(playerId) {
   const p = state.players.find(x => x.id === playerId);
   if (!p) return;
-  if (!confirm(`Czy na pewno przeprowadzic EGZEKUCJE na graczu ${p.name}?`)) return;
+  if (!confirm(`Czy na pewno przeprowadzić EGZEKUCJĘ na graczu ${p.name}?`)) return;
   p.alive = false;
-  addPublicLog(`EGZEKUCJA: Gracz ${p.name} zostal wyeliminowany z gry.`);
+  addPublicLog(`EGZEKUCJA: Gracz ${p.name} został wyeliminowany z gry.`);
   if (p.role === "HITLER") {
-    state.winner = `ZWYCIESTWO LIBERALOW — ${p.name} BYL HITLEREM!`;
+    state.winner = `ZWYCIĘSTWO LIBERAŁÓW — ${p.name} BYŁ HITLEREM!`;
     addPublicLog(state.winner);
   }
   broadcastState();
@@ -824,7 +811,7 @@ function manualRevive(playerId) {
   if (!p) return;
   p.alive = true;
   if (state.winner && state.winner.includes(p.name)) state.winner = null;
-  addPublicLog(`PRZYWROCONO gracza ${p.name} do gry.`);
+  addPublicLog(`PRZYWRÓCONO gracza ${p.name} do gry.`);
   broadcastState();
 }
 
@@ -842,13 +829,13 @@ function resolveEliminations() {
     const target = state.players.find(p => p.id === el.targetId);
     if (!target || !target.alive) return;
     if (state.shields[target.id] === state.round) {
-      addPublicLog(`TAJNY ZAMACH ZABLOKOWANY: Tarcza Ochronna uratowala jednego z graczy.`);
-      addPrivateLog(target, "Twoja Tarcza Ochronna zablokowala zamach w tej rundzie.");
+      addPublicLog("TAJNY ZAMACH ZABLOKOWANY: Tarcza Ochronna uratowała jednego z graczy.");
+      addPrivateLog(target, "Twoja Tarcza Ochronna zablokowała zamach w tej rundzie.");
     } else {
       target.alive = false;
-      addPublicLog(`TAJNA ELIMINACJA: Gracz ${target.name} zostal wyeliminowany.`);
+      addPublicLog(`TAJNA ELIMINACJA: Gracz ${target.name} został wyeliminowany.`);
       if (target.role === "HITLER") {
-        state.winner = `ZWYCIESTWO LIBERALOW — ${target.name} BYL HITLEREM!`;
+        state.winner = `ZWYCIĘSTWO LIBERAŁÓW — ${target.name} BYŁ HITLEREM!`;
         addPublicLog(state.winner);
       }
     }
@@ -856,7 +843,7 @@ function resolveEliminations() {
   broadcastState();
 }
 
-/* ==================== OBSLUGA AKCJI OD GRACZY ==================== */
+/* ==================== OBSŁUGA AKCJI OD GRACZY ==================== */
 function handleHostAction(action) {
   if (!action || !action.type) return;
 
@@ -864,7 +851,7 @@ function handleHostAction(action) {
     const existing = state.players.find(p => p.id === action.id);
     if (!existing) {
       state.players.push(createPlayerObj(action.id, action.name));
-      addPublicLog(`Gracz ${action.name} dolaczyl do pokoju.`);
+      addPublicLog(`Gracz ${action.name} dołączył do pokoju.`);
     } else {
       existing.name = action.name;
     }
@@ -890,7 +877,7 @@ function handleHostAction(action) {
     }
     const station = state.stations.find(s => s.token === action.token);
     if (!station) {
-      addPrivateLog(player, "Nieprawidlowy kod QR.");
+      addPrivateLog(player, "Nieprawidłowy kod QR.");
       broadcastState();
       return;
     }
@@ -900,7 +887,6 @@ function handleHostAction(action) {
       return;
     }
 
-    // Zapis historii skanowan (z uwzglednieniem Falszywego Tropu)
     const isActuallyFascist = (player.role === "FASCIST" || player.role === "HITLER");
     const hasFalseTrail = (player.falseTrailRound === state.round);
     state.scanHistory.push({
@@ -911,34 +897,31 @@ function handleHostAction(action) {
       fake: hasFalseTrail
     });
 
-    // Sprawdzenie podsluchow na tej stacji
     state.wiretaps.forEach(w => {
       if (w.stationId === station.id && w.expiresRound >= state.round && w.ownerId !== player.id) {
         const owner = state.players.find(p => p.id === w.ownerId);
         if (owner) {
-          const shownName = hasFalseTrail ? "NIEZNANY (FALSZYWY TROP)" : player.name;
-          addPrivateLog(owner, `PODSLUCH STACJI #${station.id}: Zeskanowal ja gracz ${shownName}.`);
+          const shownName = hasFalseTrail ? "NIEZNANY (FAŁSZYWY TROP)" : player.name;
+          addPrivateLog(owner, `PODSŁUCH STACJI #${station.id}: Zeskanował ją gracz ${shownName}.`);
         }
       }
     });
 
-    // Sprawdzenie ukrytej broni
     if (station.id === state.weaponStationId && !state.weaponUsed) {
       player.foundWeapon = true;
-      addPrivateLog(player, `ZNALAZLES UKRYTA BRON na stacji #${station.id}! Mozesz jej uzyc w zakladce ZADANIE QR.`);
+      addPrivateLog(player, `ZNALAZŁEŚ UKRYTĄ BROŃ na stacji #${station.id}. Możesz jej użyć w zakładce ZADANIE QR.`);
     }
 
-    // Zaliczanie zadania
     if (station.id === player.assignedStation) {
       if (player.completedRound === state.round) {
-        addPrivateLog(player, `Zadanie w rundzie ${state.round} zostalo juz wczesniej zaliczone.`);
+        addPrivateLog(player, `Zadanie w rundzie ${state.round} zostało już wcześniej zaliczone.`);
       } else {
         player.completedRound = state.round;
         player.points += 1;
-        addPrivateLog(player, `Zaliczone zadanie na stacji #${station.id} (${station.location}). Otrzymujesz +1 PKT Wplywu.`);
+        addPrivateLog(player, `Zaliczono stację #${station.id} (${station.location}). Otrzymujesz +1 PKT Wpływu.`);
       }
     } else {
-      addPrivateLog(player, `Zeskanowano stacje #${station.id} (${station.location}), ale Twoim celem byla stacja #${player.assignedStation}.`);
+      addPrivateLog(player, `Zeskanowano stację #${station.id} (${station.location}), ale Twoim celem była stacja #${player.assignedStation}.`);
     }
 
     broadcastState();
@@ -952,10 +935,10 @@ function handleHostAction(action) {
     state.bufferedEliminations.push({
       sourceId: player.id,
       targetId: action.targetId,
-      reason: "UKRYTA BRON QR"
+      reason: "UKRYTA BROŃ QR"
     });
     const t = state.players.find(p => p.id === action.targetId);
-    addPrivateLog(player, `Zlecono tajna eliminacje gracza ${t ? t.name : "?"}. Zostanie rozliczona na Ekranie Glownym.`);
+    addPrivateLog(player, `Zlecono tajną eliminację gracza ${t ? t.name : "?"}.`);
     broadcastState();
     return;
   }
@@ -966,76 +949,73 @@ function handleHostAction(action) {
   }
 }
 
-/* ==================== LOGIKA SKLEPU (WSPOLNA PULA + 3 SLADY FASZYSTY) ==================== */
+/* ==================== LOGIKA SKLEPU ==================== */
 function processShopPurchase(player, itemId, target1, target2) {
   const item = SHOP_CATALOG.find(i => i.id === itemId);
   const cfg = state.shopConfig[itemId];
   if (!item || !cfg || !cfg.enabled) return;
 
   if (item.fascistOnly && player.role !== "FASCIST") {
-    addPrivateLog(player, "Brak uprawnien do tego przedmiotu.");
+    addPrivateLog(player, "Brak uprawnień do tego przedmiotu.");
     return;
   }
   if (cfg.remaining <= 0) {
-    addPrivateLog(player, `Przedmiot "${item.name}" zostal juz wykupiony ze wspolnej puli.`);
+    addPrivateLog(player, `Przedmiot "${item.name}" został już wykupiony ze wspólnej puli.`);
     return;
   }
   if (player.points < cfg.cost) {
-    addPrivateLog(player, `Za malo Punktow Wplywu na "${item.name}".`);
+    addPrivateLog(player, `Za mało Punktów Wpływu na "${item.name}".`);
     return;
   }
   if (state.settings.limitOnePurchasePerRound && player.purchasedRound === state.round) {
-    addPrivateLog(player, "Limit: mozesz kupic tylko 1 przedmiot w sklepie na runde.");
+    addPrivateLog(player, "Limit: możesz kupić tylko 1 przedmiot w sklepie na rundę.");
     return;
   }
   if (itemId === "compare_factions" && player.usedCompare) {
-    addPrivateLog(player, "Porownanie Frakcji mozna wykorzystac tylko raz na cala gre.");
+    addPrivateLog(player, "Porównanie Frakcji można wykorzystać tylko raz na całą grę.");
     return;
   }
 
-  // Walidacja danych dla 3 wariantow Sladu Faszysty ZANIM pobierzemy punkty i pule
   if (itemId === "trace_narrow") {
     const fasScans = state.scanHistory.filter(s => s.isFascist && s.round >= state.round - 1);
     if (fasScans.length === 0) {
-      addPrivateLog(player, "SLAD FASZYSTY (ZAWEZENIE): Brak swiezych sladow Faszystow z tej ani poprzedniej rundy. Punkty i pula NIE zostaly pobrane.");
+      addPrivateLog(player, "ŚLAD FASZYSTY (ZAWĘŻENIE): Brak świeżych śladów z tej ani poprzedniej rundy. Punkty i pula NIE zostały pobrane.");
       return;
     }
     const pickedFas = fasScans[fasScans.length - 1];
     const libStationIds = [...new Set(
       state.scanHistory.filter(s => !s.isFascist && s.stationId !== pickedFas.stationId).map(s => s.stationId)
     )];
-    // Dopelnienie losowymi stacjami, jesli za malo skanow Liberalow
     while (libStationIds.length < 2) {
       const rnd = Math.floor(Math.random() * state.stations.length) + 1;
       if (rnd !== pickedFas.stationId && !libStationIds.includes(rnd)) libStationIds.push(rnd);
     }
-    // Wybor 2 i tasowanie
     libStationIds.sort(() => Math.random() - 0.5);
     const trio = [pickedFas.stationId, libStationIds[0], libStationIds[1]].sort(() => Math.random() - 0.5);
     const names = trio.map(id => {
       const st = state.stations.find(x => x.id === id);
       return `#${id} (${st ? st.location : "?"})`;
     }).join(", ");
-    addPrivateLog(player, `SLAD FASZYSTY (ZAWEZENIE): Faszysta odbil sie ostatnio w jednym z tych miejsc: ${names}.`);
+    addPrivateLog(player, `ŚLAD FASZYSTY (ZAWĘŻENIE): Faszysta odbił się ostatnio w jednym z tych miejsc: ${names}.`);
   }
   else if (itemId === "trace_delayed") {
     if (state.round <= 1) {
-      addPrivateLog(player, "SLAD FASZYSTY (OPOZNIONY): Dostepny od 2. rundy. Punkty i pula NIE zostaly pobrane.");
+      addPrivateLog(player, "ŚLAD FASZYSTY (OPÓŹNIONY): Dostępny od 2. rundy. Punkty i pula NIE zostały pobrane.");
       return;
     }
     const prevFas = state.scanHistory.filter(s => s.isFascist && s.round === state.round - 1);
     if (prevFas.length === 0) {
-      addPrivateLog(player, `SLAD FASZYSTY (OPOZNIONY): Zaden Faszysta nie zeskanowal kodu w rundzie ${state.round - 1}. Punkty i pula NIE zostaly pobrane.`);
+      addPrivateLog(player, `ŚLAD FASZYSTY (OPÓŹNIONY): Żaden Faszysta nie zeskanował kodu w rundzie ${state.round - 1}. Punkty i pula NIE zostały pobrane.`);
       return;
     }
     const chosen = prevFas[Math.floor(Math.random() * prevFas.length)];
     const st = state.stations.find(x => x.id === chosen.stationId);
-    addPrivateLog(player, `SLAD FASZYSTY (OPOZNIONY): W poprzedniej rundzie (R${state.round - 1}) Faszysta zeskanowal stacje #${chosen.stationId} (${st ? st.location : "?"}).`);
+    addPrivateLog(player, `ŚLAD FASZYSTY (OPÓŹNIONY): W poprzedniej rundzie (R${state.round - 1}) Faszysta zeskanował stację #${chosen.stationId} (${st ? st.location : "?"}).`);
   }
   else if (itemId === "trace_hot") {
     const allFas = state.scanHistory.filter(s => s.isFascist);
     if (allFas.length === 0) {
-      addPrivateLog(player, "SLAD FASZYSTY (GORACE STACJE): Brak jakichkolwiek skanowan Faszystow od poczatku gry. Punkty i pula NIE zostaly pobrane.");
+      addPrivateLog(player, "ŚLAD FASZYSTY (GORĄCE STACJE): Brak skanowań Faszystów od początku gry. Punkty i pula NIE zostały pobrane.");
       return;
     }
     const lastThree = allFas.slice(-3).map(s => s.stationId).sort(() => Math.random() - 0.5);
@@ -1043,67 +1023,67 @@ function processShopPurchase(player, itemId, target1, target2) {
       const st = state.stations.find(x => x.id === id);
       return `#${id} (${st ? st.location : "?"})`;
     }).join(", ");
-    addPrivateLog(player, `SLAD FASZYSTY (GORACE STACJE): Ostatnie stacje odwiedzone przez Faszystow (losowa kolejnosc): ${names}.`);
+    addPrivateLog(player, `ŚLAD FASZYSTY (GORĄCE STACJE): Ostatnie stacje odwiedzone przez Faszystów (losowa kolejność): ${names}.`);
   }
   else if (itemId === "extra_vote") {
     player.extraVoteActive = true;
-    addPrivateLog(player, "Aktywowano TAJNY +1 GLOS na najblizsze glosowanie.");
+    addPrivateLog(player, "Aktywowano TAJNY +1 GŁOS na najbliższe głosowanie.");
   }
   else if (itemId === "block_vote") {
     const t = state.players.find(p => p.id === target1);
     if (!t) return;
     state.blockedVotes[t.id] = true;
-    addPrivateLog(player, `Zablokowano glos gracza ${t.name} w najblizszym glosowaniu.`);
+    addPrivateLog(player, `Zablokowano głos gracza ${t.name} w najbliższym głosowaniu.`);
   }
   else if (itemId === "shield") {
     const t = state.players.find(p => p.id === target1);
     if (!t) return;
     state.shields[t.id] = state.round;
-    addPrivateLog(player, `Nalozono TARCZE OCHRONNA na gracza ${t.name} w tej rundzie.`);
+    addPrivateLog(player, `Nałożono TARCZĘ OCHRONNĄ na gracza ${t.name} w tej rundzie.`);
   }
   else if (itemId === "sabotage") {
     const st = state.stations.find(s => s.id === Number(target1));
     if (!st) return;
     st.sabotagedRound = state.round;
-    addPrivateLog(player, `Zasabotowano stacje #${st.id} (${st.location}) do konca tej rundy.`);
+    addPrivateLog(player, `Zasabotowano stację #${st.id} (${st.location}) do końca tej rundy.`);
   }
   else if (itemId === "wiretap") {
     const st = state.stations.find(s => s.id === Number(target1));
     if (!st) return;
     state.wiretaps.push({ ownerId: player.id, stationId: st.id, expiresRound: state.round + 1 });
-    addPrivateLog(player, `Zalozono PODSLUCH na stacji #${st.id} (${st.location}) na rundy R${state.round}-R${state.round + 1}.`);
+    addPrivateLog(player, `Założono PODSŁUCH na stacji #${st.id} (${st.location}) na rundy R${state.round}-R${state.round + 1}.`);
   }
   else if (itemId === "activity_report") {
     const prevR = Math.max(1, state.round - 1);
     const scannedIds = new Set(state.scanHistory.filter(s => s.round === prevR).map(s => s.playerId));
     const inactive = state.players.filter(p => p.alive && !scannedIds.has(p.id)).map(p => p.name);
-    addPrivateLog(player, `RAPORT AKTYWNOSCI (R${prevR}): Nie zeskanowali zadnego kodu: ${inactive.length ? inactive.join(", ") : "Wszyscy byli aktywni"}.`);
+    addPrivateLog(player, `RAPORT AKTYWNOŚCI (R${prevR}): Nie zeskanowali żadnego kodu: ${inactive.length ? inactive.join(", ") : "Wszyscy byli aktywni"}.`);
   }
   else if (itemId === "counter_intel") {
     const prevR = Math.max(1, state.round - 1);
     const bought = state.purchaseHistory.filter(h => h.round === prevR).map(h => h.itemName);
-    addPrivateLog(player, `RAPORT KONTRWYWIADU (R${prevR}): Zakupione przedmioty: ${bought.length ? bought.join(", ") : "Brak zakupow"}.`);
+    addPrivateLog(player, `RAPORT KONTRWYWIADU (R${prevR}): Zakupione przedmioty: ${bought.length ? bought.join(", ") : "Brak zakupów"}.`);
   }
   else if (itemId === "compare_factions") {
     const p1 = state.players.find(p => p.id === target1);
     const p2 = state.players.find(p => p.id === target2);
     if (!p1 || !p2 || p1.id === p2.id) {
-      addPrivateLog(player, "Wybierz dwoch roznych graczy.");
+      addPrivateLog(player, "Wybierz dwóch różnych graczy.");
       return;
     }
     const f1 = (p1.role === "LIBERAL") ? (p1.falseTrailRound === state.round ? "FAS" : "LIB") : (p1.falseTrailRound === state.round ? "LIB" : "FAS");
     const f2 = (p2.role === "LIBERAL") ? (p2.falseTrailRound === state.round ? "FAS" : "LIB") : (p2.falseTrailRound === state.round ? "LIB" : "FAS");
     player.usedCompare = true;
-    addPrivateLog(player, `POROWNANIE FRAKCJI (${p1.name} vs ${p2.name}): ${f1 === f2 ? "TA SAMA FRAKCJA" : "ROZNE FRAKCJE"}.`);
+    addPrivateLog(player, `PORÓWNANIE FRAKCJI (${p1.name} vs ${p2.name}): ${f1 === f2 ? "TA SAMA FRAKCJA" : "RÓŻNE FRAKCJE"}.`);
   }
   else if (itemId === "cut_debate") {
     state.timerSeconds = Math.max(10, state.timerSeconds - 120);
-    addPublicLog("Ktos anonimowo skrocil czas dyskusji o 2 minuty.");
-    addPrivateLog(player, "Skrocono zegar dyskusji o 2 minuty.");
+    addPublicLog("Ktoś anonimowo skrócił czas dyskusji o 2 minuty.");
+    addPrivateLog(player, "Skrócono zegar dyskusji o 2 minuty.");
   }
   else if (itemId === "false_trail") {
     player.falseTrailRound = state.round;
-    addPrivateLog(player, "Aktywowano FALSZYWY TROP na te runde.");
+    addPrivateLog(player, "Aktywowano FAŁSZYWY TROP na tę rundę.");
   }
   else if (itemId === "fascist_kill") {
     const t = state.players.find(p => p.id === target1);
@@ -1111,12 +1091,11 @@ function processShopPurchase(player, itemId, target1, target2) {
     state.bufferedEliminations.push({
       sourceId: player.id,
       targetId: t.id,
-      reason: "TAJNY ZAMACH FASZYSTOW"
+      reason: "TAJNY ZAMACH FASZYSTÓW"
     });
-    addPrivateLog(player, `Zlecono TAJNY ZAMACH na gracza ${t.name}. Wynik pojawi sie po rozliczeniu bufora.`);
+    addPrivateLog(player, `Zlecono TAJNY ZAMACH na gracza ${t.name}. Wynik pojawi się po rozliczeniu bufora.`);
   }
 
-  // Pobranie kosztu i aktualizacja puli
   player.points -= cfg.cost;
   player.purchasedRound = state.round;
   cfg.remaining -= 1;
@@ -1140,7 +1119,7 @@ function updateStationLocation(id, value) {
 }
 
 function regenerateAllTokens() {
-  if (!confirm("Wygenerowac nowe tajne tokeny dla wszystkich 15 stacji? Poprzednie wydruki przestana dzialac.")) return;
+  if (!confirm("Wygenerować nowe tajne tokeny dla wszystkich 15 stacji? Poprzednie wydruki przestaną działać.")) return;
   state.stations.forEach(s => { s.token = randomToken(10); });
   renderQrPrintGrid();
   broadcastState();
@@ -1169,14 +1148,12 @@ function randomizeShopBalanced() {
   const size = state.settings.boardSize;
   const scale = size === "5-6" ? 0.75 : (size === "9-10" ? 1.35 : 1.0);
 
-  // 1. Wylacz wszystko na start
   SHOP_CATALOG.forEach(i => {
     state.shopConfig[i.id].enabled = false;
     state.shopConfig[i.id].maxQty = 0;
     state.shopConfig[i.id].remaining = 0;
   });
 
-  // 2. Zawsze wybierz 1 lub 2 warianty Sladu Faszysty (zeby nie bylo inflacji informacji)
   const traces = ["trace_narrow", "trace_delayed", "trace_hot"].sort(() => Math.random() - 0.5);
   const traceCount = size === "5-6" ? 1 : 2;
   for (let i = 0; i < traceCount; i++) {
@@ -1186,7 +1163,6 @@ function randomizeShopBalanced() {
     state.shopConfig[id] = { enabled: true, cost: base.defaultCost, maxQty: qty, remaining: qty };
   }
 
-  // 3. Zawsze wlacz podstawe glosowania i obrony
   const core = ["extra_vote", "shield", "sabotage"];
   core.forEach(id => {
     const base = SHOP_CATALOG.find(x => x.id === id);
@@ -1194,7 +1170,6 @@ function randomizeShopBalanced() {
     state.shopConfig[id] = { enabled: true, cost: base.defaultCost, maxQty: qty, remaining: qty };
   });
 
-  // 4. Dobierz losowo 3-4 przedmioty dodatkowe z pozostalej puli
   const extras = ["block_vote", "wiretap", "activity_report", "counter_intel", "compare_factions", "cut_debate", "false_trail"]
     .sort(() => Math.random() - 0.5);
   const pickExtras = size === "5-6" ? 2 : (size === "9-10" ? 4 : 3);
@@ -1205,7 +1180,6 @@ function randomizeShopBalanced() {
     state.shopConfig[id] = { enabled: true, cost: base.defaultCost, maxQty: qty, remaining: qty };
   }
 
-  // 5. Tajny Zamach Faszystow (wlaczony od 7+ graczy, 1 sztuka dla 7-8, 1-2 dla 9-10)
   if (size !== "5-6") {
     const killQty = (size === "9-10" && Math.random() > 0.4) ? 2 : 1;
     state.shopConfig["fascist_kill"] = { enabled: true, cost: 3, maxQty: killQty, remaining: killQty };
@@ -1215,7 +1189,7 @@ function randomizeShopBalanced() {
   broadcastState();
 }
 
-/* ==================== RENDEROWANIE WIDOKOW ==================== */
+/* ==================== RENDEROWANIE WIDOKÓW ==================== */
 function formatTime(sec) {
   const m = Math.floor(sec / 60);
   const s = sec % 60;
@@ -1230,10 +1204,10 @@ function renderAll() {
 function renderHostView() {
   const phaseEl = document.getElementById("timer-phase-label");
   if (state.phase === "CHORES") {
-    phaseEl.textContent = "FAZA 1: PRACE DOMOWE (SKANOWANIE QR I SKLEP)";
+    phaseEl.textContent = "FAZA 1 // PRACE DOMOWE (SKANOWANIE QR I SKLEP)";
     phaseEl.className = "timer-phase chores";
   } else {
-    phaseEl.textContent = "FAZA 2: DYSKUSJA PRZY STOLE (ZADANIA QR ZABLOKOWANE)";
+    phaseEl.textContent = "FAZA 2 // DYSKUSJA PRZY STOLE (ZADANIA QR ZABLOKOWANE)";
     phaseEl.className = "timer-phase discussion";
   }
   document.getElementById("timer-display").textContent = formatTime(state.timerSeconds);
@@ -1242,7 +1216,7 @@ function renderHostView() {
   document.getElementById("lib-count").textContent = state.liberalPolicies;
   document.getElementById("fas-count").textContent = state.fascistPolicies;
   document.getElementById("election-tracker").textContent = `${state.electionTracker} / 3`;
-  document.getElementById("buffered-elim-badge").textContent = `BUFOR ELIMINACJI: ${state.bufferedEliminations.length}`;
+  document.getElementById("buffered-elim-badge").textContent = `BUFOR: ${state.bufferedEliminations.length}`;
 
   const vic = document.getElementById("victory-banner");
   if (state.winner) {
@@ -1252,18 +1226,16 @@ function renderHostView() {
     vic.style.display = "none";
   }
 
-  // Tor liberalny
   const libTrack = document.getElementById("liberal-track");
   libTrack.innerHTML = "";
   for (let i = 0; i < 5; i++) {
     const slot = document.createElement("div");
     slot.className = "policy-slot" + (i < state.liberalPolicies ? " enacted-liberal" : "");
     slot.onclick = () => togglePolicy("LIBERAL", i);
-    slot.innerHTML = `<div class="policy-slot-num">USTAWA ${i + 1}</div><div class="policy-slot-power">${i === 4 ? "ZWYCIESTWO" : "LIBERALNA"}</div>`;
+    slot.innerHTML = `<div class="policy-slot-num">USTAWA ${i + 1}</div><div class="policy-slot-power">${i === 4 ? "ZWYCIĘSTWO" : "LIBERALNA"}</div>`;
     libTrack.appendChild(slot);
   }
 
-  // Tor faszystowski
   const fasTrack = document.getElementById("fascist-track");
   fasTrack.innerHTML = "";
   const powers = BOARD_POWERS[state.settings.boardSize] || BOARD_POWERS["7-8"];
@@ -1275,13 +1247,12 @@ function renderHostView() {
     fasTrack.appendChild(slot);
   }
 
-  // Wynik glosowania
   const voteBox = document.getElementById("vote-result-box");
   if (state.votingOpen) {
     const count = Object.keys(state.votes).length;
     const aliveCount = state.players.filter(p => p.alive).length;
     voteBox.style.display = "block";
-    voteBox.textContent = `GLOSOWANIE OTWARTE: oddano ${count} z ${aliveCount} glosow.`;
+    voteBox.textContent = `GŁOSOWANIE OTWARTE: oddano ${count} z ${aliveCount} głosów.`;
   } else if (state.lastVoteSummary) {
     voteBox.style.display = "block";
     voteBox.textContent = state.lastVoteSummary;
@@ -1289,7 +1260,6 @@ function renderHostView() {
     voteBox.style.display = "none";
   }
 
-  // Podsumowanie wspolnej puli sklepu
   const shopSum = document.getElementById("host-shop-summary");
   shopSum.innerHTML = "";
   SHOP_CATALOG.forEach(item => {
@@ -1301,36 +1271,30 @@ function renderHostView() {
     shopSum.appendChild(b);
   });
 
-  // Lista graczy
   const plist = document.getElementById("host-players-list");
   plist.innerHTML = "";
   if (state.players.length === 0) {
-    plist.innerHTML = `<p style="font-size:0.88rem; color:var(--ink-muted);">Brak graczy w pokoju. Dodaj recznie lub poczekaj na polaczenie telefonow.</p>`;
+    plist.innerHTML = `<p style="color:var(--ink-muted);">Brak graczy w pokoju.</p>`;
   } else {
     state.players.forEach(p => {
       const card = document.createElement("div");
       card.className = "player-card" + (p.alive ? "" : " dead");
-      const votedTag = (state.votingOpen && state.votes[p.id]) ? `<span class="badge badge-liberal">ZAGLOSOWAL</span>` : "";
+      const votedTag = (state.votingOpen && state.votes[p.id]) ? `<span class="badge badge-liberal">ZAGŁOSOWAŁ</span>` : "";
       const actionBtn = p.alive
         ? `<button class="btn btn-sm btn-fascist" onclick="manualExecute('${p.id}')">EGZEKUCJA</button>`
-        : `<span class="stamp">WYELIMINOWANY</span> <button class="btn btn-sm btn-outline" onclick="manualRevive('${p.id}')">PRZYWROC</button>`;
+        : `<span class="stamp">WYELIMINOWANY</span> <button class="btn btn-sm btn-outline" onclick="manualRevive('${p.id}')">PRZYWRÓĆ</button>`;
       card.innerHTML = `
-        <div>
-          <strong class="player-name">${p.name}</strong> ${votedTag}
-        </div>
-        <div style="display:flex; gap:6px; align-items:center;">
-          ${actionBtn}
-        </div>
+        <div><strong class="player-name">${p.name}</strong> ${votedTag}</div>
+        <div style="display:flex; gap:6px; align-items:center;">${actionBtn}</div>
       `;
       plist.appendChild(card);
     });
   }
 
-  // Dziennik publiczny
   const plog = document.getElementById("host-public-log");
   plog.innerHTML = state.publicLogs.length
     ? state.publicLogs.map(l => `<div class="log-entry">${l}</div>`).join("")
-    : `<div class="log-entry" style="color:var(--ink-muted);">Brak wpisow.</div>`;
+    : `<div class="log-entry" style="color:var(--ink-muted);">Brak wpisów.</div>`;
 }
 
 function renderConfigView() {
@@ -1340,16 +1304,14 @@ function renderConfigView() {
   document.getElementById("cfg-base-url").value = state.settings.baseUrl;
   document.getElementById("cfg-limit-one-purchase").checked = state.settings.limitOnePurchasePerRound;
 
-  // Edytor 15 stacji
   const sed = document.getElementById("stations-editor-list");
   sed.innerHTML = state.stations.map(s => `
     <div style="display:flex; gap:8px; align-items:center; margin-bottom:6px;">
-      <strong style="min-width:34px;">#${s.id}</strong>
+      <strong style="min-width:32px;">#${s.id}</strong>
       <input type="text" value="${s.location.replace(/"/g, '&quot;')}" onchange="updateStationLocation(${s.id}, this.value)" />
     </div>
   `).join("");
 
-  // Tabela sklepu
   const tbody = document.getElementById("shop-config-tbody");
   tbody.innerHTML = SHOP_CATALOG.map(item => {
     const cfg = state.shopConfig[item.id];
@@ -1360,7 +1322,7 @@ function renderConfigView() {
         </td>
         <td>
           <strong>${item.name}</strong>
-          ${item.fascistOnly ? '<br><span class="badge badge-fascist">TYLKO FASZYSCI</span>' : ''}
+          ${item.fascistOnly ? '<br><span class="badge badge-fascist" style="margin-top:3px;">TYLKO FASZYŚCI</span>' : ''}
         </td>
         <td><span class="badge">${item.category}</span> ${item.desc}</td>
         <td><input type="number" min="1" max="10" value="${cfg.cost}" onchange="updateShopConfigField('${item.id}', 'cost', this.value)" /></td>
@@ -1415,11 +1377,10 @@ function renderQrPrintGrid() {
 }
 
 function renderPhoneView() {
-  // Przelacznik demo
   if (connMode === "DEMO") {
     const sel = document.getElementById("demo-player-select");
     const prev = sel.value;
-    sel.innerHTML = state.players.map(p => `<option value="${p.id}">${p.name} (${p.alive ? "ZYWY" : "MARTWY"} | ${p.points} PKT)</option>`).join("");
+    sel.innerHTML = state.players.map(p => `<option value="${p.id}">${p.name} (${p.alive ? "ŻYWY" : "MARTWY"} | ${p.points} PKT)</option>`).join("");
     if (myPlayerId) sel.value = myPlayerId;
     else if (prev) sel.value = prev;
 
@@ -1430,78 +1391,80 @@ function renderPhoneView() {
   }
 
   const player = state.players.find(p => p.id === myPlayerId);
+  const aliveBadge = document.getElementById("phone-alive-badge");
   if (!player) {
-    document.getElementById("phone-player-header").textContent = "BRAK POLACZONEGO GRACZA";
+    document.getElementById("phone-player-header").textContent = "BRAK SESJI";
+    document.getElementById("phone-points").textContent = "0";
+    document.getElementById("phone-phase-text").textContent = "OCZEKIWANIE";
     return;
   }
 
-  document.getElementById("phone-player-header").textContent = "GRACZ: " + player.name.toUpperCase();
+  document.getElementById("phone-player-header").textContent = player.name.toUpperCase();
   document.getElementById("phone-points").textContent = player.points;
-  document.getElementById("phone-phase-text").textContent = state.phase === "CHORES" ? "PRACE DOMOWE" : "DYSKUSJA";
+  document.getElementById("phone-phase-text").textContent = state.started
+    ? (state.phase === "CHORES" ? "PRACE DOMOWE" : "DYSKUSJA")
+    : "OCZEKIWANIE";
   document.getElementById("phone-round-text").textContent = state.round;
-  document.getElementById("phone-alive-text").textContent = player.alive ? "ZYWY" : "WYELIMINOWANY";
+  aliveBadge.textContent = player.alive ? "ŻYWY" : "WYELIMINOWANY";
+  aliveBadge.className = "badge " + (player.alive ? "badge-liberal" : "badge-fascist");
 
-  // Tajna rola
   const roleBox = document.getElementById("secret-role-container");
   if (roleVisible) {
     roleBox.style.display = "block";
     let css = "liberal";
-    let title = "LIBERAL";
+    let title = "LIBERAŁ";
     let extra = "Uchwal 5 ustaw liberalnych lub wyeliminuj Hitlera.";
     if (player.role === "FASCIST") {
       css = "fascist";
       title = "FASZYSTA";
       const others = state.players.filter(p => p.id !== player.id && (p.role === "FASCIST" || p.role === "HITLER"))
         .map(p => `${p.name} (${p.role === "HITLER" ? "HITLER" : "FASZYSTA"})`).join(", ");
-      extra = `Twoi wspolnicy: ${others || "brak"}.`;
+      extra = `Twoi wspólnicy: ${others || "brak"}.`;
     } else if (player.role === "HITLER") {
       css = "hitler";
       title = "HITLER";
       if (state.settings.boardSize === "5-6") {
         const fas = state.players.find(p => p.role === "FASCIST");
-        extra = `Plansza 5-6: Twoj Faszysta to ${fas ? fas.name : "?"}.`;
+        extra = `Plansza 5-6: Twój Faszysta to ${fas ? fas.name : "?"}.`;
       } else {
-        extra = "Plansza 7-10: Nie znasz swoich Faszystow. Zdobywaj zaufanie.";
+        extra = "Plansza 7-10: Nie znasz swoich Faszystów. Zdobywaj zaufanie.";
       }
     }
-    roleBox.innerHTML = `<div class="role-box ${css}"><h3>${title}</h3><p style="margin-top:6px; font-size:0.9rem;">${extra}</p></div>`;
+    roleBox.innerHTML = `<div class="role-box ${css}"><h3>${title}</h3><p style="margin-top:6px; font-size:0.84rem;">${extra}</p></div>`;
   } else {
     roleBox.style.display = "none";
   }
 
-  // Glosowanie
   const voteStatus = document.getElementById("phone-vote-status");
   const btnJa = document.getElementById("btn-vote-ja");
   const btnNein = document.getElementById("btn-vote-nein");
   if (!player.alive) {
-    voteStatus.textContent = "Zostales wyeliminowany — nie bierzesz udzialu w glosowaniu.";
+    voteStatus.textContent = "Zostałeś wyeliminowany — nie bierzesz udziału w głosowaniu.";
     btnJa.disabled = true;
     btnNein.disabled = true;
   } else if (state.votingOpen) {
     const myVote = state.votes[player.id];
     voteStatus.textContent = myVote
-      ? `Twoj oddany glos: ${myVote} (mozesz zmienic do zamkniecia).`
-      : "Glosowanie otwarte! Wybierz JA lub NEIN.";
+      ? `Twój oddany głos: ${myVote} (możesz zmienić do zamknięcia).`
+      : "Głosowanie otwarte. Wybierz JA lub NEIN.";
     btnJa.disabled = false;
     btnNein.disabled = false;
   } else {
-    voteStatus.textContent = "Glosowanie jest obecnie zamkniete.";
+    voteStatus.textContent = "Głosowanie jest obecnie zamknięte.";
     btnJa.disabled = true;
     btnNein.disabled = true;
   }
 
-  // Zadanie QR
   const st = state.stations.find(s => s.id === player.assignedStation);
   const taskBox = document.getElementById("phone-task-box");
   if (!player.alive) {
-    taskBox.textContent = "Jestes wyeliminowany — zadania QR sa nieaktywne.";
+    taskBox.textContent = "Jesteś wyeliminowany — zadania QR są nieaktywne.";
   } else if (player.completedRound === state.round) {
-    taskBox.innerHTML = `<strong>ZADANIE ZALICZONE!</strong> Zeskanowales stacje #${player.assignedStation} w tej rundzie (+1 PKT).`;
+    taskBox.innerHTML = `<strong>ZADANIE ZALICZONE</strong><br>Stacja #${player.assignedStation} została zeskanowana w tej rundzie (+1 PKT).`;
   } else {
-    taskBox.innerHTML = `<strong>TWOJ CEL W RUNDZIE ${state.round}:</strong><br>STACJA #${player.assignedStation} — ${st ? st.location : "?"}<br><span style="font-size:0.82rem;">Zeskanuj kod QR w fazie Prac Domowych, aby zdobyc +1 PKT Wplywu.</span>`;
+    taskBox.innerHTML = `<strong>CEL NA RUNDĘ ${state.round}:</strong><br>STACJA #${player.assignedStation} — ${st ? st.location : "?"}`;
   }
 
-  // Ukryta bron
   const wPanel = document.getElementById("hidden-weapon-panel");
   if (player.foundWeapon && !state.weaponUsed && player.alive) {
     wPanel.style.display = "block";
@@ -1512,14 +1475,12 @@ function renderPhoneView() {
     wPanel.style.display = "none";
   }
 
-  // Sklep
   renderPhoneShop(player);
 
-  // Raporty prywatne
   const privLogs = document.getElementById("phone-private-logs");
   privLogs.innerHTML = player.logs.length
     ? player.logs.map(l => `<div class="log-entry">${l}</div>`).join("")
-    : `<div class="log-entry" style="color:var(--ink-muted);">Brak raportow.</div>`;
+    : `<div class="log-entry" style="color:var(--ink-muted);">Brak raportów.</div>`;
 }
 
 function renderPhoneShop(player) {
@@ -1528,13 +1489,13 @@ function renderPhoneShop(player) {
   list.innerHTML = "";
 
   if (!player.alive) {
-    notice.textContent = "Sklep jest niedostepny dla wyeliminowanych graczy.";
+    notice.textContent = "Sklep jest niedostępny dla wyeliminowanych graczy.";
     return;
   }
   const locked = state.settings.limitOnePurchasePerRound && player.purchasedRound === state.round;
   notice.textContent = locked
-    ? "Wykorzystales juz limit 1 zakupu w tej rundzie."
-    : "Wspolna pula na cala gre — kto pierwszy, ten lepszy.";
+    ? "Wykorzystano limit 1 zakupu w tej rundzie."
+    : "Wspólna pula na całą grę — liczy się kolejność zakupu.";
 
   const aliveOthers = state.players.filter(p => p.alive && p.id !== player.id);
   const aliveAll = state.players.filter(p => p.alive);
@@ -1569,7 +1530,7 @@ function renderPhoneShop(player) {
 
     div.innerHTML = `
       <div class="shop-item-head">
-        <strong>${item.name}</strong>
+        <span class="shop-item-title">${item.name}</span>
         <span class="badge ${cfg.remaining === 0 ? "badge-fascist" : "badge-gold"}">PULA: ${cfg.remaining}/${cfg.maxQty}</span>
       </div>
       <div class="shop-item-desc">${item.desc}</div>
@@ -1583,7 +1544,7 @@ function renderPhoneShop(player) {
 /* ==================== AKCJE NA TELEFONIE ==================== */
 function toggleSecretRole() {
   roleVisible = !roleVisible;
-  document.getElementById("btn-toggle-role").textContent = roleVisible ? "UKRYJ TAJNA ROLE" : "ODSLON TAJNA ROLE";
+  document.getElementById("btn-toggle-role").textContent = roleVisible ? "UKRYJ TAJNĄ ROLĘ" : "ODSŁOŃ TAJNĄ ROLĘ";
   renderPhoneView();
 }
 
@@ -1612,7 +1573,7 @@ function useHiddenWeapon() {
   sendActionToHost({ type: "USE_WEAPON", playerId: myPlayerId, targetId: sel.value });
 }
 
-/* ==================== SKANER QR I PARSOWANIE LINKOW (PODEJSCIE 3) ==================== */
+/* ==================== SKANER QR ==================== */
 function extractTokenFromScan(rawText) {
   if (!rawText) return null;
   if (rawText.startsWith("SHQR:")) return rawText.slice(5).trim();
@@ -1628,7 +1589,7 @@ function processScannedToken(rawText) {
   const token = extractTokenFromScan(rawText);
   if (!token || !myPlayerId) return;
   sendActionToHost({ type: "SCAN_QR", playerId: myPlayerId, token });
-  document.getElementById("qr-scan-feedback").innerHTML = `<div class="info-box">Przeslano skan kodu QR. Sprawdz zakladke RAPORTY lub komunikat powyzej.</div>`;
+  document.getElementById("qr-scan-feedback").innerHTML = `<div class="info-box">Przesłano skan kodu QR. Sprawdź zakładkę GŁOS / NOTES.</div>`;
   pendingScanToken = null;
 }
 
@@ -1636,7 +1597,7 @@ function startQrScanner() {
   const readerEl = document.getElementById("qr-reader");
   readerEl.style.display = "block";
   if (typeof Html5Qrcode === "undefined") {
-    document.getElementById("qr-scan-feedback").textContent = "Brak biblioteki skanera — uzyj natywnego aparatu telefonu (link ?scan=TOKEN).";
+    document.getElementById("qr-scan-feedback").textContent = "Brak biblioteki skanera — użyj natywnego aparatu telefonu.";
     return;
   }
   if (qrScanner) return;
@@ -1649,9 +1610,9 @@ function startQrScanner() {
       processScannedToken(decodedText);
     },
     () => {}
-  ).catch(err => {
+  ).catch(() => {
     document.getElementById("qr-scan-feedback").innerHTML =
-      `<div class="alert-box">Przegladarka zablokowala dostep do kamery (wymagane HTTPS). Zamiast tego zeskanuj kod QR <strong>natywnym aparatem telefonu</strong>.</div>`;
+      `<div class="alert-box">Przeglądarka zablokowała dostęp do kamery (wymagane HTTPS). Zeskanuj kod QR <strong>natywnym aparatem telefonu</strong>.</div>`;
     stopQrScanner();
   });
 }
@@ -1685,7 +1646,6 @@ function simulateSelectedScan() {
   if (st) processScannedToken(st.token);
 }
 
-/* ==================== NOTATNIK ==================== */
 function savePersonalNotes() {
   if (!myPlayerId) return;
   localStorage.setItem("sh_notes_" + myPlayerId, document.getElementById("phone-personal-notes").value);
@@ -1696,7 +1656,6 @@ function loadPersonalNotes() {
   document.getElementById("phone-personal-notes").value = localStorage.getItem("sh_notes_" + myPlayerId) || "";
 }
 
-/* ==================== START I OBSLUGA ?scan=TOKEN Z APARATU ==================== */
 window.addEventListener("DOMContentLoaded", () => {
   checkLanServer();
   renderConfigView();
@@ -1708,7 +1667,7 @@ window.addEventListener("DOMContentLoaded", () => {
     pendingScanToken = scanParam;
     const banner = document.getElementById("auto-scan-banner");
     banner.style.display = "block";
-    banner.innerHTML = `<strong>WYKRYTO KOD QR Z APARATU!</strong> Laczenie z sesja gracza, aby zaliczyc stacje...`;
+    banner.innerHTML = `<strong>WYKRYTO KOD QR Z APARATU</strong> — łączenie z sesją gracza...`;
 
     const lastMode = localStorage.getItem("sh_last_mode");
     const lastName = localStorage.getItem("sh_last_name");
@@ -1722,9 +1681,8 @@ window.addEventListener("DOMContentLoaded", () => {
       document.getElementById("peer-player-name").value = lastName;
       setTimeout(() => joinOnlineRoom(), 600);
     } else {
-      banner.innerHTML = `<strong>WYKRYTO KOD QR Z APARATU!</strong> Dolacz teraz do pokoju (Online lub LAN), a skan zostanie zaliczony automatycznie.`;
+      banner.innerHTML = `<strong>WYKRYTO KOD QR Z APARATU</strong> — dołącz do pokoju, a skan zostanie zaliczony automatycznie.`;
     }
-    // Wyczysc parametr z paska adresu, zeby odswiezenie nie skanowalo ponownie
     window.history.replaceState({}, document.title, window.location.pathname);
   }
 });

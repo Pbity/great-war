@@ -1,16 +1,18 @@
-/* SECRET HITLER: QR & SKLEP WPLYWOW - ESTETYKA REPUBLIKI WEIMARSKIEJ */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap');
+
 :root {
-  --bg: #efe4ce;
-  --paper: #f7f0e1;
-  --paper-dark: #e4d5b7;
-  --ink: #1a1715;
-  --ink-muted: #524a42;
-  --fascist: #a62626;
-  --fascist-dark: #7a1818;
-  --liberal: #24567d;
-  --liberal-dark: #183b57;
-  --gold: #a87b22;
-  --border: #1a1715;
+  --bg: #ece3d0;
+  --paper: #f8f4ea;
+  --paper-alt: #f0e8d6;
+  --ink: #1a1816;
+  --ink-muted: #5a534a;
+  --fascist: #a62b2b;
+  --fascist-dark: #7d1e1e;
+  --liberal: #2a5d82;
+  --liberal-dark: #1d435f;
+  --gold: #9c7a38;
+  --gold-dark: #7c5f27;
+  --border: #1a1816;
 }
 
 * {
@@ -20,76 +22,84 @@
 }
 
 body {
-  font-family: "Georgia", "Times New Roman", serif;
+  font-family: "IBM Plex Mono", "Courier New", Courier, monospace;
   background-color: var(--bg);
   color: var(--ink);
-  line-height: 1.45;
+  line-height: 1.5;
   min-height: 100vh;
+  font-size: 13px;
 }
 
-h1, h2, h3, h4, .display-font, button, .badge, .tab-btn {
-  font-family: "Arial Narrow", "Impact", "Helvetica Neue", Arial, sans-serif;
+h1, h2, h3, h4, .display-font, button, .tab-btn, .subtab-btn, .panel-title, .brand-title, .badge {
+  font-family: "Oswald", "Arial Narrow", "Impact", Arial, sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
+/* NAGLOWEK */
 .app-header {
-  background: var(--ink);
-  color: var(--paper);
-  padding: 14px 20px;
-  border-bottom: 5px solid var(--fascist);
+  background: #141312;
+  color: #f8f4ea;
+  padding: 12px 24px;
+  border-bottom: 3px solid var(--fascist);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .brand-title {
-  font-size: 1.55rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  color: #f8f4ea;
 }
 
 .brand-sub {
-  font-size: 0.78rem;
-  color: var(--paper-dark);
-  letter-spacing: 0.15em;
+  font-family: "IBM Plex Mono", "Courier New", monospace;
+  font-size: 0.68rem;
+  color: #c24b3a;
+  letter-spacing: 0.16em;
   display: block;
+  margin-top: 2px;
+  text-transform: uppercase;
 }
 
 .nav-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  align-items: center;
+  gap: 6px;
 }
 
 .tab-btn {
   background: transparent;
-  color: var(--paper);
-  border: 2px solid var(--paper-dark);
-  padding: 8px 14px;
-  font-size: 0.85rem;
-  font-weight: 700;
+  color: #e6dfd1;
+  border: none;
+  padding: 9px 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
 
 .tab-btn:hover {
-  background: var(--paper-dark);
-  color: var(--ink);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .tab-btn.active {
-  background: var(--fascist);
-  border-color: var(--fascist);
+  background: var(--gold);
   color: #fff;
 }
 
+/* UKLAD GLOWNY */
 .container {
-  max-width: 1260px;
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 24px 20px 40px;
 }
 
 .view-section {
@@ -100,16 +110,17 @@ h1, h2, h3, h4, .display-font, button, .badge, .tab-btn {
   display: block;
 }
 
+/* PANELE / AKTA */
 .panel {
   background: var(--paper);
-  border: 3px solid var(--border);
-  padding: 18px;
+  border: 2px solid var(--border);
+  padding: 18px 20px;
   margin-bottom: 18px;
-  box-shadow: 5px 5px 0 rgba(26, 23, 21, 0.18);
+  box-shadow: 4px 4px 0 rgba(26, 24, 22, 0.18);
 }
 
 .panel-header {
-  border-bottom: 2px solid var(--border);
+  border-bottom: 1.5px solid var(--border);
   padding-bottom: 8px;
   margin-bottom: 14px;
   display: flex;
@@ -121,7 +132,8 @@ h1, h2, h3, h4, .display-font, button, .badge, .tab-btn {
 
 .panel-title {
   font-size: 1.15rem;
-  font-weight: 900;
+  font-weight: 700;
+  color: var(--ink);
 }
 
 .grid-2 {
@@ -132,28 +144,30 @@ h1, h2, h3, h4, .display-font, button, .badge, .tab-btn {
 
 .grid-3 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
 }
 
+/* PRZYCISKI */
 .btn {
-  background: var(--ink);
-  color: var(--paper);
-  border: 2px solid var(--ink);
-  padding: 9px 15px;
-  font-size: 0.85rem;
-  font-weight: 700;
+  background: #1c1a18;
+  color: #f8f4ea;
+  border: 2px solid #1c1a18;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   display: inline-block;
   text-align: center;
+  transition: background 0.12s, color 0.12s;
 }
 
 .btn:hover:not(:disabled) {
-  background: #332e2a;
+  background: #33302c;
 }
 
 .btn:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
@@ -177,109 +191,142 @@ h1, h2, h3, h4, .display-font, button, .badge, .tab-btn {
   background: var(--liberal-dark);
 }
 
+.btn-gold {
+  background: var(--gold);
+  border-color: var(--gold-dark);
+  color: #fff;
+}
+
+.btn-gold:hover:not(:disabled) {
+  background: var(--gold-dark);
+}
+
 .btn-outline {
-  background: transparent;
+  background: var(--paper);
   color: var(--ink);
+  border: 1.5px solid var(--border);
 }
 
 .btn-outline:hover:not(:disabled) {
-  background: var(--paper-dark);
+  background: var(--paper-alt);
 }
 
 .btn-sm {
-  padding: 5px 10px;
-  font-size: 0.75rem;
+  padding: 6px 11px;
+  font-size: 0.78rem;
 }
 
+/* FORMULARZE */
 input[type="text"],
 input[type="number"],
 select,
 textarea {
   width: 100%;
   padding: 8px 10px;
-  border: 2px solid var(--border);
-  background: #fffdf8;
+  border: 1.5px solid var(--border);
+  background: #fffdf9;
   color: var(--ink);
-  font-family: inherit;
-  font-size: 0.95rem;
+  font-family: "IBM Plex Mono", "Courier New", monospace;
+  font-size: 0.85rem;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--gold);
 }
 
 textarea {
-  min-height: 90px;
+  min-height: 100px;
   resize: vertical;
 }
 
 label {
   display: block;
-  font-size: 0.82rem;
-  font-weight: 700;
+  font-family: "IBM Plex Mono", "Courier New", monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
   text-transform: uppercase;
-  margin-bottom: 4px;
-  font-family: "Arial Narrow", Arial, sans-serif;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  margin-bottom: 5px;
 }
 
 .form-row {
   margin-bottom: 12px;
 }
 
+/* RAMKOWE ETYKIETY (STYL ZE ZRZUTU EKRANU) */
 .badge {
   display: inline-block;
-  padding: 3px 8px;
-  font-size: 0.74rem;
-  font-weight: 700;
-  border: 1px solid var(--ink);
-  background: var(--paper-dark);
+  padding: 2px 9px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  border: 1.5px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+  line-height: 1.35;
 }
 
 .badge-fascist {
-  background: var(--fascist);
-  color: #fff;
-  border-color: var(--fascist-dark);
+  border-color: var(--fascist);
+  color: var(--fascist);
+  background: rgba(166, 43, 43, 0.06);
 }
 
 .badge-liberal {
-  background: var(--liberal);
-  color: #fff;
-  border-color: var(--liberal-dark);
+  border-color: var(--liberal);
+  color: var(--liberal);
+  background: rgba(42, 93, 130, 0.06);
 }
 
 .badge-gold {
-  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(156, 122, 56, 0.06);
+}
+
+.badge-solid-fascist {
+  background: var(--fascist);
+  border-color: var(--fascist-dark);
   color: #fff;
-  border-color: #7c5812;
 }
 
 /* TIMER */
 .timer-box {
-  background: var(--ink);
-  color: var(--paper);
+  background: #141312;
+  color: #f8f4ea;
   padding: 20px;
-  border: 4px solid var(--border);
+  border: 2px solid var(--border);
+  border-bottom: 4px solid var(--gold);
   text-align: center;
   margin-bottom: 18px;
+  box-shadow: 4px 4px 0 rgba(26, 24, 22, 0.18);
 }
 
 .timer-phase {
-  font-size: 1rem;
-  letter-spacing: 0.16em;
-  color: var(--paper-dark);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   margin-bottom: 6px;
 }
 
 .timer-phase.chores {
-  color: #e6b85c;
+  color: #d6b267;
 }
 
 .timer-phase.discussion {
-  color: #e67373;
+  color: #d96b6b;
 }
 
 .timer-clock {
-  font-family: "Courier New", monospace;
-  font-size: 3.8rem;
-  font-weight: 900;
+  font-family: "Oswald", "Arial Narrow", sans-serif;
+  font-size: 4rem;
+  font-weight: 700;
   letter-spacing: 0.08em;
-  margin: 4px 0 12px;
+  line-height: 1.05;
+  margin: 4px 0 14px;
 }
 
 .timer-controls {
@@ -293,7 +340,7 @@ label {
 .board-track {
   display: grid;
   gap: 8px;
-  margin: 10px 0 16px;
+  margin: 8px 0 16px;
 }
 
 .board-track.liberal-track {
@@ -305,47 +352,55 @@ label {
 }
 
 .policy-slot {
-  border: 2px solid var(--ink);
+  border: 1.5px solid var(--ink);
   padding: 10px 6px;
   text-align: center;
-  background: var(--paper-dark);
-  min-height: 74px;
+  background: var(--paper-alt);
+  min-height: 72px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   user-select: none;
+  transition: background 0.12s;
+}
+
+.policy-slot:hover {
+  background: #e5dac2;
 }
 
 .policy-slot.enacted-liberal {
   background: var(--liberal);
+  border-color: var(--liberal-dark);
   color: #fff;
 }
 
 .policy-slot.enacted-fascist {
   background: var(--fascist);
+  border-color: var(--fascist-dark);
   color: #fff;
 }
 
 .policy-slot-num {
-  font-size: 0.72rem;
-  font-weight: 700;
+  font-family: "Oswald", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   opacity: 0.85;
 }
 
 .policy-slot-power {
-  font-size: 0.72rem;
-  font-weight: 700;
+  font-size: 0.68rem;
   margin-top: 4px;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 /* LISTA GRACZY NA LAPTOPIE */
 .player-card {
-  border: 2px solid var(--ink);
-  padding: 10px 12px;
-  background: #fffdf8;
+  border: 1.5px solid var(--ink);
+  padding: 9px 12px;
+  background: #fffdf9;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -354,7 +409,7 @@ label {
 }
 
 .player-card.dead {
-  background: #d8cfc0;
+  background: #e5dccb;
   opacity: 0.75;
 }
 
@@ -363,93 +418,88 @@ label {
 }
 
 .stamp {
-  border: 2px solid var(--fascist);
+  font-family: "Oswald", sans-serif;
+  border: 1.5px solid var(--fascist);
   color: var(--fascist);
-  padding: 2px 6px;
-  font-size: 0.72rem;
-  font-weight: 900;
-  transform: rotate(-3deg);
-  display: inline-block;
+  padding: 2px 7px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }
 
-/* WIDOK TELEFONU */
+/* WIDOK TELEFONU (DOPASOWANY DO ZRZUTU EKRANU) */
 .phone-shell {
-  max-width: 520px;
+  max-width: 470px;
   margin: 0 auto;
 }
 
-.role-box {
-  border: 3px solid var(--ink);
-  padding: 16px;
-  text-align: center;
-  background: var(--paper-dark);
-  margin: 12px 0;
-}
-
-.role-box.liberal {
-  background: var(--liberal);
-  color: #fff;
-}
-
-.role-box.fascist {
-  background: var(--fascist);
-  color: #fff;
-}
-
-.role-box.hitler {
-  background: #1a1715;
-  color: #e6b85c;
-  border-color: var(--fascist);
-}
-
-.shop-item {
-  border: 2px solid var(--ink);
-  padding: 12px;
-  background: #fffdf8;
-  margin-bottom: 10px;
-}
-
-.shop-item.fascist-only {
-  border-color: var(--fascist);
-  background: #fdf2f2;
-}
-
-.shop-item-head {
+.player-status-card {
+  background: var(--paper);
+  border: 2px solid var(--border);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  box-shadow: 4px 4px 0 rgba(26, 24, 22, 0.16);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
+  gap: 12px;
 }
 
-.shop-item-desc {
-  font-size: 0.88rem;
+.player-status-name {
+  font-family: "Oswald", sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.player-status-meta {
+  font-size: 0.72rem;
   color: var(--ink-muted);
-  margin-bottom: 10px;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.player-status-badges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.player-status-badges .badge {
+  min-width: 96px;
+  text-align: center;
 }
 
 .subtabs {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 6px;
   margin-bottom: 14px;
-  flex-wrap: wrap;
 }
 
 .subtab-btn {
-  flex: 1;
-  min-width: 90px;
-  padding: 8px 6px;
-  border: 2px solid var(--ink);
-  background: var(--paper-dark);
+  padding: 9px 4px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
   color: var(--ink);
-  font-weight: 700;
-  font-size: 0.78rem;
+  font-weight: 600;
+  font-size: 0.82rem;
   cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.subtab-btn:hover {
+  background: var(--paper-alt);
 }
 
 .subtab-btn.active {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--gold);
+  border-color: var(--ink);
+  color: #fff;
 }
 
 .phone-pane {
@@ -460,36 +510,96 @@ label {
   display: block;
 }
 
+.role-box {
+  border: 2px solid var(--ink);
+  padding: 16px;
+  text-align: center;
+  background: var(--paper-alt);
+  margin: 12px 0 0;
+}
+
+.role-box.liberal {
+  background: var(--liberal);
+  color: #fff;
+  border-color: var(--liberal-dark);
+}
+
+.role-box.fascist {
+  background: var(--fascist);
+  color: #fff;
+  border-color: var(--fascist-dark);
+}
+
+.role-box.hitler {
+  background: #141312;
+  color: #e6c273;
+  border-color: var(--fascist);
+}
+
+.shop-item {
+  border: 1.5px solid var(--ink);
+  padding: 12px 14px;
+  background: #fffdf9;
+  margin-bottom: 10px;
+}
+
+.shop-item.fascist-only {
+  border-color: var(--fascist);
+  background: #fdf4f4;
+}
+
+.shop-item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.shop-item-title {
+  font-family: "Oswald", sans-serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.shop-item-desc {
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  margin-bottom: 10px;
+}
+
 .alert-box {
-  border: 2px solid var(--fascist);
-  background: #f9e3e3;
+  border: 1.5px solid var(--fascist);
+  background: #f9e8e8;
   color: var(--fascist-dark);
   padding: 10px 12px;
   margin-bottom: 12px;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
 }
 
 .info-box {
-  border: 2px solid var(--liberal);
-  background: #e3eff7;
+  border: 1.5px solid var(--liberal);
+  background: #e9f1f7;
   color: var(--liberal-dark);
   padding: 10px 12px;
   margin-bottom: 12px;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
 }
 
 .log-list {
-  max-height: 260px;
+  max-height: 250px;
   overflow-y: auto;
-  border: 2px solid var(--ink);
-  background: #fffdf8;
+  border: 1.5px solid var(--ink);
+  background: #fffdf9;
   padding: 10px;
-  font-size: 0.86rem;
+  font-size: 0.78rem;
 }
 
 .log-entry {
-  padding: 5px 0;
-  border-bottom: 1px dashed #c8bca6;
+  padding: 6px 0;
+  border-bottom: 1px dashed #cfc4b0;
 }
 
 .log-entry:last-child {
@@ -500,32 +610,35 @@ label {
 .config-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.86rem;
+  font-size: 0.78rem;
 }
 
 .config-table th,
 .config-table td {
   border: 1px solid var(--ink);
-  padding: 6px 8px;
+  padding: 7px 8px;
   text-align: left;
+  vertical-align: middle;
 }
 
 .config-table th {
-  background: var(--ink);
-  color: var(--paper);
-  font-family: "Arial Narrow", Arial, sans-serif;
+  background: #141312;
+  color: #f8f4ea;
+  font-family: "Oswald", sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .config-table input[type="number"] {
-  width: 68px;
+  width: 64px;
   padding: 4px 6px;
 }
 
 /* QR GRID DO DRUKU */
 .qr-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
   gap: 14px;
 }
 
@@ -538,14 +651,14 @@ label {
 }
 
 .qr-card-num {
-  font-family: "Arial Narrow", Arial, sans-serif;
+  font-family: "Oswald", sans-serif;
   font-size: 1.15rem;
-  font-weight: 900;
+  font-weight: 700;
   margin-bottom: 4px;
 }
 
 .qr-card-loc {
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   margin-bottom: 8px;
   min-height: 2.2em;
 }
@@ -554,12 +667,12 @@ label {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 150px;
+  min-height: 145px;
 }
 
 .qr-img-wrap img,
 .qr-img-wrap canvas {
-  max-width: 150px;
+  max-width: 145px;
   height: auto;
 }
 

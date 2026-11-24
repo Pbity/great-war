@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SECRET HITLER — System QR i Sklep Wplywow</title>
+  <title>SECRET HITLER // STACJE QR</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- Biblioteki QR oraz PeerJS (dla trybu online bez serwera) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
@@ -13,110 +12,109 @@
 <body>
   <header class="app-header no-print">
     <div>
-      <div class="brand-title">SECRET HITLER</div>
-      <span class="brand-sub">SYSTEM STACJI QR I SKLEPU WPLYWOW</span>
+      <div class="brand-title">SECRET HITLER // STACJE QR</div>
+      <span class="brand-sub">SYSTEM ZARZĄDZANIA ROZGRYWKĄ BEZ MISTRZA GRY</span>
     </div>
     <nav class="nav-tabs">
-      <button class="tab-btn active" data-view="lobby" onclick="switchView('lobby')">LOBBY / POLACZENIE</button>
-      <button class="tab-btn" data-view="host" onclick="switchView('host')">EKRAN GLOWNY (LAPTOP)</button>
+      <button class="tab-btn active" data-view="lobby" onclick="switchView('lobby')">START / POKÓJ</button>
+      <button class="tab-btn" data-view="host" onclick="switchView('host')">EKRAN GŁÓWNY</button>
       <button class="tab-btn" data-view="config" onclick="switchView('config')">USTAWIENIA / QR / SKLEP</button>
       <button class="tab-btn" data-view="phone" onclick="switchView('phone')">TELEFON GRACZA</button>
     </nav>
   </header>
 
   <main class="container">
-    <!-- ==================== WIDOK 1: LOBBY ==================== -->
+    <!-- ==================== WIDOK 1: START / POKÓJ ==================== -->
     <section id="view-lobby" class="view-section active">
       <div id="auto-scan-banner" class="info-box" style="display:none;"></div>
 
       <div class="grid-3">
         <div class="panel">
           <div class="panel-header">
-            <span class="panel-title">1. TRYB TESTOWY (LOKALNY)</span>
-            <span class="badge">BEZ SIECI</span>
+            <span class="panel-title">1. TRYB TESTOWY</span>
+            <span class="badge">LOKALNY</span>
           </div>
-          <p style="font-size:0.9rem; margin-bottom:12px;">
-            Natychmiastowe uruchomienie pelnej symulacji na jednym urzadzeniu (7 graczy). Pozwala przetestowac Ekran Glowny, Sklep, wszystkie 3 warianty Sladu Faszysty oraz symulacje skanowania QR.
+          <p style="margin-bottom:14px;">
+            Pełna symulacja gry dla 7 graczy na jednym urządzeniu. Pozwala przetestować Ekran Główny, Sklep Wpływów, 3 warianty Śladu Faszysty oraz skanowanie stacji.
           </p>
-          <button class="btn btn-fascist" style="width:100%;" onclick="startLocalDemo()">URUCHOM TRYB TESTOWY (7 GRACZY)</button>
+          <button class="btn" style="width:100%;" onclick="startLocalDemo()">URUCHOM SYMULACJĘ (7 GRACZY)</button>
         </div>
 
         <div class="panel">
           <div class="panel-header">
-            <span class="panel-title">2. TRYB ONLINE (NETLIFY / P2P)</span>
-            <span class="badge badge-liberal">HTTPS + PEERJS</span>
+            <span class="panel-title">2. POKÓJ ONLINE</span>
+            <span class="badge badge-liberal">HTTPS / P2P</span>
           </div>
-          <p style="font-size:0.9rem; margin-bottom:12px;">
-            Uruchom pokoj na laptopie (Host), a znajomi dolacza z telefonow przez kod pokoju lub kod QR. Wymaga hostingu z HTTPS (np. Netlify Drop) do skanera kamery.
+          <p style="margin-bottom:12px;">
+            Hostowanie przez przeglądarkę (Netlify Drop / GitHub Pages). Skaner kamery działa natywnie po HTTPS.
           </p>
           <div class="form-row">
-            <label for="peer-room-input">Kod pokoju (do dolaczenia lub wlasny)</label>
-            <input type="text" id="peer-room-input" placeholder="np. BERLIN-1933" />
+            <label for="peer-room-input">Kod pokoju</label>
+            <input type="text" id="peer-room-input" />
           </div>
           <div class="form-row">
-            <label for="peer-player-name">Twoje imie (jesli dolaczasz z telefonu)</label>
-            <input type="text" id="peer-player-name" placeholder="np. Janek" />
+            <label for="peer-player-name">Imię gracza (dołączenie)</label>
+            <input type="text" id="peer-player-name" />
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="btn" style="flex:1;" onclick="hostOnlineRoom()">ZALOZ POKOJ (LAPTOP)</button>
-            <button class="btn btn-liberal" style="flex:1;" onclick="joinOnlineRoom()">DOLACZ (TELEFON)</button>
+            <button class="btn" style="flex:1;" onclick="hostOnlineRoom()">ZAŁÓŻ POKÓJ</button>
+            <button class="btn btn-gold" style="flex:1;" onclick="joinOnlineRoom()">DOŁĄCZ</button>
           </div>
         </div>
 
         <div class="panel">
           <div class="panel-header">
-            <span class="panel-title">3. TRYB SERWERA LAN (PYTHON)</span>
-            <span class="badge badge-gold">OFFLINE WI-FI</span>
+            <span class="panel-title">3. SERWER WI-FI (LAN)</span>
+            <span class="badge badge-gold">OFFLINE</span>
           </div>
-          <p style="font-size:0.9rem; margin-bottom:12px;">
-            Jesli uruchomiles strone przez dolaczony skrypt <strong>server.py</strong> w domowym Wi-Fi, wszystkie telefony synchronizuja sie bezposrednio z laptopem bez internetu.
+          <p style="margin-bottom:10px;">
+            Lokalna synchronizacja w domowym Wi-Fi przez dołączony skrypt <strong>server.py</strong> (bez dostępu do internetu).
           </p>
           <div id="lan-status-box" class="info-box" style="margin-bottom:10px;">
-            Sprawdzanie dostepnosci lokalnego serwera Python...
+            Wykrywanie lokalnego serwera...
           </div>
           <div class="form-row">
-            <label for="lan-player-name">Twoje imie (dla telefonu w sieci LAN)</label>
-            <input type="text" id="lan-player-name" placeholder="np. Kasia" />
+            <label for="lan-player-name">Imię gracza (dołączenie LAN)</label>
+            <input type="text" id="lan-player-name" />
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="btn" style="flex:1;" onclick="hostLanRoom()">USTAW JAKO LAPTOP (LAN)</button>
-            <button class="btn btn-liberal" style="flex:1;" onclick="joinLanRoom()">DOLACZ JAKO GRACZ (LAN)</button>
+            <button class="btn" style="flex:1;" onclick="hostLanRoom()">USTAW LAPTOP</button>
+            <button class="btn btn-gold" style="flex:1;" onclick="joinLanRoom()">DOŁĄCZ LAN</button>
           </div>
         </div>
       </div>
 
       <div class="panel">
         <div class="panel-header">
-          <span class="panel-title">STATUS POLACZENIA I SZYBKI DOSTEP</span>
-          <span id="connection-badge" class="badge">TRYB: NIEAKTYWNY</span>
+          <span class="panel-title">STATUS POŁĄCZENIA</span>
+          <span id="connection-badge" class="badge">NIEAKTYWNE</span>
         </div>
-        <div id="connection-info" style="font-size:0.92rem;">
-          Wybierz jeden z powyzszych trybow, aby rozpoczac. W trybie natywnego aparatu (Podejscie 3) kody QR moga zawierac bezposredni link URL ze znacznikiem <code>?scan=TOKEN</code>, co omija wymagania uprawnien kamery w przegladarce.
+        <div id="connection-info">
+          Wybierz tryb połączenia powyżej. Kody QR obsługują także skanowanie natywnym aparatem telefonu (link z parametrem <code>?scan=TOKEN</code>).
         </div>
       </div>
     </section>
 
-    <!-- ==================== WIDOK 2: EKRAN GLOWNY (LAPTOP) ==================== -->
+    <!-- ==================== WIDOK 2: EKRAN GŁÓWNY (LAPTOP) ==================== -->
     <section id="view-host" class="view-section">
       <div class="timer-box">
-        <div id="timer-phase-label" class="timer-phase chores">FAZA 1: PRACE DOMOWE (SKANOWANIE QR I SKLEP)</div>
+        <div id="timer-phase-label" class="timer-phase chores">FAZA 1 // PRACE DOMOWE (SKANOWANIE QR I SKLEP)</div>
         <div id="timer-display" class="timer-clock">02:00</div>
         <div class="timer-controls">
-          <button class="btn btn-liberal" onclick="timerStart()">START</button>
-          <button class="btn" onclick="timerPause()">PAUZA</button>
-          <button class="btn btn-fascist" onclick="timerSwitchPhase()">PRZELACZ FAZE</button>
-          <button class="btn" onclick="nextRound()">NASTEPNA RUNDA</button>
+          <button class="btn btn-gold" onclick="timerStart()">START</button>
+          <button class="btn btn-outline" style="background:#262320; color:#f8f4ea; border-color:#5a534a;" onclick="timerPause()">PAUZA</button>
+          <button class="btn btn-fascist" onclick="timerSwitchPhase()">PRZEŁĄCZ FAZĘ</button>
+          <button class="btn btn-liberal" onclick="nextRound()">NASTĘPNA RUNDA</button>
         </div>
       </div>
 
-      <div id="victory-banner" class="alert-box" style="display:none; font-size:1.15rem; font-weight:700; text-align:center;"></div>
+      <div id="victory-banner" class="alert-box" style="display:none; font-size:1.05rem; font-weight:700; text-align:center;"></div>
 
       <div class="grid-2">
-        <!-- LEWA KOLUMNA: PLANSZA I GLOSOWANIE -->
         <div>
           <div class="panel">
             <div class="panel-header">
-              <span class="panel-title">PLANSZA USTAW — <span id="host-board-label">7-8 GRACZY</span></span>
+              <span class="panel-title">PLANSZA USTAW // <span id="host-board-label">7-8 GRACZY</span></span>
               <span class="badge">RUNDA <span id="host-round-num">1</span></span>
             </div>
             <label>USTAWY LIBERALNE (<span id="lib-count">0</span> / 5)</label>
@@ -125,9 +123,9 @@
             <label>USTAWY FASZYSTOWSKIE (<span id="fas-count">0</span> / 6)</label>
             <div id="fascist-track" class="board-track fascist-track"></div>
 
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-top:10px; border-top:2px solid var(--border); padding-top:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-top:12px; border-top:1.5px solid var(--border); padding-top:10px;">
               <div>
-                <strong>LICZNIK ODRZUCONYCH RZADOW:</strong>
+                <strong>ODRZUCONE RZĄDY:</strong>
                 <span id="election-tracker" class="badge badge-fascist">0 / 3</span>
               </div>
               <div style="display:flex; gap:6px;">
@@ -139,43 +137,40 @@
 
           <div class="panel">
             <div class="panel-header">
-              <span class="panel-title">GLOSOWANIE RZADOWE I ELIMINACJE</span>
-              <span id="buffered-elim-badge" class="badge">BUFOR ELIMINACJI: 0</span>
+              <span class="panel-title">GŁOSOWANIE I ELIMINACJE</span>
+              <span id="buffered-elim-badge" class="badge badge-fascist">BUFOR: 0</span>
             </div>
             <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
-              <button class="btn btn-liberal" onclick="openVoting()">OTWORZ GLOSOWANIE</button>
-              <button class="btn" onclick="tallyVotes()">PODSUMUJ GLOSY</button>
-              <button class="btn btn-fascist" onclick="resolveEliminations()">ROZLICZ BUFOROWANE ELIMINACJE</button>
+              <button class="btn btn-liberal" onclick="openVoting()">OTWÓRZ GŁOSOWANIE</button>
+              <button class="btn" onclick="tallyVotes()">PODSUMUJ GŁOSY</button>
+              <button class="btn btn-fascist" onclick="resolveEliminations()">ROZLICZ BUFOR ELIMINACJI</button>
             </div>
             <div id="vote-result-box" class="info-box" style="display:none;"></div>
 
             <div style="margin-top:10px;">
-              <label>POZOSTALA PULA W SKLEPIE WPLYWOW</label>
+              <label>POZOSTAŁA PULA W SKLEPIE WPŁYWÓW</label>
               <div id="host-shop-summary" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;"></div>
             </div>
           </div>
         </div>
 
-        <!-- PRAWA KOLUMNA: GRACZE I DZIENNIK -->
         <div>
           <div class="panel">
             <div class="panel-header">
-              <span class="panel-title">PARLAMENT — LISTA GRACZY</span>
-              <div style="display:flex; gap:6px;">
-                <button class="btn btn-sm btn-fascist" onclick="startGameAndAssignRoles()">ROZPOCZNIJ / LOSUJ ROLE</button>
-              </div>
+              <span class="panel-title">PARLAMENT // GRACZE</span>
+              <button class="btn btn-sm btn-fascist" onclick="startGameAndAssignRoles()">ROZPOCZNIJ / LOSUJ ROLE</button>
             </div>
-            <div style="display:flex; gap:6px; margin-bottom:10px;">
-              <input type="text" id="host-add-player-input" placeholder="Dodaj gracza recznie..." />
-              <button class="btn btn-sm" onclick="addPlayerFromHost()">DODAJ</button>
+            <div style="display:flex; gap:6px; margin-bottom:12px;">
+              <input type="text" id="host-add-player-input" aria-label="Imię nowego gracza" />
+              <button class="btn btn-sm" onclick="addPlayerFromHost()">DODAJ GRACZA</button>
             </div>
             <div id="host-players-list"></div>
           </div>
 
           <div class="panel">
             <div class="panel-header">
-              <span class="panel-title">DZIENNIK WYDARZEN PUBLICZNYCH</span>
-              <button class="btn btn-sm btn-outline" onclick="clearPublicLog()">WYCZYSC</button>
+              <span class="panel-title">DZIENNIK PUBLICZNY</span>
+              <button class="btn btn-sm btn-outline" onclick="clearPublicLog()">WYCZYŚĆ</button>
             </div>
             <div id="host-public-log" class="log-list"></div>
           </div>
@@ -183,76 +178,71 @@
       </div>
     </section>
 
-    <!-- ==================== WIDOK 3: KONFIGURACJA / QR / SKLEP ==================== -->
+    <!-- ==================== WIDOK 3: USTAWIENIA / QR / SKLEP ==================== -->
     <section id="view-config" class="view-section">
       <div class="config-non-qr">
         <div class="grid-2">
           <div class="panel">
             <div class="panel-header">
-              <span class="panel-title">PARAMETRY GRY I TIMERA</span>
+              <span class="panel-title">PARAMETRY ROZGRYWKI</span>
+              <span class="badge">KONFIGURACJA</span>
             </div>
             <div class="form-row">
               <label for="cfg-board-size">Plansza Secret Hitlera</label>
               <select id="cfg-board-size" onchange="updateSettingsFromUI()">
-                <option value="5-6">5-6 graczy (Hitler zna Faszyste)</option>
-                <option value="7-8" selected>7-8 graczy (2 Faszystow + Hitler)</option>
-                <option value="9-10">9-10 graczy (3 Faszystow + Hitler)</option>
+                <option value="5-6">5-6 graczy (Hitler zna Faszystę)</option>
+                <option value="7-8" selected>7-8 graczy (2 Faszystów + Hitler)</option>
+                <option value="9-10">9-10 graczy (3 Faszystów + Hitler)</option>
               </select>
             </div>
             <div class="grid-2">
               <div class="form-row">
-                <label for="cfg-chores-sec">Czas: Prace Domowe (sekundy)</label>
+                <label for="cfg-chores-sec">Prace Domowe (sekundy)</label>
                 <input type="number" id="cfg-chores-sec" value="120" min="15" max="900" onchange="updateSettingsFromUI()" />
               </div>
               <div class="form-row">
-                <label for="cfg-discussion-sec">Czas: Dyskusja (sekundy)</label>
+                <label for="cfg-discussion-sec">Dyskusja (sekundy)</label>
                 <input type="number" id="cfg-discussion-sec" value="300" min="30" max="1800" onchange="updateSettingsFromUI()" />
               </div>
             </div>
             <div class="form-row">
-              <label for="cfg-base-url">Bazowy adres URL dla kodow QR (natywny aparat - Podejscie 3)</label>
-              <input type="text" id="cfg-base-url" placeholder="Domyslnie biezacy adres strony" onchange="updateSettingsFromUI()" />
+              <label for="cfg-base-url">Bazowy adres URL dla kodów QR (aparat natywny)</label>
+              <input type="text" id="cfg-base-url" onchange="updateSettingsFromUI()" />
             </div>
             <div class="form-row">
-              <label>
-                <input type="checkbox" id="cfg-limit-one-purchase" checked onchange="updateSettingsFromUI()" />
-                Limit: maksymalnie 1 zakup w Sklepie na runde na gracza
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                <input type="checkbox" id="cfg-limit-one-purchase" style="width:auto;" checked onchange="updateSettingsFromUI()" />
+                <span>Limit: maksymalnie 1 zakup w Sklepie na rundę na gracza</span>
               </label>
             </div>
           </div>
 
           <div class="panel">
             <div class="panel-header">
-              <span class="panel-title">EDYCJA 15 STACJI QR (BEZ PIN-OW)</span>
-              <button class="btn btn-sm btn-outline" onclick="regenerateAllTokens()">NOWE TOKENY QR</button>
+              <span class="panel-title">15 STACJI QR (OPISY LOKALIZACJI)</span>
+              <button class="btn btn-sm btn-outline" onclick="regenerateAllTokens()">NOWE TOKENY</button>
             </div>
-            <p style="font-size:0.85rem; margin-bottom:10px; color:var(--ink-muted);">
-              Opisz miejsca, w ktorych powiesisz 15 kodow. Kody zawieraja losowe tokeny oraz link URL, dzieki czemu dzialaja zarowno w skanerze aplikacji, jak i w zwyklym aparacie telefonu.
-            </p>
-            <div id="stations-editor-list" style="max-height:280px; overflow-y:auto; padding-right:4px;"></div>
+            <div id="stations-editor-list" style="max-height:275px; overflow-y:auto; padding-right:4px;"></div>
           </div>
         </div>
 
         <div class="panel">
           <div class="panel-header">
-            <span class="panel-title">KONFIGURATOR SKLEPU WPLYWOW (WSPOLNA PULA)</span>
+            <span class="panel-title">SKLEP WPŁYWÓW // WSPÓLNA PULA</span>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <button class="btn btn-fascist" onclick="randomizeShopBalanced()">LOSUJ SKLEP (ZBALANSOWANY)</button>
-              <button class="btn btn-outline" onclick="resetShopDefaults()">PRZYWROC DOMYSLNE</button>
+              <button class="btn btn-gold" onclick="randomizeShopBalanced()">LOSUJ SKLEP (ZBALANSOWANY)</button>
+              <button class="btn btn-outline" onclick="resetShopDefaults()">PRZYWRÓĆ DOMYŚLNE</button>
             </div>
           </div>
-          <p style="font-size:0.86rem; margin-bottom:12px; color:var(--ink-muted);">
-            Wlaczaj przedmioty, dostosuj ich koszt w Punktach Wplywu oraz liczbe sztuk dostepnych we wspolnej puli na cala gre. Przycisk losowania dobiera zbalansowany zestaw adekwatny do wybranej planszy.
-          </p>
           <div style="overflow-x:auto;">
             <table class="config-table">
               <thead>
                 <tr>
-                  <th>AKTYWNY</th>
+                  <th>WŁ.</th>
                   <th>PRZEDMIOT</th>
-                  <th>KATEGORIA / OPIS</th>
-                  <th>KOSZT (PKT)</th>
-                  <th>PULA (SZT.)</th>
+                  <th>KATEGORIA I DZIAŁANIE</th>
+                  <th>KOSZT</th>
+                  <th>PULA</th>
                 </tr>
               </thead>
               <tbody id="shop-config-tbody"></tbody>
@@ -263,10 +253,10 @@
 
       <div class="panel">
         <div class="panel-header no-print">
-          <span class="panel-title">ARKUSZ 15 KODOW QR DO DRUKU</span>
+          <span class="panel-title">ARKUSZ 15 KODÓW QR DO DRUKU</span>
           <div style="display:flex; gap:8px;">
-            <button class="btn btn-liberal" onclick="renderQrPrintGrid()">ODSWIEZ KODY QR</button>
-            <button class="btn btn-fascist" onclick="window.print()">DRUKUJ 15 KODOW QR</button>
+            <button class="btn btn-outline" onclick="renderQrPrintGrid()">ODŚWIEŻ KODY</button>
+            <button class="btn btn-fascist" onclick="window.print()">DRUKUJ 15 KODÓW QR</button>
           </div>
         </div>
         <div id="qr-print-grid" class="qr-grid"></div>
@@ -276,87 +266,116 @@
     <!-- ==================== WIDOK 4: TELEFON GRACZA ==================== -->
     <section id="view-phone" class="view-section">
       <div class="phone-shell">
-        <div id="demo-switcher-panel" class="panel" style="display:none; background:var(--paper-dark);">
-          <label for="demo-player-select">TRYB TESTOWY — PRZELACZ PODGLAD GRACZA:</label>
+        <div id="demo-switcher-panel" class="panel" style="display:none; padding:12px 16px;">
+          <label for="demo-player-select">TRYB TESTOWY // PODGLĄD GRACZA</label>
           <select id="demo-player-select" onchange="selectDemoPlayer(this.value)"></select>
         </div>
 
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title" id="phone-player-header">NIEZALOGOWANY GRACZ</span>
-            <span class="badge badge-gold">WPLYWY: <span id="phone-points">0</span> PKT</span>
-          </div>
-          <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:12px;">
-            <span>FAZA: <strong id="phone-phase-text">PRACE DOMOWE</strong></span>
-            <span>RUNDA: <strong id="phone-round-text">1</strong></span>
-            <span>STATUS: <strong id="phone-alive-text">ZYWY</strong></span>
-          </div>
-
-          <div class="subtabs">
-            <button class="subtab-btn active" data-pane="role" onclick="switchPhonePane('role')">AKTA / GLOS</button>
-            <button class="subtab-btn" data-pane="task" onclick="switchPhonePane('task')">ZADANIE QR</button>
-            <button class="subtab-btn" data-pane="shop" onclick="switchPhonePane('shop')">SKLEP</button>
-            <button class="subtab-btn" data-pane="notes" onclick="switchPhonePane('notes')">RAPORTY</button>
-          </div>
-
-          <!-- PANE 1: ROLA I GLOSOWANIE -->
-          <div id="phone-pane-role" class="phone-pane active">
-            <button class="btn" style="width:100%;" id="btn-toggle-role" onclick="toggleSecretRole()">ODSLON TAJNA ROLE</button>
-            <div id="secret-role-container" style="display:none;"></div>
-
-            <div style="margin-top:18px; border-top:2px solid var(--border); padding-top:14px;">
-              <label>GLOSOWANIE NAD RZADEM</label>
-              <div id="phone-vote-status" style="font-size:0.88rem; margin-bottom:10px;">Oczekiwanie na otwarcie glosowania na Ekranie Glownym.</div>
-              <div style="display:flex; gap:10px;">
-                <button class="btn btn-liberal" style="flex:1; padding:14px;" id="btn-vote-ja" onclick="castVote('JA')" disabled>JA (ZA)</button>
-                <button class="btn btn-fascist" style="flex:1; padding:14px;" id="btn-vote-nein" onclick="castVote('NEIN')" disabled>NEIN (PRZECIW)</button>
-              </div>
+        <div class="player-status-card">
+          <div>
+            <div class="player-status-name" id="phone-player-header">BRAK SESJI</div>
+            <div class="player-status-meta">
+              RUNDA <span id="phone-round-text">1</span> // FAZA: <span id="phone-phase-text">OCZEKIWANIE</span>
             </div>
           </div>
+          <div class="player-status-badges">
+            <span class="badge badge-gold"><span id="phone-points">0</span> PKT WPŁYWU</span>
+            <span class="badge badge-liberal" id="phone-alive-badge">ŻYWY</span>
+          </div>
+        </div>
 
-          <!-- PANE 2: ZADANIE QR -->
-          <div id="phone-pane-task" class="phone-pane">
+        <div class="subtabs">
+          <button class="subtab-btn active" data-pane="role" onclick="switchPhonePane('role')">AKTA</button>
+          <button class="subtab-btn" data-pane="task" onclick="switchPhonePane('task')">ZADANIE QR</button>
+          <button class="subtab-btn" data-pane="shop" onclick="switchPhonePane('shop')">SKLEP</button>
+          <button class="subtab-btn" data-pane="notes" onclick="switchPhonePane('notes')">GŁOS / NOTES</button>
+        </div>
+
+        <!-- PANE 1: AKTA -->
+        <div id="phone-pane-role" class="phone-pane active">
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">TAJNE AKTA PERSONALNE</span>
+              <span class="badge">ŚCIŚLE TAJNE</span>
+            </div>
+            <p style="margin-bottom:14px; font-size:0.82rem;">
+              Upewnij się, że nikt nie patrzy w Twój ekran, zanim odsłonisz przydział frakcyjny.
+            </p>
+            <button class="btn" style="width:100%;" id="btn-toggle-role" onclick="toggleSecretRole()">ODSŁOŃ TAJNĄ ROLĘ</button>
+            <div id="secret-role-container" style="display:none;"></div>
+          </div>
+        </div>
+
+        <!-- PANE 2: ZADANIE QR -->
+        <div id="phone-pane-task" class="phone-pane">
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">PRZYDZIAŁ STACJI QR</span>
+              <span class="badge badge-gold">+1 PKT</span>
+            </div>
             <div id="phone-task-box" class="info-box"></div>
 
             <div id="hidden-weapon-panel" class="alert-box" style="display:none;">
-              <strong>ZNALAZLES UKRYTA BRON!</strong>
-              <p style="font-size:0.85rem; margin:6px 0;">Mozesz zlecic jednorazowa, tajna eliminacje. Trafi do bufora na Ekranie Glownym.</p>
+              <strong>ZNALEZIONO UKRYTĄ BROŃ</strong>
+              <p style="margin:6px 0;">Możesz zlecić jednorazową tajną eliminację do bufora na Ekranie Głównym.</p>
               <select id="weapon-target-select" style="margin-bottom:8px;"></select>
-              <button class="btn btn-fascist" style="width:100%;" onclick="useHiddenWeapon()">ZLEC TAJNA ELIMINACJE</button>
+              <button class="btn btn-fascist" style="width:100%;" onclick="useHiddenWeapon()">ZLEĆ TAJNĄ ELIMINACJĘ</button>
             </div>
 
             <div style="display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
-              <button class="btn btn-liberal" style="flex:1;" onclick="startQrScanner()">URUCHOM SKANER KAMERY</button>
-              <button class="btn btn-outline" onclick="stopQrScanner()">ZATRZYMAJ KAMERE</button>
+              <button class="btn" style="flex:1;" onclick="startQrScanner()">URUCHOM SKANER QR</button>
+              <button class="btn btn-outline" onclick="stopQrScanner()">STOP</button>
             </div>
             <div id="qr-reader" style="display:none;"></div>
-            <div id="qr-scan-feedback" style="font-size:0.88rem; margin-top:8px;"></div>
+            <div id="qr-scan-feedback" style="margin-top:8px;"></div>
 
-            <div id="demo-scan-controls" style="display:none; margin-top:14px; border-top:2px dashed var(--border); padding-top:10px;">
-              <label>SYMULACJA SKANOWANIA QR (TRYB TESTOWY)</label>
-              <div style="display:flex; gap:6px; margin-bottom:6px;">
-                <button class="btn btn-sm btn-liberal" style="flex:1;" onclick="simulateAssignedScan()">ZESKANUJ PRZYPISANA STACJE</button>
-              </div>
+            <div id="demo-scan-controls" style="display:none; margin-top:14px; border-top:1.5px dashed var(--border); padding-top:12px;">
+              <label>SYMULACJA SKANOWANIA (TRYB TESTOWY)</label>
+              <button class="btn btn-sm btn-gold" style="width:100%; margin-bottom:8px;" onclick="simulateAssignedScan()">ZESKANUJ PRZYPISANĄ STACJĘ</button>
               <div style="display:flex; gap:6px;">
                 <select id="demo-any-station-select"></select>
-                <button class="btn btn-sm" onclick="simulateSelectedScan()">SKANUJ WYBRANA</button>
+                <button class="btn btn-sm" onclick="simulateSelectedScan()">SKANUJ</button>
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- PANE 3: SKLEP WPLYWOW -->
-          <div id="phone-pane-shop" class="phone-pane">
-            <div id="phone-shop-notice" style="font-size:0.85rem; margin-bottom:10px; color:var(--ink-muted);"></div>
+        <!-- PANE 3: SKLEP -->
+        <div id="phone-pane-shop" class="phone-pane">
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">SKLEP WPŁYWÓW</span>
+              <span class="badge badge-gold">WSPÓLNA PULA</span>
+            </div>
+            <div id="phone-shop-notice" style="font-size:0.8rem; margin-bottom:12px; color:var(--ink-muted);"></div>
             <div id="phone-shop-list"></div>
           </div>
+        </div>
 
-          <!-- PANE 4: RAPORTY I NOTATNIK -->
-          <div id="phone-pane-notes" class="phone-pane">
-            <label>TWOJE TAJNE RAPORTY ZE SKLEPU</label>
+        <!-- PANE 4: GŁOS / NOTES / RAPORTY -->
+        <div id="phone-pane-notes" class="phone-pane">
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">GŁOSOWANIE NAD RZĄDEM</span>
+              <span class="badge">TAJNE</span>
+            </div>
+            <div id="phone-vote-status" style="font-size:0.82rem; margin-bottom:10px;">Głosowanie jest obecnie zamknięte.</div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn btn-liberal" style="flex:1; padding:12px;" id="btn-vote-ja" onclick="castVote('JA')" disabled>JA (ZA)</button>
+              <button class="btn btn-fascist" style="flex:1; padding:12px;" id="btn-vote-nein" onclick="castVote('NEIN')" disabled>NEIN (PRZECIW)</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">RAPORTY WYWIADU I NOTES</span>
+              <span class="badge">PRYWATNE</span>
+            </div>
+            <label>OTRZYMANE RAPORTY</label>
             <div id="phone-private-logs" class="log-list" style="margin-bottom:14px;"></div>
 
-            <label for="phone-personal-notes">PRYWATNY NOTES GRACZA (ZAPISYWANY LOKALNIE)</label>
-            <textarea id="phone-personal-notes" placeholder="Notuj podejrzenia, kto byl w kuchni, wyniki glosowan..." oninput="savePersonalNotes()"></textarea>
+            <label for="phone-personal-notes">NOTATKI WŁASNE</label>
+            <textarea id="phone-personal-notes" oninput="savePersonalNotes()"></textarea>
           </div>
         </div>
       </div>

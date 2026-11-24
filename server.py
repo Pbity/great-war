@@ -2,8 +2,8 @@
 """
 Secret Hitler QR — Lokalny serwer Wi-Fi (Offline LAN)
 Wymaga tylko standardowego Pythona 3 (zero dodatkowych bibliotek).
-Uzycie:
-  python server.py           (uruchamia HTTP na porcie 8000)
+Użycie:
+  python server.py           (HTTP na porcie 8000)
   python server.py --https   (generuje lokalny certyfikat przez openssl i uruchamia HTTPS na porcie 8443)
 """
 
@@ -103,7 +103,7 @@ def ensure_cert():
         )
         return cert_file, key_file
     except Exception:
-        print("UWAGA: Nie znaleziono openssl. Uruchamiam zwykly tryb HTTP (uzyj natywnego aparatu telefonu do skanowania QR).")
+        print("UWAGA: Nie znaleziono openssl. Uruchamiam zwykły tryb HTTP (użyj natywnego aparatu telefonu do skanowania QR).")
         return None, None
 
 
@@ -130,8 +130,8 @@ if __name__ == "__main__":
     proto = "https" if USE_HTTPS else "http"
     print("============================================================")
     print("  SECRET HITLER — SERWER LAN URUCHOMIONY")
-    print(f"  Na laptopie otworz:   {proto}://localhost:{PORT}")
-    print(f"  Na telefonach otworz: {proto}://{LOCAL_IP}:{PORT}")
+    print(f"  Na laptopie otwórz:   {proto}://localhost:{PORT}")
+    print(f"  Na telefonach otwórz: {proto}://{LOCAL_IP}:{PORT}")
     print("  Zatrzymanie serwera:  Ctrl+C")
     print("============================================================")
     try:
