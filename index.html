@@ -1,0 +1,2215 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SECRET HITLER // SYSTEM STACJI QR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <style>
+    :root {
+      --bg-paper: #efe4cc;
+      --bg-card: #f7efdc;
+      --bg-dark: #1c1917;
+      --ink: #1a1715;
+      --ink-muted: #5c5349;
+      --fascist: #b52b22;
+      --fascist-dark: #7d1912;
+      --liberal: #25597a;
+      --liberal-dark: #173a52;
+      --gold: #a68246;
+      --border: #2a241f;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-paper);
+      color: var(--ink);
+      font-family: 'Courier Prime', 'Courier New', monospace;
+      min-height: 100vh;
+      line-height: 1.45;
+      background-image:
+        radial-gradient(rgba(26, 23, 21, 0.04) 1px, transparent 0);
+      background-size: 16px 16px;
+    }
+
+    h1, h2, h3, h4, .heading-font {
+      font-family: 'Oswald', Impact, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    /* Header / Banner */
+    .top-banner {
+      background: var(--bg-dark);
+      color: var(--bg-paper);
+      border-bottom: 5px solid var(--fascist);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .brand-title {
+      font-size: 1.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+
+    .brand-sub {
+      font-size: 0.78rem;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Buttons */
+    button, .btn {
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.92rem;
+      font-weight: 600;
+      padding: 9px 16px;
+      border: 2px solid var(--border);
+      background: var(--bg-card);
+      color: var(--ink);
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease;
+    }
+
+    button:hover:not(:disabled) {
+      background: #e3d3b1;
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-fascist {
+      background: var(--fascist);
+      color: #fff;
+      border-color: var(--fascist-dark);
+    }
+    .btn-fascist:hover:not(:disabled) {
+      background: var(--fascist-dark);
+    }
+
+    .btn-liberal {
+      background: var(--liberal);
+      color: #fff;
+      border-color: var(--liberal-dark);
+    }
+    .btn-liberal:hover:not(:disabled) {
+      background: var(--liberal-dark);
+    }
+
+    .btn-dark {
+      background: var(--bg-dark);
+      color: var(--bg-paper);
+      border-color: var(--bg-dark);
+    }
+    .btn-dark:hover:not(:disabled) {
+      background: #332e2a;
+    }
+
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 0.78rem;
+    }
+
+    .btn-active {
+      background: var(--gold) !important;
+      color: #fff !important;
+    }
+
+    /* Cards & Panels */
+    .panel {
+      background: var(--bg-card);
+      border: 3px solid var(--border);
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: 5px 5px 0 rgba(26, 23, 21, 0.16);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .panel-fascist {
+      border-color: var(--fascist);
+      background: #f9ebe6;
+    }
+
+    .panel-liberal {
+      border-color: var(--liberal);
+      background: #e9f0f4;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    /* Inputs */
+    input[type="text"], input[type="number"], select, textarea {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.95rem;
+      padding: 8px 10px;
+      border: 2px solid var(--border);
+      background: #fffdf7;
+      color: var(--ink);
+      width: 100%;
+    }
+
+    label {
+      display: block;
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+      color: var(--ink-muted);
+    }
+
+    .form-row {
+      margin-bottom: 12px;
+    }
+
+    /* Timer */
+    .timer-box {
+      background: var(--bg-dark);
+      color: var(--bg-paper);
+      padding: 18px;
+      text-align: center;
+      border: 3px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .timer-phase {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .timer-phase.phase-chores {
+      color: #6ab0de;
+    }
+
+    .timer-phase.phase-discussion {
+      color: #e66257;
+    }
+
+    .timer-clock {
+      font-family: 'Oswald', sans-serif;
+      font-size: 4rem;
+      font-weight: 700;
+      line-height: 1.05;
+      margin: 6px 0;
+      letter-spacing: 0.06em;
+    }
+
+    /* Stamps & Badges */
+    .stamp {
+      display: inline-block;
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 0.78rem;
+      padding: 2px 8px;
+      border: 2px solid currentColor;
+      letter-spacing: 0.08em;
+    }
+
+    .stamp-dead {
+      color: var(--fascist);
+      transform: rotate(-3deg);
+    }
+
+    .stamp-alive {
+      color: var(--liberal);
+    }
+
+    .stamp-alert {
+      background: var(--fascist);
+      color: #fff;
+      border-color: var(--fascist-dark);
+    }
+
+    .stamp-gold {
+      color: var(--gold);
+    }
+
+    /* Board Track */
+    .track {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .track-liberal {
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    .track-slot {
+      border: 2px solid var(--border);
+      padding: 8px 4px;
+      text-align: center;
+      font-size: 0.72rem;
+      min-height: 62px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .track-slot.enacted-fascist {
+      background: var(--fascist);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .track-slot.enacted-liberal {
+      background: var(--liberal);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    /* Player Row */
+    .player-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border: 2px solid var(--border);
+      background: #fffdf7;
+      margin-bottom: 8px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .player-row.is-dead {
+      background: #e6dfd1;
+      opacity: 0.75;
+    }
+
+    /* Phone Tabs */
+    .phone-shell {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .tab-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+
+    .tab-bar button {
+      padding: 8px 4px;
+      font-size: 0.78rem;
+    }
+
+    .secret-dossier {
+      border: 3px dashed var(--border);
+      padding: 16px;
+      text-align: center;
+      margin: 12px 0;
+      background: #efe4cc;
+    }
+
+    .role-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+
+    .role-liberal { color: var(--liberal); }
+    .role-fascist { color: var(--fascist); }
+    .role-hitler { color: var(--fascist-dark); }
+
+    /* QR Grid */
+    .qr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 14px;
+    }
+
+    .qr-card {
+      border: 2px solid var(--border);
+      background: #fff;
+      padding: 12px;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+
+    .qr-box {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+    }
+
+    .qr-box img, .qr-box canvas {
+      max-width: 150px;
+      height: auto;
+    }
+
+    /* Event Log */
+    .log-list {
+      max-height: 220px;
+      overflow-y: auto;
+      border: 2px solid var(--border);
+      background: #fffdf7;
+      padding: 10px;
+      font-size: 0.85rem;
+    }
+
+    .log-item {
+      padding: 4px 0;
+      border-bottom: 1px dashed #ccc0aa;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .alert-box {
+      border: 3px solid var(--fascist);
+      background: #fbe3df;
+      padding: 12px;
+      margin-bottom: 14px;
+      font-weight: 700;
+    }
+
+    .info-box {
+      border: 2px solid var(--liberal);
+      background: #e6f0f5;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      font-size: 0.88rem;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 23, 21, 0.72);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 999;
+    }
+
+    .modal-box {
+      background: var(--bg-card);
+      border: 4px solid var(--fascist);
+      max-width: 440px;
+      width: 100%;
+      padding: 20px;
+      box-shadow: 8px 8px 0 rgba(0,0,0,0.35);
+    }
+
+    #qr-reader {
+      width: 100%;
+      border: 2px solid var(--border);
+      margin: 10px 0;
+      background: #000;
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: #fff !important;
+      }
+      .top-banner, .no-print, #view-lobby, #view-laptop, #view-phone, #view-qr-controls {
+        display: none !important;
+      }
+      #view-qr {
+        display: block !important;
+      }
+      .container {
+        max-width: 100%;
+        padding: 0;
+      }
+      .panel {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+      }
+      .qr-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      .qr-card {
+        border: 2px dashed #000;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-banner no-print">
+    <div>
+      <div class="brand-title heading-font">SECRET HITLER // STACJE QR</div>
+      <div class="brand-sub">SYSTEM ZARZADZANIA ROZGRYWKA BEZ MISTRZA GRY</div>
+    </div>
+    <nav class="nav-bar" id="main-nav">
+      <button onclick="switchView('lobby')" id="nav-lobby" class="btn-dark">Start / Pokoj</button>
+      <button onclick="switchView('laptop')" id="nav-laptop" class="btn-dark hidden">Ekran Glowny (Laptop)</button>
+      <button onclick="switchView('qr')" id="nav-qr" class="btn-dark hidden">15 Stacji QR</button>
+      <button onclick="switchView('phone')" id="nav-phone" class="btn-dark hidden">Telefon Gracza</button>
+    </nav>
+  </header>
+
+  <main class="container">
+
+    <!-- ==================== VIEW: LOBBY ==================== -->
+    <section id="view-lobby">
+      <div class="grid-2">
+        <!-- HOST ONLINE -->
+        <div class="panel">
+          <div class="panel-header">
+            <h2>1. Zaloz Pokoj (Laptop / Ekran Glowny)</h2>
+            <span class="stamp stamp-gold">ONLINE P2P</span>
+          </div>
+          <p style="font-size:0.88rem; margin-bottom:14px;">
+            Uruchom na laptopie w glownym pokoju. Gracze dolacza ze swoich telefonow, skanujac kod QR z ekranu lub wpisujac kod pokoju. Wymaga polaczenia z internetem (WebRTC PeerJS).
+          </p>
+          <div class="form-row">
+            <label for="host-board-select">Wybierz Plansze (Secret Hitler)</label>
+            <select id="host-board-select">
+              <option value="5-6">Plansza 5-6 graczy (Hitler zna Faszyste)</option>
+              <option value="7-8" selected>Plansza 7-8 graczy (2 Faszystow + Hitler)</option>
+              <option value="9-10">Plansza 9-10 graczy (3 Faszystow + Hitler)</option>
+            </select>
+          </div>
+          <button class="btn-fascist" style="width:100%;" onclick="startOnlineHost()">Utworz Pokoj Online (Laptop)</button>
+          <div id="host-status" style="margin-top:10px; font-size:0.85rem; color:var(--ink-muted);"></div>
+        </div>
+
+        <!-- JOIN ONLINE -->
+        <div class="panel panel-liberal">
+          <div class="panel-header">
+            <h2>2. Dolacz do Pokoju (Telefon Gracza)</h2>
+            <span class="stamp stamp-alive">KLIENT</span>
+          </div>
+          <div class="form-row">
+            <label for="join-room-code">Kod Pokoju (z ekranu laptopa)</label>
+            <input type="text" id="join-room-code" placeholder="np. SH-4821" style="text-transform:uppercase;">
+          </div>
+          <div class="form-row">
+            <label for="join-player-name">Twoje Imie / Pseudonim</label>
+            <input type="text" id="join-player-name" placeholder="Wpisz swoje imie">
+          </div>
+          <button class="btn-liberal" style="width:100%;" onclick="joinOnlineRoom()">Polacz z Pokojem</button>
+          <div id="join-status" style="margin-top:10px; font-size:0.85rem; color:var(--ink-muted);"></div>
+        </div>
+      </div>
+
+      <!-- LOCAL TEST MODE -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2>3. Tryb Testowy (Lokalny - Wszystko na Jednym Ekranie)</h2>
+          <span class="stamp">OFFLINE DEMO</span>
+        </div>
+        <p style="font-size:0.9rem; margin-bottom:14px;">
+          Pozwala od razu przetestowac Ekran Glowny, edycje i drukowanie 15 kodow QR oraz widok Telefonu Gracza z przelaczaniem miedzy 7 graczami — bez potrzeby uzywania wielu urzadzen.
+        </p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <select id="demo-board-select" style="max-width:260px;">
+            <option value="5-6">5 graczy (Plansza 5-6)</option>
+            <option value="7-8" selected>7 graczy (Plansza 7-8)</option>
+            <option value="9-10">9 graczy (Plansza 9-10)</option>
+          </select>
+          <button class="btn-dark" onclick="startLocalTestMode()">Uruchom Tryb Testowy</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW: LAPTOP (MAIN SCREEN) ==================== -->
+    <section id="view-laptop" class="hidden">
+      <div id="victory-banner" class="alert-box hidden" style="text-align:center; font-size:1.2rem;"></div>
+
+      <div class="grid-2">
+        <!-- LEFT COLUMN: TIMER & ROUND CONTROL -->
+        <div>
+          <div class="timer-box">
+            <div class="timer-phase" id="laptop-phase-label">OCZEKIWANIE NA START GRY</div>
+            <div class="timer-clock" id="laptop-timer-clock">02:00</div>
+            <div style="font-size:0.82rem; color:#ccc0aa; margin-bottom:12px;" id="laptop-round-info">RUNDA 0 // PLANSZA 7-8</div>
+            <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+              <button class="btn-liberal btn-sm" onclick="startChoresPhase()" id="btn-start-chores">Start: Prace Domowe</button>
+              <button class="btn-fascist btn-sm" onclick="startDiscussionPhase()" id="btn-start-disc">Przejdz do Dyskusji</button>
+              <button class="btn-sm" onclick="toggleTimerPause()" id="btn-pause-timer">Pauza / Wznow</button>
+            </div>
+          </div>
+
+          <!-- TIMER SETTINGS & GAME SETUP -->
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Sterowanie Runda i Zasady</h3>
+              <span class="stamp" id="laptop-room-badge">TRYB LOKALNY</span>
+            </div>
+            <div class="grid-2" style="gap:10px; margin-bottom:12px;">
+              <div>
+                <label>Prace Domowe (sekundy)</label>
+                <input type="number" id="cfg-chores-sec" value="120" min="15" max="900">
+              </div>
+              <div>
+                <label>Dyskusja (sekundy)</label>
+                <input type="number" id="cfg-disc-sec" value="300" min="30" max="1800">
+              </div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+              <button class="btn-dark" onclick="startGameAndDealRoles()" id="btn-deal-roles">Rozpocznij Gre i Wylosuj Role</button>
+              <button class="btn-sm" onclick="advanceNextRound()">Nowa Runda (Przydziel Zadania QR)</button>
+            </div>
+            <div id="laptop-join-box" class="hidden" style="border-top:2px solid var(--border); padding-top:12px; margin-top:12px; display:flex; gap:14px; align-items:center; flex-wrap:wrap;">
+              <div id="laptop-join-qr" style="background:#fff; padding:6px; border:2px solid var(--border);"></div>
+              <div style="flex:1; min-width:180px;">
+                <div class="heading-font" style="font-size:1.1rem;">KOD POKOJU: <span id="laptop-room-code-text" style="color:var(--fascist);"></span></div>
+                <p style="font-size:0.8rem; color:var(--ink-muted); margin-top:4px;">
+                  Zeskanuj aparatem telefonu, aby dolaczyc do pokoju, lub wpisz kod recznie na stronie startowej.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- BUFFERED ELIMINATIONS & VOTING -->
+          <div class="panel panel-fascist">
+            <div class="panel-header">
+              <h3>Bufor Eliminacji i Glosowanie</h3>
+              <span class="stamp stamp-alert hidden" id="buffer-pending-badge">OCZEKUJACE ZDARZENIA</span>
+            </div>
+            <p style="font-size:0.85rem; margin-bottom:10px;">
+              Tajne eliminacje (z ukrytej broni QR lub Zamachu Faszystow) trafiaja do bufora. Rozlicz je po zakonczeniu Prac Domowych lub przed glosowaniem — Tarcza Ochronna automatycznie zablokuje atak.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+              <button class="btn-fascist" onclick="resolveBufferedEliminations()">Rozlicz Buforowane Eliminacje</button>
+              <button class="btn-liberal" onclick="openVotingRound()">Otworz Tajne Glosowanie (JA/NEIN)</button>
+              <button class="btn-dark" onclick="tallyVotes()">Policz i Oglos Wynik Glosowania</button>
+            </div>
+            <div id="vote-result-box" class="info-box hidden"></div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: BOARDS & PLAYERS -->
+        <div>
+          <!-- PHYSICAL BOARD SYNC -->
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Tor Ustaw (Synchronizacja z Plansza)</h3>
+              <span class="stamp" id="board-type-badge">PLANSZA 7-8</span>
+            </div>
+            <label>Ustawy Liberalne (kliknij pole, aby odhaczyc)</label>
+            <div class="track track-liberal" id="track-liberal"></div>
+            <label style="margin-top:12px;">Ustawy Faszystowskie (moce zalezne od planszy)</label>
+            <div class="track" id="track-fascist"></div>
+          </div>
+
+          <!-- PLAYER ROSTER -->
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Lista Graczy (<span id="player-count-alive">0</span> zywych)</h3>
+              <div style="display:flex; gap:6px;">
+                <input type="text" id="add-local-player-name" placeholder="Dodaj gracza..." style="width:140px; padding:4px 8px; font-size:0.82rem;">
+                <button class="btn-sm" onclick="addManualPlayer()">Dodaj</button>
+              </div>
+            </div>
+            <div id="laptop-player-list"></div>
+          </div>
+
+          <!-- PUBLIC LOG -->
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Dziennik Zdarzen Publicznych</h3>
+            </div>
+            <div class="log-list" id="laptop-log"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW: 15 QR STATIONS ==================== -->
+    <section id="view-qr" class="hidden">
+      <div class="panel no-print" id="view-qr-controls">
+        <div class="panel-header">
+          <h2>Konfiguracja i Drukowanie 15 Stacji QR</h2>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn-dark" onclick="regenerateAllTokens()">Nowe Losowe Tokeny QR</button>
+            <button class="btn-fascist" onclick="window.print()">Drukuj 15 Kodow QR</button>
+          </div>
+        </div>
+        <p style="font-size:0.88rem; margin-bottom:12px;">
+          Opisz miejsca w domu, w ktorych powiesisz kartki (zapisuja sie automatycznie w przegladarce). Kazdy kod QR zawiera ukryty token — bez widocznego PIN-u, wiec gracze musza fizycznie podejsc i zeskanowac kartke aparatem telefonu.
+        </p>
+        <div class="grid-3" id="qr-editor-list"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header no-print">
+          <h3>Arkusz do Wydruku (15 Kartek QR)</h3>
+        </div>
+        <div class="qr-grid" id="qr-print-grid"></div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW: PHONE (PLAYER CLIENT) ==================== -->
+    <section id="view-phone" class="hidden">
+      <div class="phone-shell">
+        <!-- DEMO SWITCHER -->
+        <div class="panel no-print hidden" id="demo-player-switcher" style="padding:12px; background:#e3d3b1;">
+          <label for="demo-active-player">Tryb Testowy — Przelacz podglad telefonu gracza:</label>
+          <select id="demo-active-player" onchange="selectDemoPlayer(this.value)"></select>
+        </div>
+
+        <!-- PHONE HEADER STATUS -->
+        <div class="panel" style="padding:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div>
+              <div class="heading-font" style="font-size:1.3rem;" id="phone-player-name">GRACZ</div>
+              <div style="font-size:0.8rem; color:var(--ink-muted);" id="phone-phase-status">FAZA: OCZEKIWANIE</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="stamp stamp-gold" id="phone-points-badge">0 PKT WPLYWU</div>
+              <div id="phone-alive-badge" class="stamp stamp-alive" style="margin-top:4px; display:block;">ZYWY</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PHONE NAVIGATION TABS -->
+        <div class="tab-bar">
+          <button onclick="switchPhoneTab('dossier')" id="ptab-dossier" class="btn-active">Akta</button>
+          <button onclick="switchPhoneTab('task')" id="ptab-task">Zadanie QR</button>
+          <button onclick="switchPhoneTab('shop')" id="ptab-shop">Sklep</button>
+          <button onclick="switchPhoneTab('vote')" id="ptab-vote">Glos / Notes</button>
+        </div>
+
+        <!-- TAB 1: DOSSIER / SECRET ROLE -->
+        <div id="phone-tab-dossier" class="panel">
+          <div class="panel-header">
+            <h3>Tajne Akta Personalne</h3>
+            <span class="stamp">SCISELE TAJNE</span>
+          </div>
+          <p style="font-size:0.85rem; margin-bottom:10px;">
+            Upewnij sie, ze nikt nie patrzy w Twoj ekran, zanim odslonisz przydzial frakcyjny.
+          </p>
+          <button class="btn-dark" style="width:100%;" onclick="toggleSecretRole()" id="btn-toggle-role">Odslon Tajna Role</button>
+          <div id="secret-role-box" class="secret-dossier hidden">
+            <div class="role-title" id="dossier-role-name">---</div>
+            <div id="dossier-role-desc" style="font-size:0.88rem; margin-bottom:10px;"></div>
+            <div id="dossier-allies" style="font-size:0.85rem; font-weight:700; border-top:1px solid var(--border); padding-top:8px;"></div>
+          </div>
+        </div>
+
+        <!-- TAB 2: QR TASK & SCANNER -->
+        <div id="phone-tab-task" class="panel hidden">
+          <div class="panel-header">
+            <h3>Zadanie na Faze Prac Domowych</h3>
+            <span class="stamp" id="task-status-badge">BRAK ZADANIA</span>
+          </div>
+
+          <div id="task-info-box" class="info-box">
+            Oczekiwanie na rozpoczecie fazy Prac Domowych przez ekran glowny.
+          </div>
+
+          <div id="qr-scanner-controls" style="margin-top:10px;">
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+              <button class="btn-liberal" style="flex:1;" onclick="startQrScanner()" id="btn-open-cam">Uruchom Skaner QR (Aparat)</button>
+              <button class="btn-sm" onclick="stopQrScanner()" id="btn-stop-cam" disabled>Zatrzymaj Aparat</button>
+            </div>
+            <div id="qr-reader" class="hidden"></div>
+            <div id="demo-scan-box" class="hidden" style="border-top:2px dashed var(--border); padding-top:10px; margin-top:10px;">
+              <label>Tryb Testowy: Symulacja zeskanowania dowolnej stacji</label>
+              <div style="display:flex; gap:6px;">
+                <select id="demo-scan-select"></select>
+                <button class="btn-dark btn-sm" onclick="simulateQrScan()">Skanuj</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="scan-feedback" style="margin-top:10px; font-size:0.88rem; font-weight:700;"></div>
+
+          <!-- HIDDEN WEAPON PANEL -->
+          <div id="hidden-weapon-panel" class="panel panel-fascist hidden" style="margin-top:14px;">
+            <div class="panel-header">
+              <h3 style="color:var(--fascist);">ZNALAZLES UKRYTA BRON</h3>
+              <span class="stamp stamp-alert">JEDNORAZOWA</span>
+            </div>
+            <p style="font-size:0.85rem; margin-bottom:10px;">
+              Ta stacja zawiera ukryta jednorazowa eliminacje. Mozesz wskazac dowolnego gracza — zlecenie trafi do bufora i zostanie rozliczone na ekranie glownym.
+            </p>
+            <div class="form-row">
+              <label for="weapon-target-select">Wybierz cel eliminacji</label>
+              <select id="weapon-target-select"></select>
+            </div>
+            <button class="btn-fascist" style="width:100%;" onclick="useHiddenWeapon()">Zlec Tajna Eliminacje</button>
+          </div>
+        </div>
+
+        <!-- TAB 3: INFLUENCE SHOP -->
+        <div id="phone-tab-shop" class="panel hidden">
+          <div class="panel-header">
+            <h3>Sklep Wplywow (Anonimowy)</h3>
+            <span class="stamp stamp-gold" id="shop-points-display">0 PKT</span>
+          </div>
+          <p style="font-size:0.84rem; margin-bottom:12px;">
+            Wydawaj Punkty Wplywu zdobyte za skanowanie stacji QR. Zakupy sa tajne.
+          </p>
+
+          <!-- Item 1: Extra Vote -->
+          <div class="player-row">
+            <div style="flex:1;">
+              <div class="heading-font">Tajny +1 Glos</div>
+              <div style="font-size:0.8rem; color:var(--ink-muted);">Twoj nastepny glos JA/NEIN liczy sie podwojnie (anonimowo).</div>
+            </div>
+            <button class="btn-liberal btn-sm" onclick="buyShopItem('extra_vote')">2 PKT</button>
+          </div>
+
+          <!-- Item 2: Activity Report -->
+          <div class="player-row">
+            <div style="flex:1;">
+              <div class="heading-font">Raport Aktywnosci</div>
+              <div style="font-size:0.8rem; color:var(--ink-muted);">Pokazuje liste osob, ktore NIE wykonaly jeszcze zadania QR w tej rundzie.</div>
+            </div>
+            <button class="btn-liberal btn-sm" onclick="buyShopItem('activity_report')">2 PKT</button>
+          </div>
+
+          <!-- Item 3: Sabotage Station -->
+          <div class="player-row" style="flex-direction:column; align-items:stretch;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+              <div>
+                <div class="heading-font">Sabotaz Stacji QR</div>
+                <div style="font-size:0.8rem; color:var(--ink-muted);">Blokuje wybrana stacje QR do konca obecnej rundy.</div>
+              </div>
+              <button class="btn-dark btn-sm" onclick="buyShopItem('sabotage')">2 PKT</button>
+            </div>
+            <select id="shop-sabotage-select" style="margin-top:6px;"></select>
+          </div>
+
+          <!-- Item 4: Protection Shield -->
+          <div class="player-row" style="flex-direction:column; align-items:stretch;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+              <div>
+                <div class="heading-font">Tarcza Ochronna</div>
+                <div style="font-size:0.8rem; color:var(--ink-muted);">Chroni wskazanego gracza przed buforowana eliminacja w tej rundzie.</div>
+              </div>
+              <button class="btn-liberal btn-sm" onclick="buyShopItem('shield')">3 PKT</button>
+            </div>
+            <select id="shop-shield-select" style="margin-top:6px;"></select>
+          </div>
+
+          <!-- Item 5: Fascist Secret Assassination -->
+          <div id="shop-fascist-kill-box" class="player-row hidden" style="flex-direction:column; align-items:stretch; border-color:var(--fascist); background:#fbe3df;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+              <div>
+                <div class="heading-font" style="color:var(--fascist);">Tajny Zamach (Tylko Faszysci)</div>
+                <div style="font-size:0.8rem; color:var(--ink-muted);">Raz na gre: zleca tajna eliminacje do bufora (Tarcza moze ja zablokowac).</div>
+              </div>
+              <button class="btn-fascist btn-sm" onclick="buyShopItem('fascist_kill')" id="btn-buy-fkill">3 PKT</button>
+            </div>
+            <select id="shop-fkill-select" style="margin-top:6px;"></select>
+          </div>
+
+          <div id="shop-feedback" class="info-box hidden" style="margin-top:12px;"></div>
+        </div>
+
+        <!-- TAB 4: VOTING & NOTES -->
+        <div id="phone-tab-vote" class="panel hidden">
+          <div class="panel-header">
+            <h3>Tajne Glosowanie Rzadowe</h3>
+            <span class="stamp" id="phone-vote-status">ZAMKNIETE</span>
+          </div>
+          <div id="phone-vote-controls" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+            <button class="btn-liberal" style="padding:16px; font-size:1.3rem;" onclick="castVote('JA')" id="btn-vote-ja">JA (ZA)</button>
+            <button class="btn-fascist" style="padding:16px; font-size:1.3rem;" onclick="castVote('NEIN')" id="btn-vote-nein">NEIN (PRZECIW)</button>
+          </div>
+          <div id="phone-vote-feedback" style="font-size:0.85rem; margin-bottom:14px; font-weight:700;"></div>
+
+          <div style="border-top:2px solid var(--border); padding-top:12px;">
+            <label for="phone-notes">Prywatny Notatnik Gracza (zapisywany lokalnie)</label>
+            <textarea id="phone-notes" rows="6" placeholder="Zapisuj podejrzenia, kto z kim rozmawial, jakie byly karty..." oninput="savePlayerNotes()"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- CONFIRMATION MODAL (EXECUTION) -->
+  <div id="exec-modal" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <h3 style="color:var(--fascist); margin-bottom:8px;">POTWIERDZENIE EGZEKUCJI</h3>
+      <p id="exec-modal-text" style="font-size:0.92rem; margin-bottom:16px;"></p>
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button onclick="closeExecModal()">Anuluj</button>
+        <button class="btn-fascist" onclick="confirmManualExecution()">Wykonaj Egzekucje</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // DEFAULT DATA & BOARD CONFIGURATIONS
+    // =========================================================================
+    const DEFAULT_LOCATIONS = [
+      "Przedpokoj — lustro",
+      "Kuchnia — lodowka",
+      "Kuchnia — ekspres do kawy",
+      "Salon — regal z ksiazkami",
+      "Salon — okno / parapet",
+      "Lazienka — drzwi od zewnatrz",
+      "Korytarz — wlacznik swiatla",
+      "Balkon / taras — drzwi",
+      "Sypialnia — klamka",
+      "Biurko — monitor / lampka",
+      "Szafa w przedpokoju",
+      "Stol jadalny — noga stolu",
+      "Pralka / lazienka",
+      "Wejscie — wieszak na kurtki",
+      "Kuchnia — szafka nad zlewem"
+    ];
+
+    const BOARD_POWERS = {
+      '5-6': [
+        "Brak mocy",
+        "Brak mocy",
+        "Podglad 3 gornych kart",
+        "Egzekucja",
+        "Egzekucja + Weto",
+        "ZWYCIESTWO FASZYSTOW"
+      ],
+      '7-8': [
+        "Brak mocy",
+        "Sprawdzenie lojalnosci",
+        "Wybor kolejnego Prezydenta",
+        "Egzekucja",
+        "Egzekucja + Weto",
+        "ZWYCIESTWO FASZYSTOW"
+      ],
+      '9-10': [
+        "Sprawdzenie lojalnosci",
+        "Sprawdzenie lojalnosci",
+        "Wybor kolejnego Prezydenta",
+        "Egzekucja",
+        "Egzekucja + Weto",
+        "ZWYCIESTWO FASZYSTOW"
+      ]
+    };
+
+    const STORAGE_KEY_LOCATIONS = 'sh_qr_locations_v1';
+    const STORAGE_KEY_TOKENS = 'sh_qr_tokens_v1';
+
+    // =========================================================================
+    // GLOBAL APPLICATION STATE
+    // =========================================================================
+    let appMode = 'none'; // 'local' | 'host' | 'client'
+    let peer = null;
+    let hostConnections = {}; // peerId -> DataConnection
+    let clientConn = null;
+    let myPlayerId = null;
+    let roleRevealed = false;
+    let pendingExecPlayerId = null;
+    let html5QrCode = null;
+    let timerInterval = null;
+
+    let state = {
+      roomCode: '',
+      boardType: '7-8',
+      started: false,
+      round: 0,
+      phase: 'idle', // 'idle' | 'chores' | 'discussion'
+      timerSeconds: 120,
+      timerPaused: false,
+      choresDuration: 120,
+      discussionDuration: 300,
+      liberalPolicies: 0,
+      fascistPolicies: 0,
+      votingOpen: false,
+      lastVoteResult: null,
+      victoryMessage: null,
+      weaponStationId: null, // 1..15
+      weaponUsed: false,
+      stations: [], // { id, label, token, sabotaged }
+      players: [],  // { id, name, role, alive, points, assignedStation, taskDone, extraVote, fascistKillUsed, vote, shielded }
+      bufferedKills: [], // { targetId, source }
+      logs: []
+    };
+
+    // =========================================================================
+    // INITIALIZATION
+    // =========================================================================
+    function initStations() {
+      let savedLabels = null;
+      let savedTokens = null;
+      try {
+        savedLabels = JSON.parse(localStorage.getItem(STORAGE_KEY_LOCATIONS));
+        savedTokens = JSON.parse(localStorage.getItem(STORAGE_KEY_TOKENS));
+      } catch (e) {}
+      const labels = (Array.isArray(savedLabels) && savedLabels.length === 15) ? savedLabels : DEFAULT_LOCATIONS;
+      const tokens = (Array.isArray(savedTokens) && savedTokens.length === 15)
+        ? savedTokens
+        : labels.map((_, idx) => generateToken(idx + 1));
+      try {
+        localStorage.setItem(STORAGE_KEY_TOKENS, JSON.stringify(tokens));
+      } catch (e) {}
+      state.stations = labels.map((label, idx) => ({
+        id: idx + 1,
+        label: label,
+        token: tokens[idx],
+        sabotaged: false
+      }));
+    }
+
+    function generateToken(stationId) {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let rand = '';
+      for (let i = 0; i < 10; i++) {
+        rand += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return `SHQR-${stationId}-${rand}`;
+    }
+
+    function generateRoomCode() {
+      const num = Math.floor(1000 + Math.random() * 9000);
+      return `SH-${num}`;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initStations();
+      const params = new URLSearchParams(window.location.search);
+      const roomParam = params.get('room');
+      if (roomParam) {
+        document.getElementById('join-room-code').value = roomParam.toUpperCase();
+      }
+    });
+
+    // =========================================================================
+    // AUDIO SIGNAL (WEB AUDIO API)
+    // =========================================================================
+    function playPhaseBell(isUrgent) {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = isUrgent ? 'sawtooth' : 'triangle';
+        osc.frequency.setValueAtTime(isUrgent ? 440 : 660, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(isUrgent ? 220 : 440, ctx.currentTime + 0.45);
+        gain.gain.setValueAtTime(0.18, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.52);
+      } catch (e) {}
+    }
+
+    // =========================================================================
+    // NAVIGATION & VIEWS
+    // =========================================================================
+    function switchView(viewName) {
+      stopQrScanner();
+      ['lobby', 'laptop', 'qr', 'phone'].forEach(v => {
+        document.getElementById(`view-${v}`).classList.toggle('hidden', v !== viewName);
+        const navBtn = document.getElementById(`nav-${v}`);
+        if (navBtn) navBtn.classList.toggle('btn-active', v === viewName);
+      });
+      if (viewName === 'qr') renderQrView();
+      if (viewName === 'laptop') renderLaptopView();
+      if (viewName === 'phone') renderPhoneView();
+    }
+
+    function updateNavVisibility() {
+      document.getElementById('nav-laptop').classList.toggle('hidden', appMode === 'client' || appMode === 'none');
+      document.getElementById('nav-qr').classList.toggle('hidden', appMode === 'client' || appMode === 'none');
+      document.getElementById('nav-phone').classList.toggle('hidden', appMode === 'host' || appMode === 'none');
+    }
+
+    function switchPhoneTab(tabName) {
+      if (tabName !== 'task') stopQrScanner();
+      ['dossier', 'task', 'shop', 'vote'].forEach(t => {
+        document.getElementById(`phone-tab-${t}`).classList.toggle('hidden', t !== tabName);
+        document.getElementById(`ptab-${t}`).classList.toggle('btn-active', t === tabName);
+      });
+      renderPhoneView();
+    }
+
+    // =========================================================================
+    // MODE 1: LOCAL TEST MODE
+    // =========================================================================
+    function startLocalTestMode() {
+      appMode = 'local';
+      const board = document.getElementById('demo-board-select').value;
+      state.boardType = board;
+      state.roomCode = 'DEMO-LOKALNY';
+      state.started = false;
+      state.round = 0;
+      state.phase = 'idle';
+      state.liberalPolicies = 0;
+      state.fascistPolicies = 0;
+      state.victoryMessage = null;
+      state.bufferedKills = [];
+      state.logs = [];
+
+      const count = board === '5-6' ? 5 : (board === '7-8' ? 7 : 9);
+      const demoNames = ['Marek', 'Kasia', 'Tomek', 'Ola', 'Piotr', 'Zosia', 'Kuba', 'Ania', 'Michal'];
+      state.players = [];
+      for (let i = 0; i < count; i++) {
+        state.players.push(createPlayerObject(`p_${i + 1}`, demoNames[i]));
+      }
+      myPlayerId = state.players[0].id;
+
+      addLog(`Uruchomiono Tryb Testowy (${count} graczy, plansza ${board}).`);
+      updateNavVisibility();
+      document.getElementById('demo-player-switcher').classList.remove('hidden');
+      document.getElementById('demo-scan-box').classList.remove('hidden');
+      document.getElementById('laptop-join-box').classList.add('hidden');
+      switchView('laptop');
+    }
+
+    function createPlayerObject(id, name) {
+      return {
+        id,
+        name,
+        role: null, // 'liberal' | 'fascist' | 'hitler'
+        alive: true,
+        points: 0,
+        assignedStation: null,
+        taskDone: false,
+        extraVote: false,
+        fascistKillUsed: false,
+        vote: null,
+        shielded: false
+      };
+    }
+
+    function selectDemoPlayer(playerId) {
+      myPlayerId = playerId;
+      roleRevealed = false;
+      document.getElementById('secret-role-box').classList.add('hidden');
+      document.getElementById('btn-toggle-role').textContent = 'Odslon Tajna Role';
+      document.getElementById('scan-feedback').textContent = '';
+      document.getElementById('shop-feedback').classList.add('hidden');
+      loadPlayerNotes();
+      renderPhoneView();
+    }
+
+    // =========================================================================
+    // MODE 2: ONLINE HOST (PEERJS)
+    // =========================================================================
+    function startOnlineHost() {
+      const statusEl = document.getElementById('host-status');
+      statusEl.textContent = 'Laczenie z serwerem PeerJS...';
+
+      const roomCode = generateRoomCode();
+      if (peer) peer.destroy();
+
+      peer = new Peer(roomCode);
+      peer.on('open', (id) => {
+        appMode = 'host';
+        state.roomCode = id;
+        state.boardType = document.getElementById('host-board-select').value;
+        state.players = [];
+        state.logs = [];
+        state.started = false;
+        hostConnections = {};
+
+        addLog(`Utworzono pokoj online: ${id}. Oczekiwanie na graczy.`);
+        updateNavVisibility();
+        document.getElementById('demo-player-switcher').classList.add('hidden');
+        document.getElementById('demo-scan-box').classList.add('hidden');
+
+        // Render Join QR
+        const joinBox = document.getElementById('laptop-join-box');
+        joinBox.classList.remove('hidden');
+        document.getElementById('laptop-room-code-text').textContent = id;
+        const qrTarget = document.getElementById('laptop-join-qr');
+        qrTarget.innerHTML = '';
+        const joinUrl = `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(id)}`;
+        new QRCode(qrTarget, { text: joinUrl, width: 120, height: 120 });
+
+        switchView('laptop');
+      });
+
+      peer.on('connection', (conn) => {
+        conn.on('data', (msg) => handleHostMessage(conn, msg));
+        conn.on('close', () => {
+          delete hostConnections[conn.peer];
+        });
+      });
+
+      peer.on('error', (err) => {
+        statusEl.textContent = `Blad polaczenia: ${err.type}. Sprobuj ponownie lub uzyj Trybu Testowego.`;
+      });
+    }
+
+    function handleHostMessage(conn, msg) {
+      if (!msg || !msg.type) return;
+
+      if (msg.type === 'JOIN') {
+        const cleanName = String(msg.name || 'Gracz').trim().slice(0, 20);
+        let existing = state.players.find(p => p.name.toLowerCase() === cleanName.toLowerCase());
+        if (!existing) {
+          existing = createPlayerObject(`p_${Date.now()}_${Math.floor(Math.random()*999)}`, cleanName);
+          state.players.push(existing);
+          addLog(`Dolaczyl gracz: ${cleanName}.`);
+        }
+        hostConnections[existing.id] = conn;
+        conn.send({ type: 'JOINED', playerId: existing.id });
+        broadcastState();
+        renderLaptopView();
+        return;
+      }
+
+      const player = state.players.find(p => p.id === msg.playerId);
+      if (!player) return;
+
+      if (msg.type === 'SCAN_QR') {
+        const result = processQrScan(player.id, msg.token);
+        conn.send({ type: 'SCAN_RESULT', ...result });
+      } else if (msg.type === 'WEAPON_KILL') {
+        processHiddenWeapon(player.id, msg.targetId);
+      } else if (msg.type === 'BUY_SHOP') {
+        const res = processShopPurchase(player.id, msg.item, msg.target);
+        conn.send({ type: 'SHOP_RESULT', ...res });
+      } else if (msg.type === 'CAST_VOTE') {
+        processVote(player.id, msg.choice);
+      }
+    }
+
+    function broadcastState() {
+      if (appMode !== 'host') return;
+      Object.entries(hostConnections).forEach(([pid, conn]) => {
+        if (conn && conn.open) {
+          conn.send({ type: 'STATE', state: buildClientSafeState(pid) });
+        }
+      });
+    }
+
+    function buildClientSafeState(forPlayerId) {
+      const me = state.players.find(p => p.id === forPlayerId);
+      const isFascist = me && me.role === 'fascist';
+      const isHitlerKnows = me && me.role === 'hitler' && state.boardType === '5-6';
+
+      const safePlayers = state.players.map(p => {
+        let visibleRole = null;
+        if (p.id === forPlayerId) visibleRole = p.role;
+        else if (isFascist && (p.role === 'fascist' || p.role === 'hitler')) visibleRole = p.role;
+        else if (isHitlerKnows && p.role === 'fascist') visibleRole = p.role;
+
+        return {
+          id: p.id,
+          name: p.name,
+          alive: p.alive,
+          role: visibleRole,
+          points: p.id === forPlayerId ? p.points : 0,
+          assignedStation: p.id === forPlayerId ? p.assignedStation : null,
+          taskDone: p.id === forPlayerId ? p.taskDone : false,
+          extraVote: p.id === forPlayerId ? p.extraVote : false,
+          fascistKillUsed: p.id === forPlayerId ? p.fascistKillUsed : false,
+          vote: p.id === forPlayerId ? p.vote : (p.vote ? 'VOTED' : null)
+        };
+      });
+
+      return {
+        roomCode: state.roomCode,
+        boardType: state.boardType,
+        started: state.started,
+        round: state.round,
+        phase: state.phase,
+        timerSeconds: state.timerSeconds,
+        liberalPolicies: state.liberalPolicies,
+        fascistPolicies: state.fascistPolicies,
+        votingOpen: state.votingOpen,
+        lastVoteResult: state.lastVoteResult,
+        victoryMessage: state.victoryMessage,
+        stations: state.stations.map(s => ({ id: s.id, label: s.label, sabotaged: s.sabotaged })),
+        players: safePlayers
+      };
+    }
+
+    // =========================================================================
+    // MODE 3: ONLINE CLIENT (PHONE)
+    // =========================================================================
+    function joinOnlineRoom() {
+      const roomCode = document.getElementById('join-room-code').value.trim().toUpperCase();
+      const playerName = document.getElementById('join-player-name').value.trim();
+      const statusEl = document.getElementById('join-status');
+
+      if (!roomCode || !playerName) {
+        statusEl.textContent = 'Wpisz kod pokoju oraz swoje imie.';
+        return;
+      }
+
+      statusEl.textContent = `Laczenie z pokojem ${roomCode}...`;
+      if (peer) peer.destroy();
+
+      peer = new Peer();
+      peer.on('open', () => {
+        clientConn = peer.connect(roomCode);
+        clientConn.on('open', () => {
+          appMode = 'client';
+          clientConn.send({ type: 'JOIN', name: playerName });
+        });
+        clientConn.on('data', (msg) => {
+          if (msg.type === 'JOINED') {
+            myPlayerId = msg.playerId;
+            updateNavVisibility();
+            document.getElementById('demo-player-switcher').classList.add('hidden');
+            document.getElementById('demo-scan-box').classList.add('hidden');
+            loadPlayerNotes();
+            switchView('phone');
+          } else if (msg.type === 'STATE') {
+            state = { ...state, ...msg.state };
+            renderPhoneView();
+          } else if (msg.type === 'SCAN_RESULT') {
+            handleClientScanFeedback(msg);
+          } else if (msg.type === 'SHOP_RESULT') {
+            showShopFeedback(msg.message);
+          }
+        });
+        clientConn.on('error', () => {
+          statusEl.textContent = 'Nie udalo sie polaczyc z pokojem.';
+        });
+      });
+
+      peer.on('error', (err) => {
+        statusEl.textContent = `Blad sieci: ${err.type}. Sprawdz kod pokoju.`;
+      });
+    }
+
+    // =========================================================================
+    // GAME LOGIC (HOST / LOCAL)
+    // =========================================================================
+    function addManualPlayer() {
+      const input = document.getElementById('add-local-player-name');
+      const name = input.value.trim();
+      if (!name) return;
+      state.players.push(createPlayerObject(`p_${Date.now()}`, name));
+      input.value = '';
+      addLog(`Dodano gracza: ${name}.`);
+      broadcastState();
+      renderLaptopView();
+      if (appMode === 'local') renderPhoneView();
+    }
+
+    function startGameAndDealRoles() {
+      const n = state.players.length;
+      if (n < 5) {
+        alert('Potrzeba minimum 5 graczy, aby rozpoczac gre.');
+        return;
+      }
+
+      // Auto-select board based on player count
+      if (n <= 6) state.boardType = '5-6';
+      else if (n <= 8) state.boardType = '7-8';
+      else state.boardType = '9-10';
+
+      const fascistCount = n <= 6 ? 1 : (n <= 8 ? 2 : 3);
+      const roles = ['hitler'];
+      for (let i = 0; i < fascistCount; i++) roles.push('fascist');
+      while (roles.length < n) roles.push('liberal');
+
+      // Fisher-Yates shuffle
+      for (let i = roles.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [roles[i], roles[j]] = [roles[j], roles[i]];
+      }
+
+      state.players.forEach((p, idx) => {
+        p.role = roles[idx];
+        p.alive = true;
+        p.points = 0;
+        p.assignedStation = null;
+        p.taskDone = false;
+        p.extraVote = false;
+        p.fascistKillUsed = false;
+        p.vote = null;
+        p.shielded = false;
+      });
+
+      state.started = true;
+      state.round = 1;
+      state.liberalPolicies = 0;
+      state.fascistPolicies = 0;
+      state.victoryMessage = null;
+      state.bufferedKills = [];
+      state.votingOpen = false;
+      state.lastVoteResult = null;
+
+      // Secretly hide one-time weapon in one of 15 stations
+      state.weaponStationId = Math.floor(Math.random() * 15) + 1;
+      state.weaponUsed = false;
+
+      assignRoundTasks();
+      addLog(`ROZPOCZETO GRE (${n} graczy, plansza ${state.boardType}). Role zostaly rozdane. Jedna z 15 stacji QR kryje ukryta bron.`);
+      broadcastState();
+      renderLaptopView();
+      if (appMode === 'local') renderPhoneView();
+    }
+
+    function assignRoundTasks() {
+      state.stations.forEach(s => s.sabotaged = false);
+      state.players.forEach(p => {
+        p.taskDone = false;
+        p.shielded = false;
+        p.vote = null;
+        if (p.alive) {
+          p.assignedStation = Math.floor(Math.random() * 15) + 1;
+        } else {
+          p.assignedStation = null;
+        }
+      });
+    }
+
+    function advanceNextRound() {
+      if (!state.started) return;
+      state.round += 1;
+      state.phase = 'idle';
+      state.votingOpen = false;
+      state.lastVoteResult = null;
+      clearInterval(timerInterval);
+      assignRoundTasks();
+      addLog(`Rozpoczeto Runde ${state.round}. Przydzielono nowe stacje QR.`);
+      broadcastState();
+      renderLaptopView();
+      if (appMode === 'local') renderPhoneView();
+    }
+
+    // =========================================================================
+    // TWO-PHASE TIMER (CHORES -> DISCUSSION)
+    // =========================================================================
+    function startChoresPhase() {
+      if (!state.started) {
+        alert('Najpierw kliknij "Rozpocznij Gre i Wylosuj Role".');
+        return;
+      }
+      state.choresDuration = parseInt(document.getElementById('cfg-chores-sec').value, 10) || 120;
+      state.discussionDuration = parseInt(document.getElementById('cfg-disc-sec').value, 10) || 300;
+      state.phase = 'chores';
+      state.timerSeconds = state.choresDuration;
+      state.timerPaused = false;
+      playPhaseBell(false);
+      addLog(`Runda ${state.round}: Start fazy PRACE DOMOWE (${formatClock(state.timerSeconds)}).`);
+      runTimerLoop();
+      broadcastState();
+      renderLaptopView();
+      if (appMode === 'local') renderPhoneView();
+    }
+
+    function startDiscussionPhase() {
+      if (!state.started) return;
+      state.discussionDuration = parseInt(document.getElementById('cfg-disc-sec').value, 10) || 300;
+      state.phase = 'discussion';
+      state.timerSeconds = state.discussionDuration;
+      state.timerPaused = false;
+      playPhaseBell(true);
+      addLog(`Runda ${state.round}: Start fazy DYSKUSJA (${formatClock(state.timerSeconds)}). Skanowanie QR zablokowane.`);
+      runTimerLoop();
+      broadcastState();
+      renderLaptopView();
+      if (appMode === 'local') renderPhoneView();
+    }
+
+    function toggleTimerPause() {
+      state.timerPaused = !state.timerPaused;
+      renderLaptopView();
+    }
+
+    function runTimerLoop() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (state.timerPaused) return;
+        if (state.timerSeconds > 0) {
+          state.timerSeconds -= 1;
+          renderTimerOnly();
+          if (state.timerSeconds % 5 === 0) broadcastState();
+        } else {
+          if (state.phase === 'chores') {
+            startDiscussionPhase();
+          } else {
+            clearInterval(timerInterval);
+            playPhaseBell(true);
+            addLog(`Czas dyskusji w Rundzie ${state.round} dobiegl konca.`);
+            broadcastState();
+            renderLaptopView();
+          }
+        }
+      }, 1000);
+    }
+
+    function formatClock(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    // =========================================================================
+    // QR SCANNING, WEAPON & SHOP LOGIC
+    // =========================================================================
+    function processQrScan(playerId, token) {
+      const p = state.players.find(x => x.id === playerId);
+      if (!p || !p.alive) return { ok: false, message: 'Wyeliminowani gracze nie moga skanowac stacji.' };
+      if (state.phase !== 'chores') return { ok: false, message: 'Skanowanie QR jest aktywne wylacznie w fazie PRACE DOMOWE.' };
+
+      const station = state.stations.find(s => s.token === token);
+      if (!station) return { ok: false, message: 'Nieprawidlowy kod QR (nie nalezy do tej rozgrywki).' };
+      if (station.sabotaged) return { ok: false, message: `Stacja #${station.id} zostala ZASABOTOWANA w tej rundzie.` };
+
+      let foundWeapon = false;
+      if (station.id === state.weaponStationId && !state.weaponUsed) {
+        foundWeapon = true;
+      }
+
+      let msg = '';
+      if (station.id === p.assignedStation) {
+        if (!p.taskDone) {
+          p.taskDone = true;
+          p.points += 1;
+          msg = `Zaliczono zadanie na Stacji #${station.id} (${station.label}). Otrzymano +1 PKT Wplywu.`;
+        } else {
+          msg = `Zadanie na Stacji #${station.id} zostalo juz zaliczone w tej rundzie.`;
+        }
+      } else {
+        msg = `Zeskanowano Stacje #${station.id} (${station.label}). To nie jest Twoja przydzielona stacja (szukaj #${p.assignedStation}).`;
+      }
+
+      broadcastState();
+      renderLaptopView();
+      if (appMode === 'local') renderPhoneView();
+      return { ok: true, message: msg, foundWeapon };
+    }
+
+    function processHiddenWeapon(playerId, targetId) {
+      const p = state.players.find(x => x.id === playerId);
+      const target = state.players.find(x => x.id === targetId);
+      if (!p || !p.alive || !target || !target.alive || state.weaponUsed) return;
+
+      state.weaponUsed = true;
+      state.bufferedKills.push({ targetId: target.id, source: 'Ukryta Bron QR' });
+      addLog('W systemie zarejestrowano oczekujace zdarzenie krytyczne (Bufor Eliminacji).');
+      broadcastState();
+      renderLaptopView();
+      if (appMode === 'local') renderPhoneView();
+    }
+
+    function processShopPurchase(playerId, item, target) {
+      const p = state.players.find(x => x.id === playerId);
+      if (!p || !p.alive) return { ok: false, message: 'Akcja niedostepna.' };
+
+      if (item === 'extra_vote') {
+        if (p.points < 2) return { ok: false, message: 'Za malo Punktow Wplywu (wymagane 2 PKT).' };
+        if (p.extraVote) return { ok: false, message: 'Masz juz aktywny Tajny +1 Glos.' };
+        p.points -= 2;
+        p.extraVote = true;
+        broadcastState();
+        return { ok: true, message: 'Kupiono Tajny +1 Glos. Zostanie dodany automatycznie przy najblizszym glosowaniu.' };
+      }
+
+      if (item === 'activity_report') {
+        if (p.points < 2) return { ok: false, message: 'Za malo Punktow Wplywu (wymagane 2 PKT).' };
+        p.points -= 2;
+        const slackers = state.players.filter(x => x.alive && !x.taskDone).map(x => x.name);
+        const listText = slackers.length ? slackers.join(', ') : 'Wszyscy zywi gracze wykonali zadanie.';
+        broadcastState();
+        return { ok: true, message: `RAPORT AKTYWNOSCI (bez zadania QR w rundzie ${state.round}): ${listText}` };
+      }
+
+      if (item === 'sabotage') {
+        if (p.points < 2) return { ok: false, message: 'Za malo Punktow Wplywu (wymagane 2 PKT).' };
+        const st = state.stations.find(s => s.id === parseInt(target, 10));
+        if (!st) return { ok: false, message: 'Wybierz stacje do sabotazu.' };
+        p.points -= 2;
+        st.sabotaged = true;
+        addLog(`UWAGA: Stacja QR #${st.id} (${st.label}) ulegla awarii do konca rundy.`);
+        broadcastState();
+        renderLaptopView();
+        return { ok: true, message: `Zasabotowano Stacje #${st.id} na obecna runde.` };
+      }
+
+      if (item === 'shield') {
+        if (p.points < 3) return { ok: false, message: 'Za malo Punktow Wplywu (wymagane 3 PKT).' };
+        const t = state.players.find(x => x.id === target && x.alive);
+        if (!t) return { ok: false, message: 'Wybierz zywego gracza do ochrony.' };
+        p.points -= 3;
+        t.shielded = true;
+        broadcastState();
+        return { ok: true, message: `Objeles ochrona gracza: ${t.name} (wazne do konca rundy).` };
+      }
+
+      if (item === 'fascist_kill') {
+        if (p.role !== 'fascist') return { ok: false, message: 'Ta akcja jest dostepna wylacznie dla zwyklych Faszystow.' };
+        if (p.fascistKillUsed) return { ok: false, message: 'Wykorzystales juz swoj jednorazowy Tajny Zamach.' };
+        if (p.points < 3) return { ok: false, message: 'Za malo Punktow Wplywu (wymagane 3 PKT).' };
+        const t = state.players.find(x => x.id === target && x.alive);
+        if (!t) return { ok: false, message: 'Wybierz zywego gracza.' };
+        p.points -= 3;
+        p.fascistKillUsed = true;
+        state.bufferedKills.push({ targetId: t.id, source: 'Tajny Zamach' });
+        addLog('W systemie zarejestrowano oczekujace zdarzenie krytyczne (Bufor Eliminacji).');
+        broadcastState();
+        renderLaptopView();
+        return { ok: true, message: `Zlecono Tajny Zamach na: ${t.name}. Wynik pojawi sie po rozliczeniu bufora.` };
+      }
+
+      return { ok: false, message: 'Nieznana akcja.' };
+    }
+
+    // =========================================================================
+    // BUFFERED & MANUAL EXECUTIONS
+    // =========================================================================
+    function resolveBufferedEliminations() {
+      if (state.bufferedKills.length === 0) {
+        addLog('Bufor eliminacji jest pusty. Nikt nie zostal zaatakowany.');
+        renderLaptopView();
+        return;
+      }
+
+      const kills = [...state.bufferedKills];
+      state.bufferedKills = [];
+
+      kills.forEach(k => {
+        const target = state.players.find(p => p.id === k.targetId);
+        if (!target || !target.alive) return;
+
+        if (target.shielded) {
+          addLog(`PROBA ZAMACHU ZABLOKOWANA: Ktos probowal wyeliminowac gracza ${target.name}, ale zadzialala Tarcza Ochronna.`);
+        } else {
+          target.alive = false;
+          addLog(`ELIMINACJA (BUFOR): Gracz ${target.name} zostal wyeliminowany z rozgrywki.`);
+          if (target.role === 'hitler') {
+            state.victoryMessage = `WYELIMINOWANO HITLERA (${target.name})! ZWYCIESTWO LIBERALOW!`;
+            addLog(state.victoryMessage);
+          }
+        }
+      });
+
+      broadcastState();
+      renderLaptopView();
+      if (appMode === 'local') renderPhoneView();
+    }
+
+    function openExecModal(playerId) {
+      const p = state.players.find(x => x.id === playerId);
+      if (!p) return;
+      pendingExecPlayerId = playerId;
+      document.getElementById('exec-modal-text').textContent =
+        `Czy na pewno chcesz przeprowadzic jawna Egzekucje na graczu ${p.name}? Jesli jest Hitlerem, gra natychmiast zakonczy sie zwyciestwem Liberalow.`;
+      document.getElementById('exec-modal').classList.remove('hidden');
+    }
+
+    function closeExecModal() {
+      pendingExecPlayerId = null;
+      document.getElementById('exec-modal').classList.add('hidden');
+    }
+
+    function confirmManualExecution() {
+      const p = state.players.find(x => x.id === pendingExecPlayerId);
+      closeExecModal();
+      if (!p || !p.alive) return;
+
+      p.alive = false;
+      addLog(`EGZEKUCJA (PLANSZA): Gracz ${p.name} zostal rozstrzelany przez Prezydenta.`);
+      if (p.role === 'hitler') {
+        state.victoryMessage = `ROZSTRZELANO HITLERA (${p.name})! NATYCHMIASTOWE ZWYCIESTWO LIBERALOW!`;
+        addLog(state.victoryMessage);
+      }
+      broadcastState();
+      renderLaptopView();
+      if (appMode === 'local') renderPhoneView();
+    }
+
+    function restorePlayer(playerId) {
+      const p = state.players.find(x => x.id === playerId);
+      if (!p) return;
+      p.alive = true;
+      if (p.role === 'hitler') state.victoryMessage = null;
+      addLog(`Przywrocono gracza ${p.name} do rozgrywki.`);
+      broadcastState();
+      renderLaptopView();
+      if (appMode === 'local') renderPhoneView();
+    }
+
+    // =========================================================================
+    // VOTING LOGIC
+    // =========================================================================
+    function openVotingRound() {
+      state.votingOpen = true;
+      state.lastVoteResult = null;
+      state.players.forEach(p => p.vote = null);
+      addLog('Otwarto tajne glosowanie rzadowe (JA / NEIN) na telefonach.');
+      broadcastState();
+      renderLaptopView();
+      if (appMode === 'local') renderPhoneView();
+    }
+
+    function processVote(playerId, choice) {
+      const p = state.players.find(x => x.id === playerId);
+      if (!p || !p.alive || !state.votingOpen) return;
+      p.vote = choice;
+      broadcastState();
+      renderLaptopView();
+      if (appMode === 'local') renderPhoneView();
+    }
+
+    function tallyVotes() {
+      if (!state.votingOpen) return;
+      let ja = 0;
+      let nein = 0;
+      const details = [];
+
+      state.players.filter(p => p.alive).forEach(p => {
+        if (p.vote === 'JA') {
+          ja += 1;
+          if (p.extraVote) { ja += 1; p.extraVote = false; }
+          details.push(`${p.name}: JA`);
+        } else if (p.vote === 'NEIN') {
+          nein += 1;
+          if (p.extraVote) { nein += 1; p.extraVote = false; }
+          details.push(`${p.name}: NEIN`);
+        } else {
+          details.push(`${p.name}: BRAK GLOSU`);
+        }
+      });
+
+      state.votingOpen = false;
+      const passed = ja > nein;
+      state.lastVoteResult = {
+        ja,
+        nein,
+        passed,
+        summary: `WYNIK GLOSOWANIA: JA = ${ja} | NEIN = ${nein} — RZAD ${passed ? 'PRZYJETY' : 'ODRZUCONY'} (uwzglednia ewentualne tajne +1 glosy).`
+      };
+      addLog(state.lastVoteResult.summary);
+      broadcastState();
+      renderLaptopView();
+      if (appMode === 'local') renderPhoneView();
+    }
+
+    // =========================================================================
+    // BOARD TRACK CLICKS
+    // =========================================================================
+    function toggleLiberalPolicy(index) {
+      state.liberalPolicies = (state.liberalPolicies === index + 1) ? index : index + 1;
+      if (state.liberalPolicies >= 5) {
+        state.victoryMessage = 'UCHWALONO 5 USTAW LIBERALNYCH! ZWYCIESTWO LIBERALOW!';
+      } else if (state.fascistPolicies < 6) {
+        state.victoryMessage = null;
+      }
+      broadcastState();
+      renderLaptopView();
+    }
+
+    function toggleFascistPolicy(index) {
+      state.fascistPolicies = (state.fascistPolicies === index + 1) ? index : index + 1;
+      if (state.fascistPolicies >= 6) {
+        state.victoryMessage = 'UCHWALONO 6 USTAW FASZYSTOWSKICH! ZWYCIESTWO FASZYSTOW!';
+      } else if (state.liberalPolicies < 5) {
+        state.victoryMessage = null;
+      }
+      broadcastState();
+      renderLaptopView();
+    }
+
+    function addLog(text) {
+      const now = new Date();
+      const ts = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      state.logs.unshift(`[${ts}] ${text}`);
+      if (state.logs.length > 40) state.logs.pop();
+    }
+
+    // =========================================================================
+    // RENDER: LAPTOP VIEW
+    // =========================================================================
+    function renderTimerOnly() {
+      document.getElementById('laptop-timer-clock').textContent = formatClock(state.timerSeconds);
+    }
+
+    function renderLaptopView() {
+      const vicEl = document.getElementById('victory-banner');
+      if (state.victoryMessage) {
+        vicEl.textContent = state.victoryMessage;
+        vicEl.classList.remove('hidden');
+      } else {
+        vicEl.classList.add('hidden');
+      }
+
+      const phaseEl = document.getElementById('laptop-phase-label');
+      phaseEl.className = 'timer-phase';
+      if (state.phase === 'chores') {
+        phaseEl.textContent = 'FAZA 1: PRACE DOMOWE (SKANOWANIE QR AKTYWNE)';
+        phaseEl.classList.add('phase-chores');
+      } else if (state.phase === 'discussion') {
+        phaseEl.textContent = 'FAZA 2: DYSKUSJA PRZY STOLE (QR ZABLOKOWANE)';
+        phaseEl.classList.add('phase-discussion');
+      } else {
+        phaseEl.textContent = state.started ? 'PRZERWA MIEDZY RUNDAMI' : 'OCZEKIWANIE NA START GRY';
+      }
+
+      renderTimerOnly();
+      document.getElementById('laptop-round-info').textContent = `RUNDA ${state.round} // PLANSZA ${state.boardType}`;
+      document.getElementById('laptop-room-badge').textContent = state.roomCode || 'LOKALNY';
+      document.getElementById('board-type-badge').textContent = `PLANSZA ${state.boardType}`;
+
+      // Buffer badge
+      document.getElementById('buffer-pending-badge').classList.toggle('hidden', state.bufferedKills.length === 0);
+
+      // Vote result
+      const vrBox = document.getElementById('vote-result-box');
+      if (state.lastVoteResult) {
+        vrBox.textContent = state.lastVoteResult.summary;
+        vrBox.classList.remove('hidden');
+      } else if (state.votingOpen) {
+        const votedCount = state.players.filter(p => p.alive && p.vote).length;
+        const aliveCount = state.players.filter(p => p.alive).length;
+        vrBox.textContent = `GLOSOWANIE W TOKU: oddano ${votedCount} z ${aliveCount} glosow.`;
+        vrBox.classList.remove('hidden');
+      } else {
+        vrBox.classList.add('hidden');
+      }
+
+      // Tracks
+      const libTrack = document.getElementById('track-liberal');
+      libTrack.innerHTML = '';
+      for (let i = 0; i < 5; i++) {
+        const div = document.createElement('div');
+        div.className = 'track-slot' + (i < state.liberalPolicies ? ' enacted-liberal' : '');
+        div.innerHTML = `<strong>${i + 1}</strong><span>${i === 4 ? 'WYGRANA' : 'USTAWA'}</span>`;
+        div.onclick = () => toggleLiberalPolicy(i);
+        libTrack.appendChild(div);
+      }
+
+      const fasTrack = document.getElementById('track-fascist');
+      fasTrack.innerHTML = '';
+      const powers = BOARD_POWERS[state.boardType] || BOARD_POWERS['7-8'];
+      for (let i = 0; i < 6; i++) {
+        const div = document.createElement('div');
+        div.className = 'track-slot' + (i < state.fascistPolicies ? ' enacted-fascist' : '');
+        div.innerHTML = `<strong>${i + 1}</strong><span>${powers[i]}</span>`;
+        div.onclick = () => toggleFascistPolicy(i);
+        fasTrack.appendChild(div);
+      }
+
+      // Players
+      const listEl = document.getElementById('laptop-player-list');
+      listEl.innerHTML = '';
+      const aliveCount = state.players.filter(p => p.alive).length;
+      document.getElementById('player-count-alive').textContent = aliveCount;
+
+      state.players.forEach(p => {
+        const row = document.createElement('div');
+        row.className = 'player-row' + (p.alive ? '' : ' is-dead');
+        const statusStamp = p.alive
+          ? '<span class="stamp stamp-alive">ZYWY</span>'
+          : '<span class="stamp stamp-dead">WYELIMINOWANY</span>';
+        const voteTag = state.votingOpen && p.alive
+          ? (p.vote ? '<span class="stamp stamp-gold">ZAGLOSOWAL</span>' : '<span style="font-size:0.75rem;color:#777;">czeka...</span>')
+          : '';
+        const actionBtn = p.alive
+          ? `<button class="btn-fascist btn-sm" onclick="openExecModal('${p.id}')">Egzekucja</button>`
+          : `<button class="btn-sm" onclick="restorePlayer('${p.id}')">Przywroc</button>`;
+
+        row.innerHTML = `
+          <div>
+            <strong class="heading-font" style="font-size:1.05rem;">${escapeHtml(p.name)}</strong>
+            <div style="display:flex; gap:6px; margin-top:4px; align-items:center;">
+              ${statusStamp} ${voteTag}
+            </div>
+          </div>
+          <div>${actionBtn}</div>
+        `;
+        listEl.appendChild(row);
+      });
+
+      // Logs
+      const logEl = document.getElementById('laptop-log');
+      logEl.innerHTML = state.logs.map(l => `<div class="log-item">${escapeHtml(l)}</div>`).join('');
+    }
+
+    // =========================================================================
+    // RENDER: 15 QR STATIONS VIEW
+    // =========================================================================
+    function renderQrView() {
+      const editorEl = document.getElementById('qr-editor-list');
+      editorEl.innerHTML = '';
+      state.stations.forEach(s => {
+        const wrap = document.createElement('div');
+        wrap.innerHTML = `
+          <label>Stacja #${s.id}</label>
+          <input type="text" value="${escapeHtml(s.label)}" oninput="updateStationLabel(${s.id}, this.value)">
+        `;
+        editorEl.appendChild(wrap);
+      });
+
+      const printGrid = document.getElementById('qr-print-grid');
+      printGrid.innerHTML = '';
+      state.stations.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'qr-card';
+        card.innerHTML = `
+          <div class="heading-font" style="font-size:1.25rem; border-bottom:2px solid #000; padding-bottom:4px;">STACJA QR #${s.id}</div>
+          <div class="qr-box" id="qr-canvas-${s.id}"></div>
+          <div style="font-size:0.85rem; font-weight:700;" id="qr-label-print-${s.id}">${escapeHtml(s.label)}</div>
+          <div style="font-size:0.68rem; color:#555; margin-top:4px;">SECRET HITLER // SKANUJ W APLIKACJI</div>
+        `;
+        printGrid.appendChild(card);
+        new QRCode(card.querySelector(`#qr-canvas-${s.id}`), {
+          text: s.token,
+          width: 145,
+          height: 145
+        });
+      });
+    }
+
+    function updateStationLabel(id, value) {
+      const st = state.stations.find(s => s.id === id);
+      if (!st) return;
+      st.label = value;
+      try {
+        localStorage.setItem(STORAGE_KEY_LOCATIONS, JSON.stringify(state.stations.map(x => x.label)));
+      } catch (e) {}
+      const printLabel = document.getElementById(`qr-label-print-${id}`);
+      if (printLabel) printLabel.textContent = value;
+      broadcastState();
+    }
+
+    function regenerateAllTokens() {
+      state.stations.forEach(s => s.token = generateToken(s.id));
+      try {
+        localStorage.setItem(STORAGE_KEY_TOKENS, JSON.stringify(state.stations.map(s => s.token)));
+      } catch (e) {}
+      renderQrView();
+    }
+
+    // =========================================================================
+    // RENDER & ACTIONS: PHONE VIEW
+    // =========================================================================
+    function renderPhoneView() {
+      if (appMode === 'local') {
+        const sw = document.getElementById('demo-player-switcher');
+        sw.classList.remove('hidden');
+        const sel = document.getElementById('demo-active-player');
+        sel.innerHTML = state.players.map(p =>
+          `<option value="${p.id}" ${p.id === myPlayerId ? 'selected' : ''}>${escapeHtml(p.name)} (${p.role || 'brak roli'}, ${p.points} PKT${p.alive ? '' : ' - WYELIMINOWANY'})</option>`
+        ).join('');
+      }
+
+      const me = state.players.find(p => p.id === myPlayerId);
+      if (!me) return;
+
+      document.getElementById('phone-player-name').textContent = me.name;
+      const phaseMap = { idle: 'OCZEKIWANIE', chores: 'PRACE DOMOWE (SKANOWANIE QR)', discussion: 'DYSKUSJA PRZY STOLE' };
+      document.getElementById('phone-phase-status').textContent = `RUNDA ${state.round} // FAZA: ${phaseMap[state.phase] || '---'}`;
+      document.getElementById('phone-points-badge').textContent = `${me.points} PKT WPLYWU`;
+      document.getElementById('shop-points-display').textContent = `${me.points} PKT`;
+
+      const aliveBadge = document.getElementById('phone-alive-badge');
+      aliveBadge.textContent = me.alive ? 'ZYWY' : 'WYELIMINOWANY';
+      aliveBadge.className = 'stamp ' + (me.alive ? 'stamp-alive' : 'stamp-dead');
+
+      // Dossier content
+      renderDossierContent(me);
+
+      // Task info
+      const taskBadge = document.getElementById('task-status-badge');
+      const taskInfo = document.getElementById('task-info-box');
+      if (!state.started) {
+        taskBadge.textContent = 'BRAK GRY';
+        taskInfo.textContent = 'Oczekiwanie na wylosowanie rol na ekranie glownym.';
+      } else if (!me.alive) {
+        taskBadge.textContent = 'WYELIMINOWANY';
+        taskInfo.textContent = 'Zostales wyeliminowany. Nie mozesz wykonywac zadan QR.';
+      } else {
+        const st = state.stations.find(s => s.id === me.assignedStation);
+        taskBadge.textContent = me.taskDone ? 'ZALICZONE (+1 PKT)' : 'DO WYKONANIA';
+        taskInfo.innerHTML = st
+          ? `<strong>Twoja stacja w Rundzie ${state.round}:</strong> STACJA #${st.id} — ${escapeHtml(st.label)}<br><span style="font-size:0.82rem;">${state.phase === 'chores' ? 'Faza Prac Domowych trwa — mozesz zeskanowac kod QR.' : 'Skanowanie odblokuje sie po uruchomieniu fazy Prac Domowych.'}</span>`
+          : 'Oczekiwanie na przydzial stacji.';
+      }
+
+      // Demo scan dropdown
+      if (appMode === 'local') {
+        const demoSel = document.getElementById('demo-scan-select');
+        demoSel.innerHTML = state.stations.map(s =>
+          `<option value="${s.token}">#${s.id} — ${escapeHtml(s.label)}${s.id === state.weaponStationId && !state.weaponUsed ? ' [UKRYTA BRON]' : ''}</option>`
+        ).join('');
+      }
+
+      // Shop selects
+      const aliveOthers = state.players.filter(p => p.alive);
+      const playerOpts = aliveOthers.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('');
+      document.getElementById('shop-shield-select').innerHTML = playerOpts;
+      document.getElementById('shop-fkill-select').innerHTML = playerOpts;
+      document.getElementById('weapon-target-select').innerHTML = playerOpts;
+      document.getElementById('shop-sabotage-select').innerHTML = state.stations
+        .map(s => `<option value="${s.id}">Stacja #${s.id} — ${escapeHtml(s.label)}</option>`).join('');
+
+      // Fascist-only shop item
+      const fkillBox = document.getElementById('shop-fascist-kill-box');
+      if (me.role === 'fascist') {
+        fkillBox.classList.remove('hidden');
+        const btnKill = document.getElementById('btn-buy-fkill');
+        btnKill.disabled = me.fascistKillUsed;
+        btnKill.textContent = me.fascistKillUsed ? 'ZUZYTY' : '3 PKT';
+      } else {
+        fkillBox.classList.add('hidden');
+      }
+
+      // Voting controls
+      const vStatus = document.getElementById('phone-vote-status');
+      vStatus.textContent = state.votingOpen ? 'OTWARTE' : 'ZAMKNIETE';
+      document.getElementById('btn-vote-ja').disabled = !state.votingOpen || !me.alive;
+      document.getElementById('btn-vote-nein').disabled = !state.votingOpen || !me.alive;
+      const vFeed = document.getElementById('phone-vote-feedback');
+      if (me.vote) {
+        vFeed.textContent = `Twoj oddany glos: ${me.vote}${me.extraVote ? ' (z aktywnym Tajnym +1 Glosem!)' : ''}`;
+      } else if (state.lastVoteResult) {
+        vFeed.textContent = state.lastVoteResult.summary;
+      } else {
+        vFeed.textContent = me.extraVote ? 'Masz aktywny Tajny +1 Glos na najblizsze glosowanie.' : '';
+      }
+    }
+
+    function toggleSecretRole() {
+      roleRevealed = !roleRevealed;
+      const box = document.getElementById('secret-role-box');
+      const btn = document.getElementById('btn-toggle-role');
+      box.classList.toggle('hidden', !roleRevealed);
+      btn.textContent = roleRevealed ? 'Ukryj Tajna Role' : 'Odslon Tajna Role';
+      const me = state.players.find(p => p.id === myPlayerId);
+      if (me) renderDossierContent(me);
+    }
+
+    function renderDossierContent(me) {
+      const nameEl = document.getElementById('dossier-role-name');
+      const descEl = document.getElementById('dossier-role-desc');
+      const alliesEl = document.getElementById('dossier-allies');
+
+      if (!me.role) {
+        nameEl.textContent = 'ROLE NIEZALOSOWANE';
+        nameEl.className = 'role-title';
+        descEl.textContent = 'Poczekaj, az na ekranie glownym zostanie uruchomiona gra.';
+        alliesEl.textContent = '';
+        return;
+      }
+
+      if (me.role === 'liberal') {
+        nameEl.textContent = 'LIBERAL';
+        nameEl.className = 'role-title role-liberal';
+        descEl.textContent = 'Cel: uchwalic 5 ustaw Liberalnych lub wyeliminowac Hitlera.';
+        alliesEl.textContent = 'Nie znasz frakcji pozostalych graczy.';
+      } else if (me.role === 'fascist') {
+        nameEl.textContent = 'FASZYSTA';
+        nameEl.className = 'role-title role-fascist';
+        descEl.textContent = 'Cel: uchwalic 6 ustaw Faszystowskich lub wybrac Hitlera na Kanclerza po 3. ustawie faszystowskiej. W Sklepie masz dostepny jednorazowy Tajny Zamach (3 PKT).';
+        const otherFascists = state.players.filter(p => p.role === 'fascist' && p.id !== me.id).map(p => p.name);
+        const hitler = state.players.find(p => p.role === 'hitler');
+        alliesEl.innerHTML =
+          `Wspolnicy Faszysci: ${otherFascists.length ? escapeHtml(otherFascists.join(', ')) : 'brak'}<br>` +
+          `HITLER: ${hitler ? escapeHtml(hitler.name) : '---'}`;
+      } else if (me.role === 'hitler') {
+        nameEl.textContent = 'HITLER';
+        nameEl.className = 'role-title role-hitler';
+        descEl.textContent = 'Cel: uchwalic 6 ustaw Faszystowskich lub zostac Kanclerzem po 3. ustawie faszystowskiej. Uwazaj na egzekucje.';
+        if (state.boardType === '5-6') {
+          const fas = state.players.filter(p => p.role === 'fascist').map(p => p.name);
+          alliesEl.textContent = `Plansza 5-6 — Twoj Faszysta: ${fas.join(', ')}`;
+        } else {
+          alliesEl.textContent = 'Plansza 7-10 — Nie wiesz, kto jest Twoim Faszysta (oni znaja Ciebie).';
+        }
+      }
+    }
+
+    // =========================================================================
+    // PHONE QR CAMERA SCANNER
+    // =========================================================================
+    function startQrScanner() {
+      const readerEl = document.getElementById('qr-reader');
+      readerEl.classList.remove('hidden');
+      document.getElementById('btn-open-cam').disabled = true;
+      document.getElementById('btn-stop-cam').disabled = false;
+      document.getElementById('scan-feedback').textContent = 'Uruchamianie aparatu...';
+
+      try {
+        html5QrCode = new Html5Qrcode('qr-reader');
+        html5QrCode.start(
+          { facingMode: 'environment' },
+          { fps: 10, qrbox: { width: 220, height: 220 } },
+          (decodedText) => {
+            stopQrScanner();
+            submitScannedToken(decodedText);
+          },
+          () => {}
+        ).catch(err => {
+          document.getElementById('scan-feedback').textContent =
+            'Nie udalo sie uruchomic aparatu (wymagane HTTPS, np. GitHub Pages, oraz zgoda na kamere).';
+          stopQrScanner();
+        });
+      } catch (e) {
+        document.getElementById('scan-feedback').textContent = 'Skaner QR niedostepny w tej przegladarce.';
+        stopQrScanner();
+      }
+    }
+
+    function stopQrScanner() {
+      document.getElementById('btn-open-cam').disabled = false;
+      document.getElementById('btn-stop-cam').disabled = true;
+      const readerEl = document.getElementById('qr-reader');
+      if (html5QrCode) {
+        html5QrCode.stop().then(() => {
+          html5QrCode.clear();
+          html5QrCode = null;
+          readerEl.classList.add('hidden');
+        }).catch(() => {
+          html5QrCode = null;
+          readerEl.classList.add('hidden');
+        });
+      } else {
+        readerEl.classList.add('hidden');
+      }
+    }
+
+    function simulateQrScan() {
+      const token = document.getElementById('demo-scan-select').value;
+      submitScannedToken(token);
+    }
+
+    function submitScannedToken(token) {
+      if (appMode === 'local') {
+        const res = processQrScan(myPlayerId, token);
+        handleClientScanFeedback(res);
+      } else if (appMode === 'client' && clientConn) {
+        clientConn.send({ type: 'SCAN_QR', playerId: myPlayerId, token });
+      }
+    }
+
+    function handleClientScanFeedback(res) {
+      document.getElementById('scan-feedback').textContent = res.message || '';
+      const weaponPanel = document.getElementById('hidden-weapon-panel');
+      if (res.foundWeapon) {
+        weaponPanel.classList.remove('hidden');
+      } else {
+        weaponPanel.classList.add('hidden');
+      }
+    }
+
+    function useHiddenWeapon() {
+      const targetId = document.getElementById('weapon-target-select').value;
+      if (!targetId) return;
+      if (appMode === 'local') {
+        processHiddenWeapon(myPlayerId, targetId);
+      } else if (appMode === 'client' && clientConn) {
+        clientConn.send({ type: 'WEAPON_KILL', playerId: myPlayerId, targetId });
+      }
+      document.getElementById('hidden-weapon-panel').classList.add('hidden');
+      document.getElementById('scan-feedback').textContent = 'Zlecenie tajnej eliminacji zostalo wyslane do bufora.';
+    }
+
+    // =========================================================================
+    // PHONE SHOP, VOTE & NOTES ACTIONS
+    // =========================================================================
+    function buyShopItem(item) {
+      let target = null;
+      if (item === 'sabotage') target = document.getElementById('shop-sabotage-select').value;
+      if (item === 'shield') target = document.getElementById('shop-shield-select').value;
+      if (item === 'fascist_kill') target = document.getElementById('shop-fkill-select').value;
+
+      if (appMode === 'local') {
+        const res = processShopPurchase(myPlayerId, item, target);
+        showShopFeedback(res.message);
+        renderPhoneView();
+      } else if (appMode === 'client' && clientConn) {
+        clientConn.send({ type: 'BUY_SHOP', playerId: myPlayerId, item, target });
+      }
+    }
+
+    function showShopFeedback(msg) {
+      const box = document.getElementById('shop-feedback');
+      box.textContent = msg;
+      box.classList.remove('hidden');
+    }
+
+    function castVote(choice) {
+      if (appMode === 'local') {
+        processVote(myPlayerId, choice);
+      } else if (appMode === 'client' && clientConn) {
+        clientConn.send({ type: 'CAST_VOTE', playerId: myPlayerId, choice });
+      }
+    }
+
+    function savePlayerNotes() {
+      if (!myPlayerId) return;
+      try {
+        localStorage.setItem(`sh_notes_${myPlayerId}`, document.getElementById('phone-notes').value);
+      } catch (e) {}
+    }
+
+    function loadPlayerNotes() {
+      if (!myPlayerId) return;
+      try {
+        document.getElementById('phone-notes').value = localStorage.getItem(`sh_notes_${myPlayerId}`) || '';
+      } catch (e) {}
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+  </script>
+</body>
+</html>
