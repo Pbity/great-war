@@ -127,7 +127,7 @@ const SHOP_CATALOG = [
     id: "wiretap",
     name: "Podsłuch Stacji",
     category: "WYWIAD",
-    desc: "Wybierasz stację QR. Jeśli ktoś ją zeskanuje w tej lub następnej rundzie, otrzymasz jego imię.",
+    desc: "Wybierasz stację QR. Jeśli ktoś ją zeskanuje w tej lub dwoch nastepnych rundach, otrzymasz jego imię.",
     defaultCost: 2,
     defaultQty: 2,
     defaultEnabled: true,
@@ -1445,7 +1445,7 @@ function processShopPurchase(player, itemId, target1, target2) {
   else if (itemId === "wiretap") {
     const st = state.stations.find(s => s.id === Number(target1));
     if (!st) return;
-    state.wiretaps.push({ ownerId: player.id, stationId: st.id, expiresRound: state.round + 1 });
+    state.wiretaps.push({ ownerId: player.id, stationId: st.id, expiresRound: state.round + 2 });
     addPrivateLog(player, `Założono PODSŁUCH na stacji ${formatStationForPlayer(st.id, player)} na rundy R${state.round}-R${state.round + 1}.`);
   }
   else if (itemId === "activity_report") {
