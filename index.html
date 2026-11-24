@@ -11,9 +11,18 @@
 </head>
 <body>
   <header class="app-header no-print">
-    <div>
-      <div class="brand-title">SECRET HITLER // STACJE QR</div>
-      <span class="brand-sub">SYSTEM ZARZĄDZANIA ROZGRYWKĄ BEZ MISTRZA GRY</span>
+    <div class="brand-wrap">
+      <div class="brand-emblem" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f6ebd6" stroke-width="2.2">
+          <polygon points="12,2 22,12 12,22 2,12" />
+          <line x1="12" y1="6" x2="12" y2="18" />
+          <line x1="6" y1="12" x2="18" y2="12" />
+        </svg>
+      </div>
+      <div>
+        <div class="brand-title">SECRET HITLER</div>
+        <span class="brand-sub">SYSTEM STACJI QR I SKLEPU WPŁYWÓW</span>
+      </div>
     </div>
     <nav class="nav-tabs">
       <button class="tab-btn active" data-view="lobby" onclick="switchView('lobby')">START / POKÓJ</button>
@@ -35,18 +44,18 @@
             <span class="badge">LOKALNY</span>
           </div>
           <p style="margin-bottom:14px;">
-            Pełna symulacja gry dla 7 graczy na jednym urządzeniu. Pozwala przetestować Ekran Główny, Sklep Wpływów, 3 warianty Śladu Faszysty oraz skanowanie stacji.
+            Natychmiastowa symulacja 7 graczy na jednym ekranie. Pozwala przetestować planszę, wszystkie warianty Śladu Faszysty, swobodny wybór stacji przez Faszystów i skanowanie QR.
           </p>
-          <button class="btn" style="width:100%;" onclick="startLocalDemo()">URUCHOM SYMULACJĘ (7 GRACZY)</button>
+          <button class="btn btn-fascist" style="width:100%;" onclick="startLocalDemo()">URUCHOM SYMULACJĘ (7 GRACZY)</button>
         </div>
 
-        <div class="panel">
+        <div class="panel panel-liberal">
           <div class="panel-header">
             <span class="panel-title">2. POKÓJ ONLINE</span>
             <span class="badge badge-liberal">HTTPS / P2P</span>
           </div>
           <p style="margin-bottom:12px;">
-            Hostowanie przez przeglądarkę (Netlify Drop / GitHub Pages). Skaner kamery działa natywnie po HTTPS.
+            Do wrzucenia na Netlify Drop lub GitHub Pages. Skaner z kamery działa bezpośrednio po HTTPS.
           </p>
           <div class="form-row">
             <label for="peer-room-input">Kod pokoju</label>
@@ -58,7 +67,7 @@
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button class="btn" style="flex:1;" onclick="hostOnlineRoom()">ZAŁÓŻ POKÓJ</button>
-            <button class="btn btn-gold" style="flex:1;" onclick="joinOnlineRoom()">DOŁĄCZ</button>
+            <button class="btn btn-liberal" style="flex:1;" onclick="joinOnlineRoom()">DOŁĄCZ</button>
           </div>
         </div>
 
@@ -68,10 +77,10 @@
             <span class="badge badge-gold">OFFLINE</span>
           </div>
           <p style="margin-bottom:10px;">
-            Lokalna synchronizacja w domowym Wi-Fi przez dołączony skrypt <strong>server.py</strong> (bez dostępu do internetu).
+            Synchronizacja w domowym Wi-Fi bez internetu przez dołączony skrypt <strong>server.py</strong>.
           </p>
           <div id="lan-status-box" class="info-box" style="margin-bottom:10px;">
-            Wykrywanie lokalnego serwera...
+            Sprawdzanie lokalnego serwera...
           </div>
           <div class="form-row">
             <label for="lan-player-name">Imię gracza (dołączenie LAN)</label>
@@ -90,7 +99,7 @@
           <span id="connection-badge" class="badge">NIEAKTYWNE</span>
         </div>
         <div id="connection-info">
-          Wybierz tryb połączenia powyżej. Kody QR obsługują także skanowanie natywnym aparatem telefonu (link z parametrem <code>?scan=TOKEN</code>).
+          Wybierz tryb połączenia. Kody QR działają zarówno w skanerze aplikacji, jak i przez natywny aparat telefonu (link z parametrem <code>?scan=TOKEN</code>).
         </div>
       </div>
     </section>
@@ -102,28 +111,39 @@
         <div id="timer-display" class="timer-clock">02:00</div>
         <div class="timer-controls">
           <button class="btn btn-gold" onclick="timerStart()">START</button>
-          <button class="btn btn-outline" style="background:#262320; color:#f8f4ea; border-color:#5a534a;" onclick="timerPause()">PAUZA</button>
+          <button class="btn btn-outline" style="background:#26221f; color:#f6ebd6; border-color:#5a5248;" onclick="timerPause()">PAUZA</button>
           <button class="btn btn-fascist" onclick="timerSwitchPhase()">PRZEŁĄCZ FAZĘ</button>
           <button class="btn btn-liberal" onclick="nextRound()">NASTĘPNA RUNDA</button>
         </div>
       </div>
 
-      <div id="victory-banner" class="alert-box" style="display:none; font-size:1.05rem; font-weight:700; text-align:center;"></div>
+      <div id="victory-banner" class="alert-box" style="display:none; font-size:1.1rem; font-weight:700; text-align:center;"></div>
 
       <div class="grid-2">
         <div>
           <div class="panel">
             <div class="panel-header">
               <span class="panel-title">PLANSZA USTAW // <span id="host-board-label">7-8 GRACZY</span></span>
-              <span class="badge">RUNDA <span id="host-round-num">1</span></span>
+              <span class="badge badge-gold">RUNDA <span id="host-round-num">1</span></span>
             </div>
-            <label>USTAWY LIBERALNE (<span id="lib-count">0</span> / 5)</label>
-            <div id="liberal-track" class="board-track liberal-track"></div>
 
-            <label>USTAWY FASZYSTOWSKIE (<span id="fas-count">0</span> / 6)</label>
-            <div id="fascist-track" class="board-track fascist-track"></div>
+            <div class="sh-board sh-board-liberal">
+              <div class="sh-board-title">
+                <span>LIBERAŁOWIE</span>
+                <span><span id="lib-count">0</span> / 5</span>
+              </div>
+              <div id="liberal-track" class="board-track liberal-track"></div>
+            </div>
 
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-top:12px; border-top:1.5px solid var(--border); padding-top:10px;">
+            <div class="sh-board sh-board-fascist">
+              <div class="sh-board-title">
+                <span>FASZYŚCI</span>
+                <span><span id="fas-count">0</span> / 6</span>
+              </div>
+              <div id="fascist-track" class="board-track fascist-track"></div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-top:10px; border-top:2px solid var(--border); padding-top:10px;">
               <div>
                 <strong>ODRZUCONE RZĄDY:</strong>
                 <span id="election-tracker" class="badge badge-fascist">0 / 3</span>
@@ -162,7 +182,7 @@
             </div>
             <div style="display:flex; gap:6px; margin-bottom:12px;">
               <input type="text" id="host-add-player-input" aria-label="Imię nowego gracza" />
-              <button class="btn btn-sm" onclick="addPlayerFromHost()">DODAJ GRACZA</button>
+              <button class="btn btn-sm" onclick="addPlayerFromHost()">DODAJ</button>
             </div>
             <div id="host-players-list"></div>
           </div>
@@ -184,8 +204,8 @@
         <div class="grid-2">
           <div class="panel">
             <div class="panel-header">
-              <span class="panel-title">PARAMETRY ROZGRYWKI</span>
-              <span class="badge">KONFIGURACJA</span>
+              <span class="panel-title">PARAMETRY ROZGRYWKI I WIDOCZNOŚĆ</span>
+              <span class="badge">ZASADY</span>
             </div>
             <div class="form-row">
               <label for="cfg-board-size">Plansza Secret Hitlera</label>
@@ -209,20 +229,58 @@
               <label for="cfg-base-url">Bazowy adres URL dla kodów QR (aparat natywny)</label>
               <input type="text" id="cfg-base-url" onchange="updateSettingsFromUI()" />
             </div>
-            <div class="form-row">
-              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-                <input type="checkbox" id="cfg-limit-one-purchase" style="width:auto;" checked onchange="updateSettingsFromUI()" />
-                <span>Limit: maksymalnie 1 zakup w Sklepie na rundę na gracza</span>
-              </label>
-            </div>
+
+            <label style="margin-top:10px;">REGUŁY ROZGRYWKI (WŁĄCZ / WYŁĄCZ)</label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="cfg-transfers-enabled" checked onchange="updateSettingsFromUI()" />
+              <span>Przelewy punktów (Opcja 1): max 1 wysłany i 1 odebrany PKT na rundę, odblokowane od 2. rundy, tajne (liczba przelewów w Raporcie Kontrwywiadu)</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="cfg-limit-one-purchase" checked onchange="updateSettingsFromUI()" />
+              <span>Limit zakupów: maksymalnie 1 zakup w Sklepie na rundę na gracza</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="cfg-fascist-free-choice" checked onchange="updateSettingsFromUI()" />
+              <span>Swobodny wybór Faszystów + premia za powtórzenie: dowolny kod QR (+1 PKT), powtórzenie w kolejnej rundzie daje +2 PKT</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="cfg-hidden-weapon" checked onchange="updateSettingsFromUI()" />
+              <span>Ukryta broń QR: 1 losowa stacja QR zawiera jednorazową tajną eliminację</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="cfg-starting-point" onchange="updateSettingsFromUI()" />
+              <span>Kapitał startowy: każdy gracz rozpoczyna grę z 1 PKT Wpływu</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="cfg-liberal-catchup" onchange="updateSettingsFromUI()" />
+              <span>Wyrównanie dla Liberałów: +1 PKT dla wszystkich żywych Liberałów po każdej uchwalonej ustawie faszystowskiej</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="cfg-hide-desc-liberals" onchange="updateSettingsFromUI()" />
+              <span>Ukryj opisy lokalizacji kodów dla Demokratów / Liberałów (widzą tylko numer stacji)</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="cfg-hide-desc-fascists" onchange="updateSettingsFromUI()" />
+              <span>Ukryj opisy lokalizacji kodów dla Faszystów (widzą tylko numer stacji)</span>
+            </label>
           </div>
 
           <div class="panel">
             <div class="panel-header">
-              <span class="panel-title">15 STACJI QR (OPISY LOKALIZACJI)</span>
+              <span class="panel-title">STACJE QR — LICZBA I OPISY</span>
               <button class="btn btn-sm btn-outline" onclick="regenerateAllTokens()">NOWE TOKENY</button>
             </div>
-            <div id="stations-editor-list" style="max-height:275px; overflow-y:auto; padding-right:4px;"></div>
+            <div class="form-row" style="display:flex; gap:10px; align-items:flex-end;">
+              <div style="flex:1;">
+                <label for="cfg-station-count">Liczba kodów QR (3–30)</label>
+                <input type="number" id="cfg-station-count" value="15" min="3" max="30" onchange="changeStationCount(this.value)" />
+              </div>
+              <button class="btn btn-sm btn-gold" onclick="changeStationCount(document.getElementById('cfg-station-count').value)">ZASTOSUJ LICZBĘ</button>
+            </div>
+            <p style="font-size:0.78rem; margin-bottom:10px; color:var(--ink-muted);">
+              Zmiany opisów zapisują się automatycznie podczas pisania i od razu aktualizują arkusz QR poniżej.
+            </p>
+            <div id="stations-editor-list" style="max-height:310px; overflow-y:auto; padding-right:4px;"></div>
           </div>
         </div>
 
@@ -253,10 +311,10 @@
 
       <div class="panel">
         <div class="panel-header no-print">
-          <span class="panel-title">ARKUSZ 15 KODÓW QR DO DRUKU</span>
+          <span class="panel-title">ARKUSZ KODÓW QR DO DRUKU (<span id="qr-count-label">15</span> SZT.)</span>
           <div style="display:flex; gap:8px;">
             <button class="btn btn-outline" onclick="renderQrPrintGrid()">ODŚWIEŻ KODY</button>
-            <button class="btn btn-fascist" onclick="window.print()">DRUKUJ 15 KODÓW QR</button>
+            <button class="btn btn-fascist" onclick="window.print()">DRUKUJ KODY QR</button>
           </div>
         </div>
         <div id="qr-print-grid" class="qr-grid"></div>
@@ -296,7 +354,7 @@
           <div class="panel">
             <div class="panel-header">
               <span class="panel-title">TAJNE AKTA PERSONALNE</span>
-              <span class="badge">ŚCIŚLE TAJNE</span>
+              <span class="badge badge-fascist">ŚCIŚLE TAJNE</span>
             </div>
             <p style="margin-bottom:14px; font-size:0.82rem;">
               Upewnij się, że nikt nie patrzy w Twój ekran, zanim odsłonisz przydział frakcyjny.
@@ -314,6 +372,7 @@
               <span class="badge badge-gold">+1 PKT</span>
             </div>
             <div id="phone-task-box" class="info-box"></div>
+            <div id="phone-fascist-station-box" class="alert-box" style="display:none;"></div>
 
             <div id="hidden-weapon-panel" class="alert-box" style="display:none;">
               <strong>ZNALEZIONO UKRYTĄ BROŃ</strong>
@@ -342,6 +401,18 @@
 
         <!-- PANE 3: SKLEP -->
         <div id="phone-pane-shop" class="phone-pane">
+          <div id="phone-transfer-panel" class="panel" style="display:none;">
+            <div class="panel-header">
+              <span class="panel-title">TAJNY PRZELEW (1 PKT)</span>
+              <span class="badge">OD 2. RUNDY</span>
+            </div>
+            <div id="phone-transfer-status" style="font-size:0.79rem; margin-bottom:10px; color:var(--ink-muted);"></div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <select id="transfer-target-select" style="flex:1;"></select>
+              <button class="btn btn-sm btn-gold" id="btn-send-transfer" onclick="sendPointTransfer()">PRZELEJ 1 PKT</button>
+            </div>
+          </div>
+
           <div class="panel">
             <div class="panel-header">
               <span class="panel-title">SKLEP WPŁYWÓW</span>
