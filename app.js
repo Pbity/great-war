@@ -1,4 +1,4 @@
-/* SECRET HITLER // STACJE QR — LOGIKA APLIKACJI (V7) */
+/* SECRET HITLER // STACJE QR — LOGIKA APLIKACJI (V10) */
 
 const BOARD_POWERS = {
   "5-6": [
@@ -127,7 +127,7 @@ const SHOP_CATALOG = [
     id: "wiretap",
     name: "Podsłuch Stacji",
     category: "WYWIAD",
-    desc: "Wybierasz stację QR. Jeśli ktoś ją zeskanuje w tej lub dwoch nastepnych rundach, otrzymasz jego imię.",
+    desc: "Wybierasz stację QR. Jeśli ktoś ją zeskanuje w tej lub następnej rundzie, otrzymasz jego imię.",
     defaultCost: 2,
     defaultQty: 2,
     defaultEnabled: true,
@@ -312,6 +312,8 @@ let state = {
     choresDuration: 120,
     discussionDuration: 300,
     baseUrl: "https://pbity.github.io/great-war/",
+    hostSettingsPin: "",
+    autoNextRound: false,
     transfersEnabled: true,
     limitOnePurchasePerRound: true,
     fascistFreeChoiceEnabled: true,
@@ -364,6 +366,8 @@ let clientConn = null;
 let qrScanner = null;
 let lanAvailable = false;
 let pendingScanToken = null;
+let configUnlockedByPin = false;
+let unlockedPinValue = "";
 let sharedAudioCtx = null;
 let lastKnownAliveMap = {};
 let bufferWatcherInterval = null;
@@ -515,7 +519,11 @@ function hostOnlineRoom() {
     return;
   }
 
+  const pinVal = document.getElementById("peer-host-pin").value.trim();
   connMode = "PEER_HOST";
+  configUnlockedByPin = true;
+  unlockedPinValue = pinVal;
+  state.settings.hostSettingsPin = pinVal;
   state.roomCode = code;
   hostConnections = [];
   peerInstance = new Peer(peerId);
@@ -549,9 +557,11 @@ function joinOnlineRoom() {
   const peerId = "sh-qr-room-" + code.toLowerCase().replace(/[^a-z0-9-]/g, "");
   connMode = "PEER_CLIENT";
 
-  const savedId = localStorage.getItem("sh_player_id_" + code) || ("pl-" + randomToken(6));
-  myPlayerId = savedId;
-  localStorage.setItem("sh_player_id_" + code, savedId);
+  configUnlockedByPin = false;
+  unlockedPinValue = "";
+  const nickId = makeNickPlayerId(name, code);
+  myPlayerId = nickId;
+  localStorage.setItem("sh_player_id_" + code, nickId);
   localStorage.setItem("sh_last_room", code);
   localStorage.setItem("sh_last_name", name);
   localStorage.setItem("sh_last_mode", "PEER");
@@ -599,7 +609,11 @@ function hostLanRoom() {
     alert("Uruchom najpierw plik server.py (lub start_lan.bat / start_lan.sh) na laptopie.");
     return;
   }
+  const lanPinVal = document.getElementById("lan-host-pin").value.trim();
   connMode = "LAN_HOST";
+  configUnlockedByPin = true;
+  unlockedPinValue = lanPinVal;
+  state.settings.hostSettingsPin = lanPinVal;
   state.roomCode = "LAN-WIFI";
   updateConnectionBadge("LAN HOST (SERWER PYTHON)");
   renderHostJoinQr();
@@ -620,9 +634,11 @@ function joinLanRoom() {
     return;
   }
   connMode = "LAN_CLIENT";
-  const savedId = localStorage.getItem("sh_lan_player_id") || ("pl-" + randomToken(6));
-  myPlayerId = savedId;
-  localStorage.setItem("sh_lan_player_id", savedId);
+  configUnlockedByPin = false;
+  unlockedPinValue = "";
+  const nickId = makeNickPlayerId(name, "lan");
+  myPlayerId = nickId;
+  localStorage.setItem("sh_lan_player_id", nickId);
   localStorage.setItem("sh_last_name", name);
   localStorage.setItem("sh_last_mode", "LAN");
 
@@ -658,6 +674,59 @@ function pollLanState() {
       }
     })
     .catch(() => {});
+}
+
+function canEditSettings() {
+  if (connMode === "NONE" || connMode === "DEMO" || connMode === "PEER_HOST" || connMode === "LAN_HOST") {
+    return true;
+  }
+  return Boolean(configUnlockedByPin);
+}
+
+function isClientMode() {
+  return connMode === "PEER_CLIENT" || connMode === "LAN_CLIENT";
+}
+
+function syncConfigToHostOrBroadcast(skipRenderAll = false) {
+  if (isClientMode() && configUnlockedByPin) {
+    sendActionToHost({
+      type: "SYNC_CONFIG",
+      pin: unlockedPinValue,
+      settings: state.settings,
+      shopConfig: state.shopConfig,
+      stations: state.stations
+    });
+    if (!skipRenderAll) renderAll();
+  } else {
+    broadcastState(skipRenderAll);
+  }
+}
+
+function unlockConfigWithPin() {
+  const entered = document.getElementById("config-unlock-pin-input").value.trim();
+  const fb = document.getElementById("config-pin-feedback");
+  const expected = String((state.settings && state.settings.hostSettingsPin) || "").trim();
+  if (!expected) {
+    fb.textContent = "Ten pokój nie ma ustawionego PIN-u — ustawienia należą wyłącznie do urządzenia hosta.";
+    return;
+  }
+  if (entered && entered === expected) {
+    configUnlockedByPin = true;
+    unlockedPinValue = entered;
+    fb.textContent = "";
+    renderConfigView();
+  } else {
+    fb.textContent = "Nieprawidłowy PIN hosta.";
+  }
+}
+
+function makeNickPlayerId(name, scope = "global") {
+  const slug = String(name || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9ąćęłńóśźż_-]+/gi, "-")
+    .replace(/^-+|-+$/g, "");
+  return `nick-${scope}-${slug || randomToken(5)}`;
 }
 
 function updateConnectionBadge(text) {
@@ -773,7 +842,7 @@ function addPlayerFromHost() {
   const inp = document.getElementById("host-add-player-input");
   const name = inp.value.trim();
   if (!name) return;
-  state.players.push(createPlayerObj("pl-" + randomToken(5), name));
+  state.players.push(createPlayerObj(makeNickPlayerId(name, state.roomCode || "host"), name));
   inp.value = "";
   addPublicLog(`Dołączył gracz: ${name}.`);
   broadcastState();
@@ -890,9 +959,25 @@ function timerStart() {
         addPublicLog("Koniec fazy Prac Domowych. Rozpoczyna się Dyskusja przy stole.");
         broadcastState();
       } else {
-        state.timerRunning = false;
-        addPublicLog("Czas dyskusji dobiegł końca. Czas na głosowanie.");
-        broadcastState();
+        if (state.settings.autoNextRound) {
+          state.round++;
+          state.phase = "CHORES";
+          state.timerSeconds = state.settings.choresDuration;
+          state.timerRunning = false;
+          state.votingOpen = false;
+          state.votes = {};
+          state.shields = {};
+          state.blockedVotes = {};
+          state.flippedVotes = {};
+          state.wiretaps = state.wiretaps.filter(w => w.expiresRound >= state.round);
+          assignStationsForRound();
+          addPublicLog(`Czas dyskusji dobiegł końca — automatycznie rozpoczęto Rundę ${state.round}.`);
+          broadcastState();
+        } else {
+          state.timerRunning = false;
+          addPublicLog("Czas dyskusji dobiegł końca. Kliknij NASTĘPNA RUNDA, aby przejść do Rundy " + (state.round + 1) + ".");
+          broadcastState();
+        }
       }
     }
   }, 1000);
@@ -1089,6 +1174,21 @@ function resolveEliminations() {
 /* ==================== OBSŁUGA AKCJI OD GRACZY ==================== */
 function handleHostAction(action) {
   if (!action || !action.type) return;
+
+  if (action.type === "SYNC_CONFIG") {
+    const expected = String((state.settings && state.settings.hostSettingsPin) || "").trim();
+    if (!expected || String(action.pin || "").trim() !== expected) return;
+    if (action.settings) {
+      state.settings = Object.assign({}, state.settings, action.settings, { hostSettingsPin: expected });
+    }
+    if (action.shopConfig) state.shopConfig = action.shopConfig;
+    if (Array.isArray(action.stations) && action.stations.length >= 3) {
+      state.stations = action.stations;
+      persistStations();
+    }
+    broadcastState();
+    return;
+  }
 
   if (action.type === "JOIN") {
     const existing = state.players.find(p => p.id === action.id);
@@ -1445,7 +1545,7 @@ function processShopPurchase(player, itemId, target1, target2) {
   else if (itemId === "wiretap") {
     const st = state.stations.find(s => s.id === Number(target1));
     if (!st) return;
-    state.wiretaps.push({ ownerId: player.id, stationId: st.id, expiresRound: state.round + 2 });
+    state.wiretaps.push({ ownerId: player.id, stationId: st.id, expiresRound: state.round + 1 });
     addPrivateLog(player, `Założono PODSŁUCH na stacji ${formatStationForPlayer(st.id, player)} na rundy R${state.round}-R${state.round + 1}.`);
   }
   else if (itemId === "activity_report") {
@@ -1531,10 +1631,12 @@ function processShopPurchase(player, itemId, target1, target2) {
 
 /* ==================== KONFIGURATOR, EDYCJA STACJI I RANDOMIZER ==================== */
 function updateSettingsFromUI() {
+  if (!canEditSettings()) { renderConfigView(); return; }
   state.settings.boardSize = document.getElementById("cfg-board-size").value;
   state.settings.choresDuration = Math.max(15, Number(document.getElementById("cfg-chores-sec").value) || 120);
   state.settings.discussionDuration = Math.max(30, Number(document.getElementById("cfg-discussion-sec").value) || 300);
   state.settings.baseUrl = document.getElementById("cfg-base-url").value.trim();
+  state.settings.autoNextRound = document.getElementById("cfg-auto-next-round").checked;
   state.settings.transfersEnabled = document.getElementById("cfg-transfers-enabled").checked;
   state.settings.limitOnePurchasePerRound = document.getElementById("cfg-limit-one-purchase").checked;
   state.settings.fascistFreeChoiceEnabled = document.getElementById("cfg-fascist-free-choice").checked;
@@ -1548,10 +1650,11 @@ function updateSettingsFromUI() {
   state.settings.liberalCatchupEnabled = document.getElementById("cfg-liberal-catchup").checked;
   state.settings.hideDescForLiberals = document.getElementById("cfg-hide-desc-liberals").checked;
   state.settings.hideDescForFascists = document.getElementById("cfg-hide-desc-fascists").checked;
-  broadcastState();
+  syncConfigToHostOrBroadcast();
 }
 
 function changeStationCount(newCountRaw) {
+  if (!canEditSettings()) { renderConfigView(); return; }
   const count = Math.max(3, Math.min(30, parseInt(newCountRaw, 10) || 15));
   document.getElementById("cfg-station-count").value = count;
   while (state.stations.length < count) {
@@ -1569,10 +1672,11 @@ function changeStationCount(newCountRaw) {
   persistStations();
   renderStationsEditor();
   renderQrPrintGrid();
-  broadcastState();
+  syncConfigToHostOrBroadcast();
 }
 
 function updateStationLocation(id, value) {
+  if (!canEditSettings()) { renderConfigView(); return; }
   const st = state.stations.find(s => s.id === id);
   if (!st) return;
   st.location = value;
@@ -1580,18 +1684,20 @@ function updateStationLocation(id, value) {
   // Natychmiastowa aktualizacja etykiety na karcie QR bez przeładowywania inputa
   const labelEl = document.getElementById("qr-loc-label-" + id);
   if (labelEl) labelEl.textContent = value;
-  broadcastState(true);
+  syncConfigToHostOrBroadcast(true);
 }
 
 function regenerateAllTokens() {
+  if (!canEditSettings()) { renderConfigView(); return; }
   if (!confirm("Wygenerować nowe tajne tokeny dla wszystkich stacji? Poprzednie wydruki przestaną działać.")) return;
   state.stations.forEach(s => { s.token = randomToken(10); });
   persistStations();
   renderQrPrintGrid();
-  broadcastState();
+  syncConfigToHostOrBroadcast();
 }
 
 function updateShopConfigField(itemId, field, value) {
+  if (!canEditSettings()) { renderConfigView(); return; }
   const cfg = state.shopConfig[itemId];
   if (!cfg) return;
   if (field === "enabled") cfg.enabled = Boolean(value);
@@ -1601,16 +1707,18 @@ function updateShopConfigField(itemId, field, value) {
     cfg.maxQty = q;
     cfg.remaining = q;
   }
-  broadcastState();
+  syncConfigToHostOrBroadcast();
 }
 
 function resetShopDefaults() {
+  if (!canEditSettings()) { renderConfigView(); return; }
   state.shopConfig = createInitialShopConfig();
   renderConfigView();
-  broadcastState();
+  syncConfigToHostOrBroadcast();
 }
 
 function randomizeShopBalanced() {
+  if (!canEditSettings()) { renderConfigView(); return; }
   const size = state.settings.boardSize;
   const scale = size === "5-6" ? 0.75 : (size === "9-10" ? 1.35 : 1.0);
 
@@ -1663,7 +1771,7 @@ function randomizeShopBalanced() {
   }
 
   renderConfigView();
-  broadcastState();
+  syncConfigToHostOrBroadcast();
 }
 
 /* ==================== RENDEROWANIE WIDOKÓW ==================== */
@@ -1797,10 +1905,19 @@ function renderStationsEditor() {
 }
 
 function renderConfigView() {
+  const allowed = canEditSettings();
+  const lockPanel = document.getElementById("config-lock-panel");
+  const editableWrap = document.getElementById("config-editable-content");
+  if (lockPanel) lockPanel.style.display = allowed ? "none" : "block";
+  if (editableWrap) {
+    editableWrap.style.opacity = allowed ? "1" : "0.55";
+    editableWrap.style.pointerEvents = allowed ? "auto" : "none";
+  }
   document.getElementById("cfg-board-size").value = state.settings.boardSize;
   document.getElementById("cfg-chores-sec").value = state.settings.choresDuration;
   document.getElementById("cfg-discussion-sec").value = state.settings.discussionDuration;
   document.getElementById("cfg-base-url").value = state.settings.baseUrl;
+  document.getElementById("cfg-auto-next-round").checked = state.settings.autoNextRound;
   document.getElementById("cfg-transfers-enabled").checked = state.settings.transfersEnabled;
   document.getElementById("cfg-limit-one-purchase").checked = state.settings.limitOnePurchasePerRound;
   document.getElementById("cfg-fascist-free-choice").checked = state.settings.fascistFreeChoiceEnabled;
@@ -2134,7 +2251,7 @@ function renderPhoneShop(player) {
     tSel.innerHTML = others.map(p => `<option value="${p.id}">${p.name}</option>`).join("");
 
     if (state.round < 2) {
-      tStatus.textContent = "Przelewy odblokują się od 2. rundy (ochrona balansu).";
+      tStatus.textContent = "Trwa 1. runda — przelewy odblokują się od 2. rundy (na laptopie kliknij NASTĘPNA RUNDA po zakończeniu tury).";
       tBtn.disabled = true;
     } else if (player.sentTransferRound === state.round) {
       tStatus.textContent = "Wysłałeś już 1 PKT w tej rundzie (limit 1 wysłany / 1 odebrany na rundę).";

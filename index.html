@@ -73,6 +73,10 @@
             <input type="text" id="peer-room-input" />
           </div>
           <div class="form-row">
+            <label for="peer-host-pin">PIN ustawień hosta (opcjonalnie)</label>
+            <input type="text" id="peer-host-pin" maxlength="12" />
+          </div>
+          <div class="form-row">
             <label for="peer-player-name">Imię gracza (dołączenie)</label>
             <input type="text" id="peer-player-name" />
           </div>
@@ -92,6 +96,10 @@
           </p>
           <div id="lan-status-box" class="info-box" style="margin-bottom:10px;">
             Sprawdzanie lokalnego serwera...
+          </div>
+          <div class="form-row">
+            <label for="lan-host-pin">PIN ustawień hosta (opcjonalnie)</label>
+            <input type="text" id="lan-host-pin" maxlength="12" />
           </div>
           <div class="form-row">
             <label for="lan-player-name">Imię gracza (dołączenie LAN)</label>
@@ -181,6 +189,7 @@
             <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
               <button class="btn btn-liberal" onclick="openVoting()">OTWÓRZ GŁOSOWANIE</button>
               <button class="btn" onclick="tallyVotes()">PODSUMUJ GŁOSY</button>
+              <button class="btn btn-gold" onclick="nextRound()">NASTĘPNA RUNDA</button>
               <button class="btn btn-fascist" onclick="resolveEliminations()">ROZLICZ BUFOR TERAZ (AWARYJNIE)</button>
             </div>
             <div id="vote-result-box" class="info-box" style="display:none;"></div>
@@ -235,7 +244,22 @@
 
     <!-- ==================== WIDOK 3: USTAWIENIA / QR / SKLEP ==================== -->
     <section id="view-config" class="view-section">
-      <div class="config-non-qr">
+      <div id="config-lock-panel" class="panel panel-fascist" style="display:none;">
+        <div class="panel-header">
+          <span class="panel-title">USTAWIENIA ZABLOKOWANE (TYLKO HOST / PIN)</span>
+          <span class="badge badge-fascist">CHRONIONE</span>
+        </div>
+        <p style="margin-bottom:12px;">
+          Zmiana ustawień, edycja stacji i modyfikacja Sklepu są dostępne wyłącznie z urządzenia zakładającego pokój albo po podaniu PIN-u hosta.
+        </p>
+        <div style="display:flex; gap:8px; max-width:380px; flex-wrap:wrap;">
+          <input type="text" id="config-unlock-pin-input" style="flex:1; min-width:140px;" />
+          <button class="btn btn-fascist" onclick="unlockConfigWithPin()">ODBLOKUJ PIN-EM</button>
+        </div>
+        <div id="config-pin-feedback" style="font-size:0.79rem; margin-top:8px; color:var(--fascist-dark);"></div>
+      </div>
+
+      <div id="config-editable-content" class="config-non-qr">
         <div class="grid-2">
           <div class="panel">
             <div class="panel-header">
@@ -276,6 +300,10 @@
             </div>
 
             <label style="margin-top:10px;">REGUŁY ROZGRYWKI (WŁĄCZ / WYŁĄCZ)</label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="cfg-auto-next-round" onchange="updateSettingsFromUI()" />
+              <span>Automatyczna nowa runda po zakończeniu Dyskusji (gdy zegar Dyskusji dojdzie do 00:00)</span>
+            </label>
             <label class="checkbox-row">
               <input type="checkbox" id="cfg-transfers-enabled" checked onchange="updateSettingsFromUI()" />
               <span>Przelewy punktów (Opcja 1): max 1 wysłany i 1 odebrany PKT na rundę, odblokowane od 2. rundy, tajne (liczba przelewów w Raporcie Kontrwywiadu)</span>
